@@ -1,0 +1,35 @@
+{
+  "name": "web",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "gen-openapi": "openapi-typescript ../shared/openapi.yaml -o ./src/api/types.d.ts"
+  },
+  "dependencies": {
+    "@macaron-css/core": "^1.2.0",
+    "@macaron-css/solid": "^1.4.1",
+    "@popperjs/core": "^2.11.8",
+    "@solid-primitives/storage": "^2.1.1",
+    "@solid-primitives/websocket": "^1.1.0",
+    "@solidjs/router": "^0.8.3",
+    "@tanstack/solid-query": "^4.35.3",
+    "modern-normalize": "^2.0.0",
+    "openapi-fetch": "^0.7.6",
+    "solid-dismiss": "^1.7.121",
+    "solid-icons": "^1.0.12",
+    "solid-js": "^1.7.8",
+    "solid-popper": "^0.3.0"
+  },
+  "devDependencies": {
+    "@macaron-css/vite": "^1.4.3",
+    "@types/node": "^20.7.0",
+    "openapi-typescript": "^6.7.0",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5",
+    "vite-plugin-solid": "^2.7.0"
+  }
+}

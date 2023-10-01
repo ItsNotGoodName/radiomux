@@ -1,0 +1,153 @@
+syntax = "proto3";
+
+option java_package = "com.gurnain.radiomux.protos";
+option go_package = "internal/protos";
+
+message Rating {
+  bool IsRated = 1;
+  int32 RatingType = 2;
+}
+
+message MediaMetadata {
+  string Title = 1;
+  string Artist = 2;
+  string AlbumTitle = 3;
+  string AlbumArtist = 4;
+  string DisplayTitle = 5;
+  string Subtitle = 6;
+  string Description = 7;
+  Rating UserRating = 8;
+  Rating OverallRating = 9;
+  bytes ArtworkData = 10;
+  int32 ArtworkDataType = 11;
+  string ArtworkUri = 12;
+  int32 TrackNumber = 13;
+  int32 TotalTrackCount = 14;
+  bool IsBrowsable = 15;
+  bool IsPlayable = 16;
+  int32 RecordingYear = 17;
+  int32 RecordingMonth = 18;
+  int32 RecordingDay = 19;
+  int32 ReleaseYear = 20;
+  int32 ReleaseMonth = 21;
+  int32 ReleaseDay = 22;
+  string Writer = 23;
+  string Composer = 24;
+  string Conductor = 25;
+  int32 DiscNumber = 26;
+  int32 TotalDiscCount = 27;
+  string Genre = 28;
+  string Compilation = 29;
+  string Station = 30;
+  int32 MediaType = 31;
+}
+
+message PlaybackException {
+  int32 error_code = 1;
+  int64 timestampMs = 2;
+}
+
+message PlaybackParameters {
+  float speed = 1;
+  float pitch = 2;
+}
+
+message DeviceInfo {
+  int32 MinVolume = 1;
+  int32 MaxVolume = 2;
+}
+
+// Event
+
+message Event {
+  oneof payload {
+    RpcReply RpcReply = 1;
+    OnMediaMetadataChanged OnMediaMetadataChanged = 2;
+    OnPlaylistMetadataChanged OnPlaylistMetadataChanged = 3;
+    OnIsLoadingChanged OnIsLoadingChanged = 4;
+    OnPlaybackStateChanged OnPlaybackStateChanged = 5;
+    OnIsPlayingChanged OnIsPlayingChanged = 6;
+    OnPlayerError OnPlayerError = 7;
+    OnPlaybackParametersChanged OnPlaybackParametersChanged = 8;
+    OnVolumeChanged OnVolumeChanged = 9;
+    OnDeviceInfoChanged OnDeviceInfoChanged = 10;
+    OnDeviceVolumeChanged OnDeviceVolumeChanged = 11;
+    OnCurrentUriChanged OnCurrentUriChanged = 12;
+  }
+}
+
+message RpcReply { int32 id = 1; }
+
+message OnMediaMetadataChanged { MediaMetadata media_metadata = 1; }
+
+message OnPlaylistMetadataChanged { MediaMetadata media_metadata = 1; }
+
+message OnIsLoadingChanged { bool is_loading = 1; }
+
+message OnPlaybackStateChanged { int32 playback_state = 1; }
+
+message OnIsPlayingChanged { bool is_playing = 1; }
+
+message OnPlayerError { PlaybackException error = 1; }
+
+message OnPlaybackParametersChanged {
+  PlaybackParameters playback_parameters = 1;
+}
+
+message OnVolumeChanged { float volume = 1; }
+
+message OnDeviceInfoChanged { DeviceInfo device_info = 1; }
+
+message OnDeviceVolumeChanged {
+  int32 volume = 1;
+  bool muted = 2;
+}
+
+message OnCurrentUriChanged { string uri = 1; }
+
+// Rpc
+
+message Rpc {
+  int32 id = 1;
+  oneof payload {
+    Stop Stop = 2;
+    Play Play = 3;
+    Pause Pause = 4;
+    Prepare Prepare = 5;
+    SetPlayWhenReady SetPlayWhenReady = 6;
+    SetMediaItem SetMediaItem = 7;
+    SetVolume SetVolume = 8;
+    SetDeviceVolume SetDeviceVolume = 9;
+    IncreaseDeviceVolume IncreaseDeviceVolume = 10;
+    DecreaseDeviceVolume DecreaseDeviceVolume = 11;
+    SetDeviceMuted SetDeviceMuted = 12;
+    SyncState SyncState = 13;
+    SeekToDefaultPosition SeekToDefaultPosition = 14;
+  }
+}
+
+message Stop {}
+
+message Play {}
+
+message Pause {}
+
+message Prepare {}
+
+message SetPlayWhenReady { bool play_when_ready = 1; }
+
+message SetMediaItem { string uri = 1; }
+
+message SetVolume { float volume = 1; }
+
+message SetDeviceVolume { int32 volume = 1; }
+
+message IncreaseDeviceVolume {}
+
+message DecreaseDeviceVolume {}
+
+message SetDeviceMuted { bool muted = 1; }
+
+message SyncState {}
+
+message SeekToDefaultPosition {}
