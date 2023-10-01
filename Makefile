@@ -50,7 +50,7 @@ dev-web:
 # Generation
 
 gen-proto:
-	# protoc --java_out=lite:android/app/src/main/java shared/message.proto
+	protoc --java_out=lite:android/app/src/main/java shared/message.proto
 	protoc --go_out=. shared/message.proto
 
 gen-openapi:
