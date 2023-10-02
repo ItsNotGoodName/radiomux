@@ -1,18 +1,32 @@
 package com.gurnain.radiomuxplayer
 
 import android.content.ComponentName
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.media3.common.C
 import androidx.media3.common.DeviceInfo
 import androidx.media3.common.MediaItem
@@ -22,6 +36,7 @@ import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
+import androidx.preference.PreferenceManager
 import com.google.common.util.concurrent.MoreExecutors
 import com.gurnain.radiomuxplayer.protos.Message
 import com.gurnain.radiomuxplayer.protos.MessageConverter
@@ -34,10 +49,9 @@ class MainActivity : ComponentActivity() {
             RadioMuxPlayerTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    App()
                 }
             }
         }
@@ -46,6 +60,10 @@ class MainActivity : ComponentActivity() {
     override fun onStart() {
         super.onStart()
 
+        val sharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
+        val url = sharedPreferences.getString("url", "")
+
         // TODO: remove this when background play is setup
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
@@ -53,9 +71,7 @@ class MainActivity : ComponentActivity() {
         val mediaControllerFuture = MediaController.Builder(this, sessionToken).buildAsync()
         mediaControllerFuture.addListener({
             mediaController = mediaControllerFuture.get()
-            // TODO: move this hardcoded url to settings
-            connection =
-                Connection("ws://192.168.20.231:8080/ws?token=test&id=1", connectionListener)
+            url?.let { connection = Connection(it, connectionListener) }
         }, MoreExecutors.directExecutor())
     }
 
@@ -124,8 +140,7 @@ class MainActivity : ComponentActivity() {
 
                     Message.Rpc.PayloadCase.SETDEVICEVOLUME -> {
                         mediaController?.setDeviceVolume(
-                            payload.setDeviceVolume.volume,
-                            C.VOLUME_FLAG_REMOVE_SOUND_AND_VIBRATE
+                            payload.setDeviceVolume.volume, C.VOLUME_FLAG_REMOVE_SOUND_AND_VIBRATE
                         )
                     }
 
@@ -139,8 +154,7 @@ class MainActivity : ComponentActivity() {
 
                     Message.Rpc.PayloadCase.SETDEVICEMUTED -> {
                         mediaController?.setDeviceMuted(
-                            payload.setDeviceMuted.muted,
-                            C.VOLUME_FLAG_REMOVE_SOUND_AND_VIBRATE
+                            payload.setDeviceMuted.muted, C.VOLUME_FLAG_REMOVE_SOUND_AND_VIBRATE
                         )
                     }
 
@@ -169,8 +183,7 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
-            MessageConverter.rpcReply(payload.id)
-                .let { connection?.send(it) }
+            MessageConverter.rpcReply(payload.id).let { connection?.send(it) }
         }
     }
 
@@ -193,26 +206,22 @@ class MainActivity : ComponentActivity() {
 
         override fun onIsLoadingChanged(isLoading: Boolean) {
             Log.v(TAG, "onIsLoadingChanged: isLoading=$isLoading")
-            MessageConverter.eventOnIsLoadingChanged(isLoading)
-                .let { connection?.send(it) }
+            MessageConverter.eventOnIsLoadingChanged(isLoading).let { connection?.send(it) }
         }
 
         override fun onPlaybackStateChanged(playbackState: Int) {
             Log.v(TAG, "onPlaybackStateChanged: playbackState=$playbackState")
-            MessageConverter.eventOnPlaybackStateChanged(playbackState)
-                .let { connection?.send(it) }
+            MessageConverter.eventOnPlaybackStateChanged(playbackState).let { connection?.send(it) }
         }
 
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             Log.v(TAG, "onIsPlayingChanged: isPlaying=$isPlaying")
-            MessageConverter.eventOnIsPlayingChanged(isPlaying)
-                .let { connection?.send(it) }
+            MessageConverter.eventOnIsPlayingChanged(isPlaying).let { connection?.send(it) }
         }
 
         override fun onPlayerError(error: PlaybackException) {
             Log.v(TAG, "onPlayerError: $error")
-            MessageConverter.eventOnPlayerError(error)
-                .let { connection?.send(it) }
+            MessageConverter.eventOnPlayerError(error).let { connection?.send(it) }
         }
 
         override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters) {
@@ -226,8 +235,7 @@ class MainActivity : ComponentActivity() {
 
         override fun onVolumeChanged(volume: Float) {
             Log.v(TAG, "onVolumeChanged: volume=$volume")
-            MessageConverter.eventOnVolumeChanged(volume)
-                .let { connection?.send(it) }
+            MessageConverter.eventOnVolumeChanged(volume).let { connection?.send(it) }
         }
 
         override fun onDeviceInfoChanged(deviceInfo: DeviceInfo) {
@@ -235,36 +243,56 @@ class MainActivity : ComponentActivity() {
                 TAG,
                 "onDeviceInfoChanged: minVolume=${deviceInfo.minVolume};maxVolume=${deviceInfo.maxVolume}"
             )
-            MessageConverter.eventOnDeviceInfoChanged(deviceInfo)
-                .let { connection?.send(it) }
+            MessageConverter.eventOnDeviceInfoChanged(deviceInfo).let { connection?.send(it) }
         }
 
         override fun onDeviceVolumeChanged(volume: Int, muted: Boolean) {
             Log.v(TAG, "onDeviceVolumeChanged: volume=$volume;muted=$muted")
-            MessageConverter.eventOnDeviceVolumeChanged(volume, muted)
-                .let { connection?.send(it) }
+            MessageConverter.eventOnDeviceVolumeChanged(volume, muted).let { connection?.send(it) }
         }
 
         fun onCurrentUriChanged(currentUri: String) {
             Log.v(TAG, "onCurrentUriChanged: uri=$currentUri")
-            MessageConverter.eventOnCurrentUriChanged(currentUri)
-                .let { connection?.send(it) }
+            MessageConverter.eventOnCurrentUriChanged(currentUri).let { connection?.send(it) }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun App() {
+    val context = LocalContext.current
+    Scaffold(topBar = {
+        TopAppBar(title = {
+            Text(
+                stringResource(id = R.string.app_name),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }, actions = {
+            IconButton(onClick = {
+                context.startActivity(
+                    Intent(
+                        context, SettingsActivity::class.java
+                    )
+                )
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.MoreVert, contentDescription = "More Options"
+                )
+            }
+        })
+    }, content = { innerPadding ->
+        LazyColumn(
+            contentPadding = innerPadding, verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) { }
+    })
 }
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     RadioMuxPlayerTheme {
-        Greeting("Android")
+        App()
     }
 }

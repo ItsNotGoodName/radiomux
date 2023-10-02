@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">RadioMuxPlayer</string>
+    <!-- Preference Titles -->
+    <string name="url_title">URL</string>
+    <string name="title_activity_settings">Settings</string>
 </resources>
