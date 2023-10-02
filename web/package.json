@@ -7,7 +7,8 @@
     "dev": "vite --host",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "gen-openapi": "openapi-typescript ../shared/openapi.yaml -o ./src/api/types.d.ts"
+    "generate-openapi": "openapi-typescript ../shared/openapi.yaml -o ./src/api/types.d.ts",
+    "generate-pwa-assets": "pwa-assets-generator"
   },
   "dependencies": {
     "@macaron-css/core": "^1.2.0",
@@ -27,6 +28,7 @@
   "devDependencies": {
     "@macaron-css/vite": "^1.4.3",
     "@types/node": "^20.7.0",
+    "@vite-pwa/assets-generator": "^0.0.10",
     "openapi-typescript": "^6.7.0",
     "typescript": "^5.0.2",
     "vite": "^4.4.5",

@@ -55,7 +55,7 @@ gen-proto:
 
 gen-openapi:
 	oapi-codegen -config shared/server.cfg.yaml shared/openapi.yaml
-	cd web && pnpm run gen-openapi
+	cd web && pnpm run generate-openapi
 
 # gen-jet:
 # 	jet -source=sqlite -dsn="$(DB_PATH)" -path=./internal/jet -ignore-tables goose_db_version,_dummy

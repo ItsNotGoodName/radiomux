@@ -177,7 +177,7 @@ export const Player: Component<Props> = (props) => {
     <Root>
       <Content>
         <ContentChild>
-          <Thumbnail src="/vite.svg" />
+          <Thumbnail src="/favicon.svg" />
           <Text title={props.player?.title}>{props.player?.title}</Text>
         </ContentChild>
         <ContentChild>
