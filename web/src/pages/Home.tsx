@@ -4,8 +4,7 @@ import { styled, } from '@macaron-css/solid'
 import { Button } from '~/ui/Button'
 import { style } from '@macaron-css/core'
 import { usePlayerPresetMutation, usePlayerMediaMutation, usePlayersQuery, usePresetsQuery } from '~/hooks/api'
-import { Card, CardContent, CardHeader, CardTitle } from '~/ui/Card'
-import { usePlayerStates } from '~/providers/playerStates'
+import { Card, CardContent, CardHeader } from '~/ui/Card'
 import { Input } from '~/ui/Input'
 import { useCurrentPlayer } from '~/providers/currentPlayer'
 
@@ -13,13 +12,13 @@ const Root = styled("div", {
   base: {
     display: "flex",
     justifyContent: "center",
-    padding: theme.space[4]
+    padding: theme.space[2]
   },
 });
 
 const Content = styled("div", {
   base: {
-    ...mixin.stack("4"),
+    ...mixin.stack("2"),
     maxWidth: theme.size.md,
     width: "100%"
   }
@@ -37,17 +36,12 @@ export function Home() {
 }
 
 function StatusCard() {
-  const { connection } = usePlayerStates()
   const presetsQuery = usePresetsQuery()
   const playersQuery = usePlayersQuery()
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>
-          <div>Websocket: {connection()}</div>
-        </CardTitle>
-      </CardHeader>
+      <CardHeader>Test</CardHeader>
       <CardContent class={style({ overflowX: "auto" })}>
         <table>
           <thead>
@@ -110,15 +104,17 @@ function PlayerControl() {
   return (
     <Show when={currentPlayerState()}>
       {currentPlayerState =>
-        <div class={style({ ...mixin.stack("4") })}>
-          <div class={style({ ...mixin.row("4"), alignItems: "center" })}>
-            <Input class={style({ flex: "1" })} disabled={playerPlayUriMutation.isLoading} ref={playerPlayUri!} type="text" placeholder="Play URL"></Input>
+        <div class={style({ ...mixin.stack("2") })}>
+          <div class={style({ ...mixin.row("2"), alignItems: "center" })}>
+            <Input class={style({ flex: "1" })} disabled={playerPlayUriMutation.isLoading} ref={playerPlayUri!} type="text" placeholder="URL"></Input>
             <Button disabled={playerPlayUriMutation.isLoading} onClick={playerPlayUriSubmit}>Play</Button>
           </div>
           <For each={presetsQuery.data}>
             {preset =>
               <Button disabled={playerPlayPresetMutation.isLoading} variant={preset.url == currentPlayerState().uri ? "default" : "outline"} onClick={() => playerPlayPresetMutation.mutate({ preset: preset.id, id: currentPlayerState().id })}>
-                {preset.name}
+                <div class={style({ ...mixin.textLine() })}>
+                  {preset.name}
+                </div>
               </Button>}
           </For>
         </div>

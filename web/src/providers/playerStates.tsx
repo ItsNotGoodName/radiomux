@@ -10,7 +10,7 @@ import {
 import { relativeWsUrl } from '~/common';
 
 type PlayerStatesContextType = {
-  connection: Accessor<string>
+  webSocketState: Accessor<WebSocketState>
   playerStates: Array<ApiPlayerState>,
 };
 
@@ -18,12 +18,17 @@ const PlayerStatesContext = createContext<PlayerStatesContextType>();
 
 type PlayerStatesContextProps = {};
 
+export enum WebSocketState {
+  Connecting,
+  Connected,
+  Disconnecting,
+  Disconnected,
+}
+
 export const PlayerStatesProvider: ParentComponent<PlayerStatesContextProps> = (props) => {
   const ws = createReconnectingWS(relativeWsUrl("/api/ws"));
 
-  const wsStates = ["Connecting", "Connected", "Disconnecting", "Disconnected"];
-  const wsState = createWSState(ws);
-  const connection = () => wsStates[wsState()]
+  const webSocketState = createWSState(ws);
 
   const [playerStates, setPlayerStates] = createStore<Array<ApiPlayerState>>([])
   ws.addEventListener("message", (msg) => {
@@ -48,7 +53,7 @@ export const PlayerStatesProvider: ParentComponent<PlayerStatesContextProps> = (
 
   const store: PlayerStatesContextType = {
     playerStates,
-    connection
+    webSocketState,
   };
 
   return (

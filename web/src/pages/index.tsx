@@ -1,12 +1,12 @@
 import { Component } from 'solid-js'
 import { styled, } from '@macaron-css/solid'
 import { usePlayerPauseMutation, usePlayerPlayMutation, usePlayerVolumeMutation, } from '~/hooks/api'
-import { Player } from '~/components/Player'
+import { ConnectionIndicator, Player } from '~/components/Player'
 import { Outlet, Route } from '@solidjs/router'
 import { Home } from './Home'
 import { mixin, theme } from '~/ui/theme'
 import { AUTO_MODE, DARK_MODE, LIGHT_MODE, themeMode, themeModeClass, toggleThemeMode } from '~/ui/theme-mode'
-import { PlayerStatesProvider, usePlayerStates } from '~/providers/playerStates'
+import { PlayerStatesProvider, WebSocketState, usePlayerStates } from '~/providers/playerStates'
 import { CurrentPlayerProvider, useCurrentPlayer } from '~/providers/currentPlayer'
 import { Button } from '~/ui/Button'
 import { ThemeIcon } from '~/ui/ThemeIcon'
@@ -23,23 +23,53 @@ export const Pages: Component = () => {
 
 const Root = styled("div", {
   base: {
+    minHeight: "100vh",
     display: "flex",
     flexDirection: "column",
-    inset: "0",
-    position: "fixed",
     background: theme.color.background,
     color: theme.color.foreground,
+  },
+});
+
+const Header = styled("div", {
+  base: {
+    height: theme.space[14],
+    position: "sticky",
+    top: "0",
+    width: "100%",
+    background: theme.color.card,
+    borderBottom: `${theme.space.px} solid ${theme.color.border}`,
+    zIndex: "10"
+  },
+});
+
+const HeaderContent = styled("div", {
+  base: {
+    ...mixin.row("2"),
+    alignItems: "center",
+    height: "100%",
+    paddingLeft: theme.space[2],
+    paddingRight: theme.space[2],
   },
 });
 
 const Content = styled("div", {
   base: {
     flex: "1",
-    overflowY: "auto"
+    paddingBottom: theme.space[28]
   },
 });
 
-function App() {
+const Footer = styled("div", {
+  base: {
+    bottom: "0",
+    left: "0",
+    right: "0",
+    position: "fixed",
+  }
+})
+
+function TheHeaderContent() {
   const themeTitle = () => {
     switch (themeMode()) {
       case AUTO_MODE:
@@ -53,51 +83,33 @@ function App() {
     }
   }
 
+  const { webSocketState } = usePlayerStates()
+
+  const wsStates = ["Connecting", "Connected", "Disconnecting", "Disconnected"];
+
   return (
-    <PlayerStatesProvider>
-      <CurrentPlayerProvider>
-        <Root class={themeModeClass()}>
-          <Header>
-            <HeaderContent>
-              <Button size='icon' variant='ghost'>
-                <RiSystemMenuLine class={style({ ...mixin.size("8") })} />
-              </Button>
-              <Button size='icon' variant='ghost' onClick={toggleThemeMode} title={themeTitle()}>
-                <ThemeIcon class={style({ ...mixin.size("8") })} />
-              </Button>
-            </HeaderContent>
-          </Header>
-          <Content>
-            <Outlet />
-          </Content>
-          <div>
-            <ThePlayer />
-          </div>
-        </Root>
-      </CurrentPlayerProvider>
-    </PlayerStatesProvider>
+    <>
+      <Button size='icon' variant='ghost' title="Menu">
+        <RiSystemMenuLine class={style({ ...mixin.size("8") })} />
+      </Button>
+      <div class={style({ ...mixin.textLine(), display: "flex", flex: "1", alignItems: "center" })}>
+        RadioMux
+      </div>
+      <div class={style({ ...mixin.row("2"), alignItems: "center" })}>
+        <ConnectionIndicator
+          title={"WebSocket " + wsStates[webSocketState()]}
+          connected={webSocketState() == WebSocketState.Connected}
+          disconnected={webSocketState() == WebSocketState.Disconnected || webSocketState() == WebSocketState.Disconnecting}
+          connecting={webSocketState() == WebSocketState.Connecting}
+        />
+        <Button size='icon' variant='ghost' onClick={toggleThemeMode} title={themeTitle()}>
+          <ThemeIcon class={style({ ...mixin.size("8") })} />
+        </Button>
+      </div>
+    </>
   )
+
 }
-
-const Header = styled("div", {
-  base: {
-    height: theme.space[14],
-    width: "100%",
-    background: theme.color.card,
-    borderBottom: `${theme.space.px} solid ${theme.color.border}`,
-  },
-});
-
-const HeaderContent = styled("div", {
-  base: {
-    ...mixin.row("4"),
-    justifyContent: "space-between",
-    alignItems: "center",
-    height: "100%",
-    paddingLeft: theme.space[4],
-    paddingRight: theme.space[4],
-  },
-});
 
 function ThePlayer() {
   // Queries
@@ -122,3 +134,26 @@ function ThePlayer() {
     />
   )
 }
+
+function App() {
+  return (
+    <PlayerStatesProvider>
+      <CurrentPlayerProvider>
+        <Root class={themeModeClass()}>
+          <Header>
+            <HeaderContent>
+              <TheHeaderContent />
+            </HeaderContent>
+          </Header>
+          <Content>
+            <Outlet />
+          </Content>
+          <Footer>
+            <ThePlayer />
+          </Footer>
+        </Root>
+      </CurrentPlayerProvider>
+    </PlayerStatesProvider>
+  )
+}
+

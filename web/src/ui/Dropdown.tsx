@@ -6,7 +6,7 @@ import Dismiss from 'solid-dismiss';
 import { Portal } from 'solid-js/web';
 
 type Props = {
-  options?: Options,
+  options?: Partial<Options>,
   button: (ref: Setter<HTMLElement | undefined>) => JSX.Element,
   children: (ref: Setter<HTMLElement | undefined>, setOpen: Setter<boolean>) => JSX.Element
 }

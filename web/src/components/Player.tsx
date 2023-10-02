@@ -1,6 +1,6 @@
 import { style } from "@macaron-css/core";
 import { styled } from "@macaron-css/solid";
-import { RiDeviceDeviceFill, RiMediaPauseFill, RiMediaPlayFill, RiMediaVolumeDownFill, RiMediaVolumeMuteFill, RiMediaVolumeUpFill } from "solid-icons/ri";
+import { RiDeviceDeviceFill, RiMediaPauseFill, RiMediaPlayFill, RiMediaVolumeDownFill, RiMediaVolumeMuteFill, RiMediaVolumeUpFill, RiSystemRefreshFill } from "solid-icons/ri";
 import { Component, For, Show, } from "solid-js";
 import { Button } from "~/ui/Button";
 import { minScreen, mixin, theme, tw } from "~/ui/theme";
@@ -10,11 +10,11 @@ const Root = styled("div", {
   base: {
     background: theme.color.card,
     color: theme.color.cardForeground,
-    height: theme.space[32],
+    height: theme.space[28],
     borderTop: `1px solid ${theme.color.border}`,
     "@media": {
       [minScreen.md]: {
-        height: theme.space[16],
+        height: theme.space[14],
       },
     },
   }
@@ -24,12 +24,13 @@ const Content = styled("div", {
   base: {
     display: "flex",
     "height": "100%",
-    paddingLeft: theme.space[4],
-    paddingRight: theme.space[4],
+    paddingLeft: theme.space[2],
+    paddingRight: theme.space[2],
     flexDirection: "column",
     "@media": {
       [minScreen.md]: {
         flexDirection: "row",
+        gap: theme.space[2]
       },
     },
   }
@@ -77,13 +78,10 @@ const Text = styled("p", {
 const Thumbnail = styled("img", {
   base: {
     ...mixin.size("10"),
-    color: theme.color.cardForeground,
-    border: `1px solid ${theme.color.border}`,
-    borderRadius: theme.borderRadius.full
   }
 })
 
-const ConnectionIndicator = styled("div", {
+export const ConnectionIndicator = styled("div", {
   base: {
     ...mixin.size("4"),
     borderRadius: theme.borderRadius.full,
@@ -93,8 +91,15 @@ const ConnectionIndicator = styled("div", {
       true: {
         background: "lime"
       },
-      false: {
+    },
+    disconnected: {
+      true: {
         background: "red"
+      }
+    },
+    connecting: {
+      true: {
+        background: "orange"
       }
     }
   }
@@ -143,11 +148,16 @@ type Props = {
   player?: {
     id: number
     name: string
+    ready: boolean
     connected: boolean
-    title: string
     playing: boolean
+    loading: boolean,
     volume: number
     muted: boolean
+    title: string
+    genre: string
+    station: string
+    uri: string
   }
   players: Array<{
     id: number
@@ -166,19 +176,65 @@ export const Player: Component<Props> = (props) => {
   const volumeDisabled = () => props.player == undefined || !props.player.connected
 
   const playDisabled = () => props.player == undefined || !props.player.connected || props.playLoading
-  const playTitle = () => {
+  const playStatus = () => {
     if (props.player == undefined) {
-      return ""
+      return "Unknown"
     }
     return props.player?.playing ? "Playing" : "Paused"
   }
+  const loading = () => props.player && (props.player.loading && !props.player.playing)
 
   return (
     <Root>
       <Content>
         <ContentChild>
-          <Thumbnail src="/favicon.svg" />
+          <div class={style({ display: "flex", alignItems: "center" })}>
+            <Dropdown options={{ placement: "top" }} button={
+              ref =>
+                <Button title="Media" ref={ref} size="icon" variant="ghost" class={style({
+                  color: theme.color.cardForeground,
+                  border: `1px solid ${theme.color.border}`,
+                  borderRadius: theme.borderRadius.full,
+                  overflow: "hidden"
+                })}>
+                  <Thumbnail src="/favicon.svg" alt="Media Thumbnail" />
+                </Button>
+            }>
+              {ref =>
+                <div ref={ref} class={style({ padding: theme.space[2], maxWidth: theme.size.md, width: "100%" })}>
+                  <Popover class={style({ padding: theme.space[2], overflowX: "auto" })}>
+                    <Show when={props.player}>
+                      {player =>
+                        <table>
+                          <tbody>
+                            <tr>
+                              <th>Title</th>
+                              <td>{player().title}</td>
+                            </tr>
+                            <tr>
+                              <th>Genre</th>
+                              <td>{player().genre}</td>
+                            </tr>
+                            <tr>
+                              <th>Station</th>
+                              <td>{player().station}</td>
+                            </tr>
+                            <tr>
+                              <th>URI</th>
+                              <td>{player().uri}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      }
+                    </Show>
+                  </Popover>
+                </div>}
+            </Dropdown>
+          </div>
           <Text title={props.player?.title}>{props.player?.title}</Text>
+          <Show when={loading()}>
+            <RiSystemRefreshFill class={style({ marginLeft: "auto", ...tw.animateSpin, ...mixin.size("6") })} />
+          </Show>
         </ContentChild>
         <ContentChild>
           <MainControl>
@@ -187,7 +243,7 @@ export const Player: Component<Props> = (props) => {
               size="icon"
               variant="ghost"
               onClick={props.onPlayClick}
-              title={playTitle()}
+              title={playStatus()}
             >
               <Show when={props.player?.playing} fallback={
                 <RiMediaPlayFill class={style({ ...mixin.size("9") })} />
@@ -202,7 +258,7 @@ export const Player: Component<Props> = (props) => {
                 <>
                   <PlayerGroup>
                     <div>
-                      <ConnectionIndicator connected={player().connected} />
+                      <ConnectionIndicator connected={player().connected} disconnected={!player().connected} />
                     </div>
                     <Text title={player().name}>{player().name}</Text>
                   </PlayerGroup>
@@ -230,7 +286,7 @@ export const Player: Component<Props> = (props) => {
               </Button>
             }>
               {ref =>
-                <div ref={ref} class={style({ padding: theme.space[2], width: theme.space[60] })}>
+                <div ref={ref} class={style({ padding: theme.space[2], maxWidth: theme.space[60], width: "100%" })}>
                   <Popover class={style({ padding: theme.space[2] })}>
                     <For each={props.players}>
                       {player => (
@@ -241,7 +297,7 @@ export const Player: Component<Props> = (props) => {
                           class={style({ ...mixin.row("2",), width: "100%", justifyContent: "start" })}
                         >
                           <div>
-                            <ConnectionIndicator connected={player.connected} />
+                            <ConnectionIndicator connected={player.connected} disconnected={!player.connected} />
                           </div>
                           <Text title={player.name}>{player.name}</Text>
                         </Button>
