@@ -1,14 +1,15 @@
 package apiws
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 
 	"github.com/ItsNotGoodName/radiomux/internal"
 	"github.com/ItsNotGoodName/radiomux/internal/android"
+	"github.com/ItsNotGoodName/radiomux/internal/core"
 	"github.com/ItsNotGoodName/radiomux/internal/openapi"
 	"github.com/ItsNotGoodName/radiomux/pkg/diff"
-	"github.com/rs/zerolog/log"
 )
 
 type playerStateChange struct {
@@ -16,32 +17,34 @@ type playerStateChange struct {
 	changed diff.Changed
 }
 
-type PlayerStateVisitor struct {
+type playerStateVisitor struct {
 	stateService *android.StateService
+	playerStore  core.PlayerStore
 
-	Empty              bool
+	empty              bool
 	refresh            bool
 	playerStateChanges []playerStateChange
 }
 
-func NewPlayerState(stateService *android.StateService) *PlayerStateVisitor {
-	return &PlayerStateVisitor{
+func newPlayerStateVisitor(stateService *android.StateService, playerStore core.PlayerStore) *playerStateVisitor {
+	return &playerStateVisitor{
 		stateService:       stateService,
-		Empty:              false,
+		playerStore:        playerStore,
+		empty:              false,
 		refresh:            true,
 		playerStateChanges: []playerStateChange{},
 	}
 }
 
-func (ps *PlayerStateVisitor) popEmpty() bool {
-	if ps.Empty {
+func (ps *playerStateVisitor) popEmpty() bool {
+	if ps.empty {
 		return true
 	}
-	ps.Empty = true
+	ps.empty = true
 	return false
 }
 
-func (ps *PlayerStateVisitor) popRefresh() bool {
+func (ps *playerStateVisitor) popRefresh() bool {
 	if ps.refresh {
 		ps.refresh = false
 		return true
@@ -49,21 +52,19 @@ func (ps *PlayerStateVisitor) popRefresh() bool {
 	return false
 }
 
-func (ps *PlayerStateVisitor) queue(refresh bool) {
-	ps.Empty = false
+func (ps *playerStateVisitor) queue(refresh bool) {
+	ps.empty = false
 	if !ps.refresh {
 		ps.refresh = refresh
 	}
 }
 
-func (ps *PlayerStateVisitor) StateChange(msg android.StateChange) {
-	log.Debug().Msgf("StateChange: Start: %+v", ps)
+func (ps *playerStateVisitor) StateChange(msg android.StateChange) {
 	for i := range ps.playerStateChanges {
 		if ps.playerStateChanges[i].id == msg.ID {
 			// Old player update
 			ps.playerStateChanges[i].changed = ps.playerStateChanges[i].changed.Merge(msg.Changed)
 			ps.queue(false)
-			log.Debug().Msgf("StateChange: End: %+v", ps)
 			return
 		}
 	}
@@ -71,15 +72,12 @@ func (ps *PlayerStateVisitor) StateChange(msg android.StateChange) {
 	// New player was added
 	ps.playerStateChanges = append(ps.playerStateChanges, playerStateChange{id: msg.ID, changed: diff.ChangedAll})
 	ps.queue(true)
-	log.Debug().Msgf("StateChange: End: %+v", ps)
 }
 
-func (ps *PlayerStateVisitor) Visit() ([]byte, error) {
-	log.Debug().Msgf("Visit: Start: %+v", ps)
+func (ps *playerStateVisitor) Visit() ([]byte, error) {
 	if ps.popEmpty() {
 		// No state needs updating
-		log.Debug().Msgf("Visit: End: %+v", ps)
-		return nil, ErrVisitorEmpty
+		return nil, errVisitorEmpty
 	}
 
 	evt := openapi.Event{}
@@ -87,9 +85,16 @@ func (ps *PlayerStateVisitor) Visit() ([]byte, error) {
 	if ps.popRefresh() {
 		// State needs a full refresh
 		playerStates := ps.stateService.List()
+		names := make([]string, len(playerStates))
+		for i := range playerStates {
+			f, err := ps.playerStore.Get(context.TODO(), playerStates[i].ID)
+			if err == nil {
+				names[i] = f.Name
+			}
+		}
 
 		err := evt.MergeEventDataPlayerState(openapi.EventDataPlayerState{
-			Data: openapi.ConvertPlayerStates(playerStates),
+			Data: openapi.ConvertPlayerStates(playerStates, names),
 		})
 		if err != nil {
 			return nil, err
@@ -133,6 +138,9 @@ func (ps *PlayerStateVisitor) Visit() ([]byte, error) {
 		}
 	}
 
-	log.Debug().Msgf("Visit: End: %+v", ps)
 	return json.Marshal(evt)
+}
+
+func (ps playerStateVisitor) HasMore() bool {
+	return !ps.empty
 }

@@ -73,18 +73,18 @@ func ConvertPlaybackError(e android.PlaybackError) string {
 	return e.String()
 }
 
-func ConvertPlayerStates(states []android.State) []PlayerState {
+func ConvertPlayerStates(states []android.State, names []string) []PlayerState {
 	players := make([]PlayerState, 0, len(states))
-	for _, s := range states {
-		players = append(players, ConvertPlayerState(&s))
+	for i, s := range states {
+		players = append(players, ConvertPlayerState(&s, names[i]))
 	}
 	return players
 }
 
-func ConvertPlayerState(s *android.State) PlayerState {
+func ConvertPlayerState(s *android.State, name string) PlayerState {
 	return PlayerState{
 		Id:            s.ID,
-		Name:          "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.",
+		Name:          name,
 		Connected:     s.Connected,
 		Ready:         s.Ready,
 		MinVolume:     s.MinVolume,

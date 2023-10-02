@@ -46,12 +46,13 @@ func (s *StateMemPubSub) Subscribe() (<-chan StateChange, func()) {
 	id := atomic.AddInt32(&s.id, 1)
 
 	s.mu.Lock()
+	log.Debug().Str("package", "android").Int32("id", id).Msg("Subscribe to state")
 	s.subscribers[id] = msg
-	log.Debug().Int32("id", id).Msg("StateSubscribe")
 	s.mu.Unlock()
 
 	return msg, sync.OnceFunc(func() {
 		s.mu.Lock()
+		log.Debug().Str("package", "android").Int32("id", id).Msg("Unsubscribe from state")
 		delete(s.subscribers, id)
 		close(msg)
 		s.mu.Unlock()

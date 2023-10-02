@@ -9,6 +9,7 @@ import (
 	"github.com/ItsNotGoodName/radiomux/internal/android"
 	"github.com/ItsNotGoodName/radiomux/internal/androidws"
 	"github.com/ItsNotGoodName/radiomux/internal/api"
+	"github.com/ItsNotGoodName/radiomux/internal/apiws"
 	"github.com/ItsNotGoodName/radiomux/internal/build"
 	"github.com/ItsNotGoodName/radiomux/internal/bus"
 	"github.com/ItsNotGoodName/radiomux/internal/file"
@@ -73,7 +74,7 @@ func run(filePath *string) lieut.Executor {
 		androidController, c2 := android.NewController(androidStateService, bus)
 		defer c2()
 		androidWSServer := androidws.NewServer(playerStore, androidController, androidStateService)
-		apiWSServer := Websocket{stateService: androidStateService}
+		apiWSServer := apiws.NewServer(androidStateService, playerStore)
 		apiServer := api.NewServer(playerStore, presetStore, androidController)
 
 		// DEBUG START
