@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	"github.com/ItsNotGoodName/radiomux/internal/core"
+	"github.com/rs/zerolog/log"
 )
 
 var (
@@ -63,6 +64,7 @@ func (s *Controller) PlayerConnect(id int64) (func(), error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
+	log.Debug().Str("package", "android").Int64("id", id).Msg("Connect to controller")
 	_, ok := s.players[id]
 	if ok {
 		return nil, ErrPlayerConflict
@@ -78,6 +80,7 @@ func (s *Controller) PlayerConnect(id int64) (func(), error) {
 		s.mu.Lock()
 		defer s.mu.Unlock()
 
+		log.Debug().Str("package", "android").Int64("id", id).Msg("Disconnect from controller")
 		if _, found := s.players[id]; !found {
 			return
 		}

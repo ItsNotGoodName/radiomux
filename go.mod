@@ -10,17 +10,14 @@ require (
 	github.com/samber/lo v1.38.1
 	github.com/thejerf/suture/v4 v4.0.2
 	google.golang.org/protobuf v1.31.0
-	nhooyr.io/websocket v1.8.7
 )
 
 require (
 	github.com/apapsch/go-jsonmerge/v2 v2.0.0 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
-	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/uuid v1.3.1
-	github.com/gorilla/websocket v1.5.0 // indirect
-	github.com/klauspost/compress v1.16.7 // indirect
+	github.com/gorilla/websocket v1.5.0
 	github.com/labstack/gommon v0.4.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect

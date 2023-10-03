@@ -36,6 +36,71 @@ func auth(ctx context.Context, c echo.Context, playerStore core.PlayerStore) (in
 	return id, nil
 }
 
+func handleEvent(ctx context.Context, id int64, busEvent android.BusEvent, event *protos.Event) error {
+	switch m := event.Payload.(type) {
+	case *protos.Event_OnMediaMetadataChanged:
+		return busEvent.MediaMetadataChanged(ctx, id, android.EventMediaMetadataChanged{
+			MediaMetadata: convertMediaMetadata(m.OnMediaMetadataChanged.GetMediaMetadata()),
+		})
+	case *protos.Event_OnPlaylistMetadataChanged:
+		return busEvent.PlaylistMetadataChanged(ctx, id, android.EventPlaylistMetadataChanged{
+			MediaMetadata: convertMediaMetadata(m.OnPlaylistMetadataChanged.GetMediaMetadata()),
+		})
+	case *protos.Event_OnIsLoadingChanged:
+		return busEvent.IsLoadingChanged(ctx, id, android.EventIsLoadingChanged{
+			IsLoading: m.OnIsLoadingChanged.GetIsLoading(),
+		})
+	case *protos.Event_OnPlaybackStateChanged:
+		return busEvent.PlaybackStateChanged(ctx, id, android.EventPlaybackStateChanged{
+			PlaybackState: android.PlaybackState(m.OnPlaybackStateChanged.GetPlaybackState()),
+		})
+	case *protos.Event_OnIsPlayingChanged:
+		return busEvent.IsPlayingChanged(ctx, id, android.EventIsPlayingChanged{
+			IsPlaying: m.OnIsPlayingChanged.GetIsPlaying(),
+		})
+	case *protos.Event_OnPlayerError:
+		error := m.OnPlayerError.GetError()
+		if error == nil {
+			return nil
+		}
+		return busEvent.PlayerError(ctx, id, android.EventPlayerError{
+			PlaybackError: android.PlaybackError{
+				Code:        android.PlaybackCode(error.GetErrorCode()),
+				TimestampMs: error.GetTimestampMs(),
+			},
+		})
+	case *protos.Event_OnPlaybackParametersChanged:
+		return busEvent.PlaybackParametersChanged(ctx, id, android.EventPlaybackParametersChanged{
+			PlaybackParameters: android.PlaybackParameters{
+				Speed: int(m.OnPlaybackParametersChanged.GetPlaybackParameters().GetSpeed()),
+				Pitch: int(m.OnPlaybackParametersChanged.GetPlaybackParameters().GetPitch()),
+			},
+		})
+	case *protos.Event_OnVolumeChanged:
+		return busEvent.VolumeChanged(ctx, id, android.EventVolumeChanged{
+			Volume: float64(m.OnVolumeChanged.GetVolume()),
+		})
+	case *protos.Event_OnDeviceInfoChanged:
+		return busEvent.DeviceInfoChanged(ctx, id, android.EventDeviceInfoChanged{
+			DeviceInfo: android.DeviceInfo{
+				MinVolume: int(m.OnDeviceInfoChanged.GetDeviceInfo().GetMinVolume()),
+				MaxVolume: int(m.OnDeviceInfoChanged.GetDeviceInfo().GetMaxVolume()),
+			},
+		})
+	case *protos.Event_OnDeviceVolumeChanged:
+		return busEvent.DeviceVolumeChanged(ctx, id, android.EventDeviceVolumeChanged{
+			Volume: int(m.OnDeviceVolumeChanged.GetVolume()),
+			Muted:  m.OnDeviceVolumeChanged.GetMuted(),
+		})
+	case *protos.Event_OnCurrentUriChanged:
+		return busEvent.CurrentURIChanged(ctx, id, android.EventCurrentURIChanged{
+			URI: m.OnCurrentUriChanged.GetUri(),
+		})
+	default:
+		return fmt.Errorf("received invalid command: %T", m)
+	}
+}
+
 func convertMediaMetadata(x *protos.MediaMetadata) *android.MediaMetadata {
 	if x == nil {
 		return &android.MediaMetadata{}

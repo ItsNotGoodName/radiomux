@@ -7,7 +7,6 @@ import (
 	"github.com/ItsNotGoodName/radiomux/internal/android"
 	"github.com/ItsNotGoodName/radiomux/internal/core"
 	"github.com/labstack/echo/v4"
-	"nhooyr.io/websocket"
 )
 
 type Server struct {
@@ -46,13 +45,12 @@ func (s Server) Handle(c echo.Context) error {
 	// Setup websocket
 	w := c.Response()
 	r := c.Request()
-	conn, err := websocket.Accept(w, r, nil)
+	conn, err := wsUpgrade(w, r)
 	if err != nil {
 		return err
 	}
-	defer conn.Close(websocket.StatusInternalError, "the sky is falling")
 
-	newConnection(conn).handle(ctx, s.controller, s.busEvent, id)
+	newConnection().handle(ctx, id, conn, s.controller, s.busEvent)
 
 	return nil
 }
