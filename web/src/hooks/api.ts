@@ -26,7 +26,13 @@ export const usePlayerPauseMutation = () => createMutation<void, Error, number>(
       .then(extractApiData)
 })
 
-export const usePlayerVolumeMutation = () => createMutation<void, Error, { id: number, delta: number, mute?: boolean }>({
+export const usePlayerSeekMutation = () => createMutation<void, Error, number>({
+  mutationFn: (id: number) =>
+    POST("/players/{id}/seek", { params: { path: { id } } })
+      .then(extractApiData)
+})
+
+export const usePlayerVolumeMutation = () => createMutation<void, Error, { id: number, delta?: number, mute?: boolean }>({
   mutationFn: ({ id, delta, mute }) =>
     POST("/players/{id}/volume", { params: { path: { id }, query: { delta, mute } } })
       .then(extractApiData)

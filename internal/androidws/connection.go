@@ -78,7 +78,6 @@ func (c connection) reader(ctx context.Context, cancel context.CancelFunc, conn 
 		// Read command or end on error
 		_, data, err := conn.ReadMessage()
 		if err != nil {
-			log.Error().Msg("IS CLOSED")
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure, websocket.CloseNormalClosure) {
 				log.Err(err).Msg("Failed to read from WebSocket")
 			}

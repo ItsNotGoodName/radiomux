@@ -271,15 +271,17 @@ func (s *Server) PostPlayersIdMedia(c echo.Context, id int64, params openapi.Pos
 func (s *Server) PostPlayersIdVolume(c echo.Context, id int64, params openapi.PostPlayersIdVolumeParams) error {
 	ctx := c.Request().Context()
 
-	if params.Delta > 0 {
-		err := s.androidBus.Handle(ctx, id, android.CommandIncreaseDeviceVolume{})
-		if err != nil {
-			return err
-		}
-	} else if params.Delta < 0 {
-		err := s.androidBus.Handle(ctx, id, android.CommandDecreaseDeviceVolume{})
-		if err != nil {
-			return err
+	if params.Delta != nil {
+		if *params.Delta > 0 {
+			err := s.androidBus.Handle(ctx, id, android.CommandIncreaseDeviceVolume{})
+			if err != nil {
+				return err
+			}
+		} else if *params.Delta < 0 {
+			err := s.androidBus.Handle(ctx, id, android.CommandDecreaseDeviceVolume{})
+			if err != nil {
+				return err
+			}
 		}
 	}
 

@@ -136,7 +136,7 @@ type PostPlayersIdPresetParams struct {
 
 // PostPlayersIdVolumeParams defines parameters for PostPlayersIdVolume.
 type PostPlayersIdVolumeParams struct {
-	Delta int   `form:"delta" json:"delta"`
+	Delta *int  `form:"delta,omitempty" json:"delta,omitempty"`
 	Mute  *bool `form:"mute,omitempty" json:"mute,omitempty"`
 }
 
@@ -521,9 +521,9 @@ func (w *ServerInterfaceWrapper) PostPlayersIdVolume(ctx echo.Context) error {
 
 	// Parameter object where we will unmarshal all parameters from the context
 	var params PostPlayersIdVolumeParams
-	// ------------- Required query parameter "delta" -------------
+	// ------------- Optional query parameter "delta" -------------
 
-	err = runtime.BindQueryParameter("form", true, true, "delta", ctx.QueryParams(), &params.Delta)
+	err = runtime.BindQueryParameter("form", true, false, "delta", ctx.QueryParams(), &params.Delta)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter delta: %s", err))
 	}

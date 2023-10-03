@@ -1,6 +1,6 @@
 import { Component } from 'solid-js'
 import { styled, } from '@macaron-css/solid'
-import { usePlayerPauseMutation, usePlayerPlayMutation, usePlayerVolumeMutation, } from '~/hooks/api'
+import { usePlayerPauseMutation, usePlayerPlayMutation, usePlayerSeekMutation, usePlayerVolumeMutation, } from '~/hooks/api'
 import { ConnectionIndicator, Player } from '~/components/Player'
 import { Outlet, Route } from '@solidjs/router'
 import { Home } from './Home'
@@ -120,17 +120,20 @@ function ThePlayer() {
   const playerVolumeMutation = usePlayerVolumeMutation()
   const playerPlayMutation = usePlayerPlayMutation()
   const playerPauseMutation = usePlayerPauseMutation()
+  const playerSeekMutation = usePlayerSeekMutation()
 
   return (
     <Player
       player={currentPlayerState()}
       players={playerStates}
       onPlayClick={() => currentPlayerState()?.playing ? playerPauseMutation.mutate(currentPlayerId()) : playerPlayMutation.mutate(currentPlayerId())}
-      playLoading={playerPauseMutation.isLoading || playerPlayMutation.isLoading}
+      playDisabled={playerPauseMutation.isLoading || playerPlayMutation.isLoading}
       onVolumeDownClick={() => playerVolumeMutation.mutate({ id: currentPlayerId(), delta: -1 })}
       onVolumeUpClick={() => playerVolumeMutation.mutate({ id: currentPlayerId(), delta: 1 })}
-      onVolumeClick={() => playerVolumeMutation.mutate({ id: currentPlayerId(), delta: 0, mute: !currentPlayerState()?.muted })}
+      onVolumeClick={() => playerVolumeMutation.mutate({ id: currentPlayerId(), mute: !currentPlayerState()?.muted })}
       onPlayerClick={(id) => setCurrentPlayerId((prev) => prev == id ? 0 : id)}
+      onSeekClick={() => playerSeekMutation.mutate(currentPlayerId())}
+      seekDisabled={playerSeekMutation.isLoading}
     />
   )
 }

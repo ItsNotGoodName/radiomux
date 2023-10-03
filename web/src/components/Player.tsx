@@ -134,6 +134,19 @@ const IconRiDeviceDeviceFill = styled(RiDeviceDeviceFill, {
   }
 })
 
+const IconRiSystemRefreshFill = styled(RiSystemRefreshFill, {
+  base: {
+    ...mixin.size("6")
+  },
+  variants: {
+    loading: {
+      true: {
+        ...tw.animateSpin,
+      }
+    }
+  }
+})
+
 const Popover = styled("div", {
   base: {
     ...tw.shadowMd,
@@ -165,24 +178,23 @@ type Props = {
     connected: boolean
   }>
   onPlayClick?: () => void
-  playLoading?: boolean,
+  playDisabled?: boolean,
   onVolumeUpClick?: () => void
   onVolumeDownClick?: () => void
   onVolumeClick?: () => void
   onPlayerClick: (id: number) => void
+  onSeekClick?: () => void
+  seekDisabled?: boolean
 }
 
 export const Player: Component<Props> = (props) => {
-  const volumeDisabled = () => props.player == undefined || !props.player.connected
-
-  const playDisabled = () => props.player == undefined || !props.player.connected || props.playLoading
+  const playDisabled = () => props.player == undefined || !props.player.connected || props.playDisabled || props.seekDisabled
   const playStatus = () => {
     if (props.player == undefined) {
       return "Unknown"
     }
     return props.player?.playing ? "Playing" : "Paused"
   }
-  const loading = () => props.player && (props.player.loading && !props.player.playing)
 
   return (
     <Root>
@@ -232,23 +244,27 @@ export const Player: Component<Props> = (props) => {
             </Dropdown>
           </div>
           <Text title={props.player?.title}>{props.player?.title}</Text>
-          <Show when={loading()}>
-            <RiSystemRefreshFill class={style({ marginLeft: "auto", ...tw.animateSpin, ...mixin.size("6") })} />
+          <Show when={props.player}>
+            {player =>
+              <Button size="icon" variant="ghost" title="Seek" disabled={props.seekDisabled} onClick={props.onSeekClick} class={style({ marginLeft: "auto" })}>
+                <IconRiSystemRefreshFill loading={player().loading || props.seekDisabled} />
+              </Button>
+            }
           </Show>
         </ContentChild>
         <ContentChild>
           <MainControl>
             <Button
-              disabled={playDisabled()}
               size="icon"
               variant="ghost"
+              disabled={playDisabled()}
               onClick={props.onPlayClick}
               title={playStatus()}
             >
               <Show when={props.player?.playing} fallback={
-                <RiMediaPlayFill class={style({ ...mixin.size("9") })} />
+                <RiMediaPlayFill class={style({ ...mixin.size("10") })} />
               }>
-                <RiMediaPauseFill class={style({ ...mixin.size("9") })} />
+                <RiMediaPauseFill class={style({ ...mixin.size("10") })} />
               </Show>
             </Button>
           </MainControl>
@@ -258,22 +274,22 @@ export const Player: Component<Props> = (props) => {
                 <>
                   <PlayerGroup>
                     <div>
-                      <ConnectionIndicator connected={player().connected} disconnected={!player().connected} />
+                      <ConnectionIndicator connected={player().connected} disconnected={!player().connected && !player().ready} connecting={!player().ready && player().connected} />
                     </div>
                     <Text title={player().name}>{player().name}</Text>
                   </PlayerGroup>
                   <VolumeGroup>
-                    <Button disabled={volumeDisabled()} size="icon" variant="ghost" onClick={props.onVolumeDownClick} title="Volume Down">
+                    <Button size="icon" variant="ghost" onClick={props.onVolumeDownClick} title="Volume Down">
                       <RiMediaVolumeDownFill class={style({ ...mixin.size("6") })} />
                     </Button>
-                    <Button disabled={volumeDisabled()} size="icon" variant="ghost" onClick={props.onVolumeClick} title={player().muted ? "Volume Muted" : undefined}>
+                    <Button size="icon" variant="ghost" onClick={props.onVolumeClick} title={player().muted ? "Volume Muted" : undefined}>
                       <Show when={!player().muted} fallback={
                         <RiMediaVolumeMuteFill class={style({ ...mixin.size("6"), color: "red" })} />
                       }>
                         {player().volume}
                       </Show>
                     </Button>
-                    <Button disabled={volumeDisabled()} size="icon" variant="ghost" onClick={props.onVolumeUpClick} title="Volume Up">
+                    <Button size="icon" variant="ghost" onClick={props.onVolumeUpClick} title="Volume Up">
                       <RiMediaVolumeUpFill class={style({ ...mixin.size("6") })} />
                     </Button>
                   </VolumeGroup>

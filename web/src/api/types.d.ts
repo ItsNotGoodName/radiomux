@@ -92,8 +92,8 @@ export interface paths {
   "/players/{id}/volume": {
     post: {
       parameters: {
-        query: {
-          delta: number;
+        query?: {
+          delta?: number;
           mute?: boolean;
         };
         path: {
