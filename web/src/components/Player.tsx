@@ -1,7 +1,7 @@
 import { style } from "@macaron-css/core";
 import { styled } from "@macaron-css/solid";
 import { RiDeviceDeviceFill, RiMediaPauseFill, RiMediaPlayFill, RiMediaVolumeDownFill, RiMediaVolumeMuteFill, RiMediaVolumeUpFill, RiSystemRefreshFill } from "solid-icons/ri";
-import { Component, For, Show, } from "solid-js";
+import { For, Show, } from "solid-js";
 import { Button } from "~/ui/Button";
 import { minScreen, mixin, theme, tw } from "~/ui/theme";
 import { Dropdown, DropdownCard } from "~/ui/Dropdown";
@@ -177,7 +177,7 @@ type Props = {
   seekDisabled?: boolean
 }
 
-export const Player: Component<Props> = (props) => {
+export function Player(props: Props) {
   const playDisabled = () => props.player == undefined || !props.player.connected || props.playDisabled || props.seekDisabled
   const playStatus = () => {
     if (props.player == undefined) {
@@ -193,7 +193,7 @@ export const Player: Component<Props> = (props) => {
           <div class={style({ display: "flex", alignItems: "center" })}>
             <Dropdown options={{ placement: "top" }} button={
               ref =>
-                <Button title="Media" ref={ref} size="icon" variant="ghost" class={style({
+                <Button disabled={props.player == undefined} title="Media" ref={ref} size="icon" variant="ghost" class={style({
                   color: theme.color.cardForeground,
                   border: `1px solid ${theme.color.border}`,
                   borderRadius: theme.borderRadius.full,
@@ -234,13 +234,9 @@ export const Player: Component<Props> = (props) => {
             </Dropdown>
           </div>
           <Text title={props.player?.title}>{props.player?.title}</Text>
-          <Show when={props.player}>
-            {player =>
-              <Button size="icon" variant="ghost" title="Seek" disabled={props.seekDisabled} onClick={props.onSeekClick} class={style({ marginLeft: "auto" })}>
-                <IconRiSystemRefreshFill loading={player().loading || props.seekDisabled} />
-              </Button>
-            }
-          </Show>
+          <Button size="icon" variant="ghost" title="Seek" disabled={props.player == undefined || props.seekDisabled} onClick={props.onSeekClick} class={style({ marginLeft: "auto" })}>
+            <IconRiSystemRefreshFill loading={props.player?.loading || props.seekDisabled} />
+          </Button>
         </ContentChild>
         <ContentChild>
           <MainControl>

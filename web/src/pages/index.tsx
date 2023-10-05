@@ -15,7 +15,7 @@ import { RiSystemMenuLine } from 'solid-icons/ri'
 
 const Header = styled("div", {
   base: {
-    ...tw.text2xl,
+    ...tw.textXl,
     height: theme.space[14],
     position: "sticky",
     top: "0",
@@ -53,7 +53,7 @@ function HeaderContent() {
       paddingRight: theme.space[2],
     })}>
       <Button size='icon' variant='ghost' title="Menu">
-        <RiSystemMenuLine class={style({ ...mixin.size("8") })} />
+        <RiSystemMenuLine class={style({ ...mixin.size("6") })} />
       </Button>
       <div class={style({
         ...mixin.textLine(),
@@ -71,7 +71,7 @@ function HeaderContent() {
           connecting={webSocketState() == WebSocketState.Connecting}
         />
         <Button size='icon' variant='ghost' onClick={toggleThemeMode} title={themeTitle()}>
-          <ThemeIcon class={style({ ...mixin.size("8") })} />
+          <ThemeIcon class={style({ ...mixin.size("6") })} />
         </Button>
       </div>
     </div>
