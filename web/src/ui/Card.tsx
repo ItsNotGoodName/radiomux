@@ -13,7 +13,10 @@ export const Card = styled("div", {
 
 export const CardContent = styled("div", {
   base: {
-    padding: `0 ${theme.space[6]} ${theme.space[6]} ${theme.space[6]}`
+    padding: `0 ${theme.space[6]} ${theme.space[6]} ${theme.space[6]}`,
+    ":first-child": {
+      paddingTop: theme.space[6]
+    }
   }
 })
 

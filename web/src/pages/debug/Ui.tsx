@@ -8,6 +8,7 @@ import { Input } from "~/ui/Input";
 import { Table, TableBody, TableCaption, TableData, TableHead, TableHeader, TableRow } from "~/ui/Table";
 import { Badge } from "~/ui/Badge";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "~/ui/Dialog";
+import { Textarea } from "~/ui/Textarea";
 
 const Root = styled("div", {
   base: {
@@ -104,8 +105,8 @@ export function Ui() {
           }
         </For>
       </Row>
-      <div>
-        <Dialog button={ref => <Button ref={ref}>Dialog</Button>}>
+      <Dialog button={ref => <Button ref={ref}>Dialog</Button>}>
+        {setOpen =>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Header Title</DialogTitle>
@@ -114,11 +115,12 @@ export function Ui() {
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
-              <Button>Footer Button</Button>
+              <Button onClick={[setOpen, false]}>Footer Button</Button>
             </DialogFooter>
           </DialogContent>
-        </Dialog>
-      </div>
+        }
+      </Dialog>
+      <Textarea placeholder="Placeholder"></Textarea>
     </Root >
   )
 }

@@ -1,6 +1,6 @@
 import { styled } from "@macaron-css/solid";
 import { minScreen, mixin, theme, tw } from "./theme";
-import { JSX, ParentProps, Setter, Show, createSignal } from "solid-js";
+import { JSX, Setter, Show, createSignal } from "solid-js";
 import { themeModeClass } from "./theme-mode";
 import { Portal } from "solid-js/web";
 import Dismiss from "solid-dismiss";
@@ -88,9 +88,10 @@ export const DialogDescription = styled("div", {
 
 type Props = {
   button: (ref: Setter<HTMLElement | undefined>) => JSX.Element,
+  children: (setOpen: Setter<boolean>) => JSX.Element
 }
 
-export function Dialog(props: ParentProps<Props>) {
+export function Dialog(props: Props) {
   const [open, setOpen] = createSignal(false);
   const [anchor, setAnchor] = createSignal<HTMLElement>();
 
@@ -103,7 +104,7 @@ export function Dialog(props: ParentProps<Props>) {
             <DialogOverlay />
           </Show>
           <Dismiss menuButton={anchor()} open={open} setOpen={setOpen} >
-            {props.children}
+            {props.children(setOpen)}
           </Dismiss>
         </div>
       </Portal>
