@@ -19,18 +19,16 @@ export const CardContent = styled("div", {
 
 export const CardDescription = styled("p", {
   base: {
+    ...tw.textSm,
     color: theme.color.mutedForeground
-    // text-sm
   }
 })
-
 
 export const CardFooter = styled("div", {
   base: {
     padding: `0 ${theme.space[6]} ${theme.space[6]} ${theme.space[6]}`
   }
 })
-
 
 export const CardHeader = styled("div", {
   base: {
@@ -43,6 +41,9 @@ export const CardHeader = styled("div", {
 
 export const CardTitle = styled("div", {
   base: {
-    // text-2xl font-semibold leading-none tracking-tighter
+    ...tw.text2xl,
+    fontWeight: "600", // font-semibold
+    lineHeight: 1, // leading-none
+    letterSpacing: "-0.05em", //  tracking-tighter
   }
 })

@@ -1,9 +1,10 @@
 import { styled } from "@macaron-css/solid";
-import { Component, For, } from "solid-js";
+import { For, } from "solid-js";
 import { Button } from "~/ui/Button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/ui/Card";
 import { mixin, theme } from "~/ui/theme";
-import { Dropdown } from "~/ui/Dropdown";
+import { Dropdown, DropdownCard, DropdownCardContent } from "~/ui/Dropdown";
+import { Input } from "~/ui/Input";
 
 const Root = styled("div", {
   base: {
@@ -33,7 +34,7 @@ const Text = styled("div", {
 const buttonVariants = ["default", "destructive", "outline", "secondary", "ghost", "link"]
 const buttonSizes = ["icon", "sm", "default", "lg"]
 
-export const Ui: Component = () => {
+export function Ui() {
   return (
     <Root>
       <Card>
@@ -64,17 +65,15 @@ export const Ui: Component = () => {
         </For>
       </Stack>
       <Dropdown button={(ref) => <Button ref={ref}>Hi</Button>}>
-        {(ref) => (
-          <Card ref={ref}>
-            <CardHeader>
-              <CardTitle>Hello World</CardTitle>
-            </CardHeader>
-            <CardContent>
+        {ref => (
+          <DropdownCard ref={ref}>
+            <DropdownCardContent>
               Hello World
-            </CardContent>
-          </Card>
+            </DropdownCardContent>
+          </DropdownCard>
         )}
       </Dropdown>
+      <Input placeholder="Placeholder" />
     </Root>
   )
 }

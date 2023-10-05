@@ -4,7 +4,7 @@ import { RiDeviceDeviceFill, RiMediaPauseFill, RiMediaPlayFill, RiMediaVolumeDow
 import { Component, For, Show, } from "solid-js";
 import { Button } from "~/ui/Button";
 import { minScreen, mixin, theme, tw } from "~/ui/theme";
-import { Dropdown } from "~/ui/Dropdown";
+import { Dropdown, DropdownCard } from "~/ui/Dropdown";
 
 const Root = styled("div", {
   base: {
@@ -147,16 +147,6 @@ const IconRiSystemRefreshFill = styled(RiSystemRefreshFill, {
   }
 })
 
-const Popover = styled("div", {
-  base: {
-    ...tw.shadowMd,
-    background: theme.color.popover,
-    color: theme.color.popoverForeground,
-    border: `1px solid ${theme.color.border}`,
-    borderRadius: theme.borderRadius.lg,
-  }
-})
-
 type Props = {
   player?: {
     id: number
@@ -214,7 +204,7 @@ export const Player: Component<Props> = (props) => {
             }>
               {ref =>
                 <div ref={ref} class={style({ padding: theme.space[2], maxWidth: theme.size.md, width: "100%" })}>
-                  <Popover class={style({ padding: theme.space[2], overflowX: "auto" })}>
+                  <DropdownCard class={style({ padding: theme.space[2], overflowX: "auto" })}>
                     <Show when={props.player}>
                       {player =>
                         <table>
@@ -239,7 +229,7 @@ export const Player: Component<Props> = (props) => {
                         </table>
                       }
                     </Show>
-                  </Popover>
+                  </DropdownCard>
                 </div>}
             </Dropdown>
           </div>
@@ -303,7 +293,7 @@ export const Player: Component<Props> = (props) => {
             }>
               {ref =>
                 <div ref={ref} class={style({ padding: theme.space[2], maxWidth: theme.space[60], width: "100%" })}>
-                  <Popover class={style({ padding: theme.space[2] })}>
+                  <DropdownCard class={style({ padding: theme.space[2] })}>
                     <For each={props.players}>
                       {player => (
                         <Button
@@ -319,7 +309,7 @@ export const Player: Component<Props> = (props) => {
                         </Button>
                       )}
                     </For>
-                  </Popover>
+                  </DropdownCard>
                 </div>
               }
             </Dropdown>

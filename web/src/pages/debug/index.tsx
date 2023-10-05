@@ -1,21 +1,8 @@
-import { Route, A } from '@solidjs/router'
-import { Component } from "solid-js";
+import { Route } from '@solidjs/router'
 import { Ui } from './Ui';
-import { style } from '@macaron-css/core';
-import { theme } from '~/ui/theme';
+import { Home } from './Home';
 
-const Home: Component = () => {
-  return (
-    <div class={style({ padding: theme.space[4] })}>
-      <ul>
-        <li><A href='./ui'>Ui</A></li>
-        <li><A href='./player'>Player</A></li>
-      </ul>
-    </div>
-  )
-}
-
-export const Debug: Component = () => {
+export function Debug() {
   return (
     <>
       <Route path="/*" component={Home} />

@@ -260,6 +260,36 @@ export const tw = {
   // shadowNone: {
   //   boxShadow: "0 0 #0000"
   // } as CSSProperties,
+
+  textXs: {
+    fontSize: "0.75rem",
+    lineHeight: "1rem"
+  } as CSSProperties,
+
+  textSm: {
+    fontSize: "0.875rem",
+    lineHeight: "1.25rem"
+  } as CSSProperties,
+
+  textOk: {
+    fontSize: "1rem",
+    lineHeight: "1.5rem"
+  } as CSSProperties,
+
+  textLg: {
+    fontSize: "1.125rem",
+    lineHeight: "1.75rem"
+  } as CSSProperties,
+
+  textXl: {
+    fontSize: "1.25rem",
+    lineHeight: "1.75rem"
+  } as CSSProperties,
+
+  text2xl: {
+    fontSize: "1.5rem",
+    lineHeight: "2rem"
+  } as CSSProperties,
 }
 
 export const mixin = {
