@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { mixin, theme } from "~/ui/theme";
 import { Dropdown, DropdownCard, DropdownCardContent } from "~/ui/Dropdown";
 import { Input } from "~/ui/Input";
+import { Table, TableBody, TableData, TableHead, TableHeader, TableRow } from "~/ui/Table";
 
 const Root = styled("div", {
   base: {
@@ -74,6 +75,24 @@ export function Ui() {
         )}
       </Dropdown>
       <Input placeholder="Placeholder" />
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Test 1</TableHead>
+            <TableHead>Test 1</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow>
+            <TableData>Data 1</TableData>
+            <TableData>Data 2</TableData>
+          </TableRow>
+          <TableRow>
+            <TableData>Data 1</TableData>
+            <TableData>Data 2</TableData>
+          </TableRow>
+        </TableBody>
+      </Table>
     </Root>
   )
 }

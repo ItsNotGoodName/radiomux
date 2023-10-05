@@ -93,6 +93,7 @@ const light = {
 
   muted: `hsl(${lightBase.muted})`,
   mutedForeground: `hsl(${lightBase.mutedForeground})`,
+  mutedHover: `hsla(${lightBase.muted}, 50%)`,
 
   accent: `hsl(${lightBase.accent})`,
   accentForeground: `hsl(${lightBase.accentForeground})`,
@@ -157,6 +158,7 @@ const dark = {
 
   muted: `hsl(${darkBase.muted})`,
   mutedForeground: `hsl(${darkBase.mutedForeground})`,
+  mutedHover: `hsla(${darkBase.muted}, 50%)`,
 
   accent: `hsl(${darkBase.accent})`,
   accentForeground: `hsl(${darkBase.accentForeground})`,
@@ -290,6 +292,12 @@ export const tw = {
     fontSize: "1.5rem",
     lineHeight: "2rem"
   } as CSSProperties,
+
+  transitionColors: {
+    transitionProperty: "color, background-color, border-color, text-decoration-color, fill, stroke",
+    transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+    transitionDuration: "150ms"
+  } as CSSProperties
 }
 
 export const mixin = {

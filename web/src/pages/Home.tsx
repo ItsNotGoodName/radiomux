@@ -7,6 +7,7 @@ import { usePlayerPresetMutation, usePlayerMediaMutation, usePlayersQuery, usePr
 import { Card, CardContent, CardHeader, CardTitle } from '~/ui/Card'
 import { Input } from '~/ui/Input'
 import { useCurrentPlayer } from '~/providers/currentPlayer'
+import { Table, TableBody, TableCaption, TableData, TableHead, TableHeader, TableRow } from '~/ui/Table'
 
 const Root = styled("div", {
   base: {
@@ -64,55 +65,50 @@ function DebugCard() {
   const playersQuery = usePlayersQuery()
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          Debug
-        </CardTitle>
-      </CardHeader>
-      <CardContent class={style({ overflowX: "auto" })}>
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Token</th>
-            </tr>
-          </thead>
-          <tbody>
-            <For each={playersQuery.data}>
-              {p => (
-                <tr>
-                  <td>{p.id}</td>
-                  <td>{p.name}</td>
-                  <td>{p.token}</td>
-                </tr>)
-              }
-            </For>
-          </tbody>
-        </table>
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>URL</th>
-            </tr>
-          </thead>
-          <tbody>
-            <For each={presetsQuery.data}>
-              {p => (
-                <tr>
-                  <td>{p.id}</td>
-                  <td>{p.name}</td>
-                  <td>{p.url}</td>
-                </tr>)
-              }
-            </For>
-          </tbody>
-        </table>
-      </CardContent>
-    </Card>
+    <>
+      <Table>
+        <TableCaption>Players</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead>ID</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Token</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <For each={playersQuery.data}>
+            {p => (
+              <TableRow>
+                <TableData>{p.id}</TableData>
+                <TableData>{p.name}</TableData>
+                <TableData>{p.token}</TableData>
+              </TableRow>)
+            }
+          </For>
+        </TableBody>
+      </Table>
+      <Table>
+        <TableCaption>Presets</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead>ID</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>URL</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <For each={presetsQuery.data}>
+            {p => (
+              <TableRow>
+                <TableData>{p.id}</TableData>
+                <TableData>{p.name}</TableData>
+                <TableData>{p.url}</TableData>
+              </TableRow>)
+            }
+          </For>
+        </TableBody>
+      </Table>
+    </>
   )
 }
 
