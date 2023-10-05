@@ -76,6 +76,7 @@ const light = {
   ...base,
   background: `hsl(${lightBase.background})`,
   foreground: `hsl(${lightBase.foreground})`,
+  backgroundOverlay: `hsla(${lightBase.background}, 80%)`,
 
   card: `hsl(${lightBase.card})`,
   cardForeground: `hsl(${lightBase.cardForeground})`,
@@ -86,6 +87,7 @@ const light = {
   primary: `hsl(${lightBase.primary})`,
   primaryForeground: `hsl(${lightBase.primaryForeground})`,
   primaryHover: `hsla(${lightBase.primary}, 90%)`,
+  primaryOverlay: `hsla(${lightBase.primary}, 80%)`,
 
   secondary: `hsl(${lightBase.secondary})`,
   secondaryForeground: `hsl(${lightBase.secondaryForeground})`,
@@ -101,6 +103,7 @@ const light = {
   destructive: `hsl(${lightBase.destructive})`,
   destructiveForeground: `hsl(${lightBase.destructiveForeground})`,
   destructiveHover: `hsla(${lightBase.destructive}, 90%)`,
+  destructiveOverlay: `hsla(${lightBase.destructive}, 80%)`,
 
   border: `hsl(${lightBase.border})`,
   input: `hsl(${lightBase.input})`,
@@ -141,6 +144,7 @@ const dark = {
   ...base,
   background: `hsl(${darkBase.background})`,
   foreground: `hsl(${darkBase.foreground})`,
+  backgroundOverlay: `hsla(${darkBase.background}, 80%)`,
 
   card: `hsl(${darkBase.card})`,
   cardForeground: `hsl(${darkBase.cardForeground})`,
@@ -151,6 +155,7 @@ const dark = {
   primary: `hsl(${darkBase.primary})`,
   primaryForeground: `hsl(${darkBase.primaryForeground})`,
   primaryHover: `hsla(${darkBase.primary}, 90%)`,
+  primaryOverlay: `hsla(${darkBase.primary}, 80%)`,
 
   secondary: `hsl(${darkBase.secondary})`,
   secondaryForeground: `hsl(${darkBase.secondaryForeground})`,
@@ -166,6 +171,7 @@ const dark = {
   destructive: `hsl(${darkBase.destructive})`,
   destructiveForeground: `hsl(${darkBase.destructiveForeground})`,
   destructiveHover: `hsla(${darkBase.destructive}, 90%)`,
+  destructiveOverlay: `hsla(${darkBase.destructive}, 80%)`,
 
   border: `hsl(${darkBase.border})`,
   input: `hsl(${darkBase.input})`,
@@ -243,9 +249,9 @@ export const tw = {
     boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);"
   } as CSSProperties,
 
-  // shadowLg: {
-  //   boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);"
-  // } as CSSProperties,
+  shadowLg: {
+    boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);"
+  } as CSSProperties,
 
   // shadowXl: {
   //   boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);"

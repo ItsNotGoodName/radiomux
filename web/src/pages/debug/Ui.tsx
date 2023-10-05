@@ -1,5 +1,5 @@
 import { styled } from "@macaron-css/solid";
-import { For, } from "solid-js";
+import { For } from "solid-js";
 import { Button } from "~/ui/Button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/ui/Card";
 import { mixin, theme } from "~/ui/theme";
@@ -7,6 +7,7 @@ import { Dropdown, DropdownCard, DropdownCardContent } from "~/ui/Dropdown";
 import { Input } from "~/ui/Input";
 import { Table, TableBody, TableCaption, TableData, TableHead, TableHeader, TableRow } from "~/ui/Table";
 import { Badge } from "~/ui/Badge";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "~/ui/Dialog";
 
 const Root = styled("div", {
   base: {
@@ -103,7 +104,22 @@ export function Ui() {
           }
         </For>
       </Row>
-    </Root>
+      <div>
+        <Dialog button={ref => <Button ref={ref}>Dialog</Button>}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Header Title</DialogTitle>
+              <DialogDescription>
+                Header Description
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button>Footer Button</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
+    </Root >
   )
 }
 

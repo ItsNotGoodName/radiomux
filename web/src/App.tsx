@@ -13,7 +13,7 @@ const Root = styled("div", {
   },
 });
 
-function Theme() {
+function TheRoot() {
   return (
     <Root class={themeModeClass()}>
       <Outlet />
@@ -24,11 +24,9 @@ function Theme() {
 function App() {
   return (
     <Routes>
-      <Route path="/" component={Theme}>
+      <Route path="/" component={TheRoot}>
         <Pages />
-        <Route path="/debug">
-          <Debug />
-        </Route>
+        <Debug />
       </Route>
     </Routes>
   )

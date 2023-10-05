@@ -19,7 +19,7 @@ export const Badge = styled("div", {
         background: theme.color.primary,
         color: theme.color.primaryForeground,
         ":hover": {
-          background: theme.color.primaryHover, // hover:bg-primary/80
+          background: theme.color.primaryOverlay,
         }
       },
       secondary: {
@@ -27,7 +27,7 @@ export const Badge = styled("div", {
         background: theme.color.secondary,
         color: theme.color.secondaryForeground,
         ":hover": {
-          background: theme.color.secondaryHover, // hover:bg-secondary/80
+          background: theme.color.secondaryHover,
         }
       },
       destructive: {
@@ -35,7 +35,7 @@ export const Badge = styled("div", {
         background: theme.color.destructive,
         color: theme.color.destructiveForeground,
         ":hover": {
-          background: theme.color.destructiveHover, // hover:bg-destructive/80
+          background: theme.color.destructiveOverlay,
         }
       },
       outline: {
