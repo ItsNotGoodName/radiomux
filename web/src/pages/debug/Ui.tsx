@@ -5,7 +5,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { mixin, theme } from "~/ui/theme";
 import { Dropdown, DropdownCard, DropdownCardContent } from "~/ui/Dropdown";
 import { Input } from "~/ui/Input";
-import { Table, TableBody, TableData, TableHead, TableHeader, TableRow } from "~/ui/Table";
+import { Table, TableBody, TableCaption, TableData, TableHead, TableHeader, TableRow } from "~/ui/Table";
+import { Badge } from "~/ui/Badge";
 
 const Root = styled("div", {
   base: {
@@ -34,6 +35,7 @@ const Text = styled("div", {
 
 const buttonVariants = ["default", "destructive", "outline", "secondary", "ghost", "link"]
 const buttonSizes = ["icon", "sm", "default", "lg"]
+const badgeVariants = ["default", "secondary", "destructive", "outline"]
 
 export function Ui() {
   return (
@@ -65,21 +67,22 @@ export function Ui() {
           }
         </For>
       </Stack>
-      <Dropdown button={(ref) => <Button ref={ref}>Hi</Button>}>
+      <Dropdown button={(ref) => <Button ref={ref}>Dropdown Button</Button>}>
         {ref => (
           <DropdownCard ref={ref}>
             <DropdownCardContent>
-              Hello World
+              Dropdown Card Content
             </DropdownCardContent>
           </DropdownCard>
         )}
       </Dropdown>
       <Input placeholder="Placeholder" />
       <Table>
+        <TableCaption>Table Caption</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead>Test 1</TableHead>
-            <TableHead>Test 1</TableHead>
+            <TableHead>Test 2</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -93,6 +96,13 @@ export function Ui() {
           </TableRow>
         </TableBody>
       </Table>
+      <Row>
+        <For each={badgeVariants}>
+          {variant =>
+            <Badge variant={variant as any}>Default</Badge>
+          }
+        </For>
+      </Row>
     </Root>
   )
 }

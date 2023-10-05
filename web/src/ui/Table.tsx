@@ -14,7 +14,7 @@ const TheTable = styled("table", {
   base: {
     ...tw.textSm,
     width: "100%",
-    // captionSide: "bottom",
+    captionSide: "bottom",
     borderCollapse: "collapse"
   }
 })
@@ -54,7 +54,8 @@ export const TableRow = styled("tr", {
     },
     selectors: {
       [`${TableHeader} &`]: {
-        borderBottom: `1px solid ${theme.color.border}`
+        borderBottom: `1px solid ${theme.color.border}`,
+        background: "unset"
       },
       [`${TableBody} &:last-child`]: {
         borderBottom: "none"
