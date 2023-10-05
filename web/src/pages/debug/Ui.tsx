@@ -9,6 +9,7 @@ import { Table, TableBody, TableCaption, TableData, TableHead, TableHeader, Tabl
 import { Badge } from "~/ui/Badge";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "~/ui/Dialog";
 import { Textarea } from "~/ui/Textarea";
+import { Label } from "~/ui/Label";
 
 const Root = styled("div", {
   base: {
@@ -69,7 +70,7 @@ export function Ui() {
           }
         </For>
       </Stack>
-      <Dropdown button={(ref) => <Button ref={ref}>Dropdown Button</Button>}>
+      <Dropdown button={ref => <Button ref={ref}>Dropdown</Button>}>
         {ref => (
           <DropdownCard ref={ref}>
             <DropdownCardContent>
@@ -78,7 +79,10 @@ export function Ui() {
           </DropdownCard>
         )}
       </Dropdown>
-      <Input placeholder="Placeholder" />
+      <Stack>
+        <Label>Input Label</Label>
+        <Input placeholder="Placeholder" />
+      </Stack>
       <Table>
         <TableCaption>Table Caption</TableCaption>
         <TableHeader>
@@ -120,7 +124,10 @@ export function Ui() {
           </DialogContent>
         }
       </Dialog>
-      <Textarea placeholder="Placeholder"></Textarea>
+      <Stack>
+        <Label>Textarea Label</Label>
+        <Textarea placeholder="Placeholder"></Textarea>
+      </Stack>
     </Root >
   )
 }
