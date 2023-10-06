@@ -101,15 +101,18 @@ func run(filePath *string) lieut.Executor {
 			},
 		}))
 		e.Use(middleware.Recover())
+		e.Use(middleware.StaticWithConfig(middleware.StaticConfig{
+			Root:       "dist",
+			Index:      "index.html",
+			Browse:     false,
+			HTML5:      true,
+			Filesystem: web.DistFS(),
+		}))
 
 		// - Routes
 		e.GET("/ws", androidWSServer.Handle)
 		e.GET("/api/ws", apiWSServer.Handle)
 		api.MountServer(e, apiServer, "/api")
-		err = echoext.MountFS(e, web.FS())
-		if err != nil {
-			return fmt.Errorf("failed to mount web filesystem: %w", err)
-		}
 
 		httpServer := http.NewServer(e, ":8080")
 		super.Add(httpServer)

@@ -23,7 +23,7 @@ func ConvertErr(err error) error {
 		return echo.ErrTooEarly.WithInternal(err)
 	}
 
-	return echo.ErrInternalServerError.WithInternal(err)
+	return err
 }
 
 func ConvertPlayers(p []core.Player) []Player {

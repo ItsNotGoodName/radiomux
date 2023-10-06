@@ -4,13 +4,12 @@ package web
 
 import (
 	"embed"
-	"io/fs"
+	"net/http"
 )
 
 //go:embed dist
 var dist embed.FS
 
-func FS() fs.FS {
-	fs, _ := fs.Sub(dist, "dist")
-	return fs
+func DistFS() http.FileSystem {
+	return http.FS(dist)
 }
