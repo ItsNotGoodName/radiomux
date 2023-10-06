@@ -1,8 +1,8 @@
-import { Component } from 'solid-js'
+import { Component, } from 'solid-js'
 import { styled, } from '@macaron-css/solid'
 import { usePlayerPauseMutation, usePlayerPlayMutation, usePlayerSeekMutation, usePlayerVolumeMutation, } from '~/hooks/api'
 import { ConnectionIndicator, Player } from '~/components/Player'
-import { Outlet, Route } from '@solidjs/router'
+import { Link, Outlet, Route } from '@solidjs/router'
 import { Home } from './Home'
 import { mixin, theme, tw } from '~/ui/theme'
 import { AUTO_MODE, DARK_MODE, LIGHT_MODE, themeMode, toggleThemeMode } from '~/ui/theme-mode'
@@ -12,6 +12,9 @@ import { Button } from '~/ui/Button'
 import { ThemeIcon } from '~/ui/ThemeIcon'
 import { style } from '@macaron-css/core'
 import { RiSystemMenuLine } from 'solid-icons/ri'
+import { Dropdown, DropdownCard, DropdownPositioner } from "~/ui/Dropdown";
+import { Players } from './Players'
+import { Presets } from './Presets'
 
 const Header = styled("div", {
   base: {
@@ -20,13 +23,35 @@ const Header = styled("div", {
     position: "sticky",
     top: "0",
     width: "100%",
-    background: theme.color.card,
+    background: theme.color.nav,
+    color: theme.color.navForeground,
     borderBottom: `${theme.space.px} solid ${theme.color.border}`,
     zIndex: "10"
   },
 });
 
-function HeaderContent() {
+const menuLinkInactiveClass = style({
+  textDecoration: "none",
+  padding: theme.space[2],
+  borderRadius: theme.borderRadius.ok,
+  ":hover": {
+    background: theme.color.accent,
+    color: theme.color.accentForeground,
+  },
+
+  color: theme.color.foreground,
+})
+
+const menuLinkActiveClass = style({
+  textDecoration: "none",
+  padding: theme.space[2],
+  borderRadius: theme.borderRadius.ok,
+
+  background: theme.color.accent,
+  color: theme.color.accentForeground,
+})
+
+function TheHeader() {
   const themeTitle = () => {
     switch (themeMode()) {
       case AUTO_MODE:
@@ -52,9 +77,25 @@ function HeaderContent() {
       paddingLeft: theme.space[2],
       paddingRight: theme.space[2],
     })}>
-      <Button size='icon' variant='ghost' title="Menu">
-        <RiSystemMenuLine class={style({ ...mixin.size("6") })} />
-      </Button>
+      <Dropdown button={ref =>
+        <Button ref={ref} size='icon' variant='ghost' title="Menu">
+          <RiSystemMenuLine class={style({ ...mixin.size("6") })} />
+        </Button>
+      }>
+        {(ref, setOpen) =>
+          <DropdownPositioner ref={ref} class={style({ maxWidth: theme.space[60], width: "100%" })}>
+            <DropdownCard class={style({
+              display: "flex",
+              flexDirection: "column",
+              padding: theme.space[2],
+            })}>
+              <Link onClick={[setOpen, false]} activeClass={menuLinkActiveClass} inactiveClass={menuLinkInactiveClass} href="/" end>Home</Link>
+              <Link onClick={[setOpen, false]} activeClass={menuLinkActiveClass} inactiveClass={menuLinkInactiveClass} href="/players">Players</Link>
+              <Link onClick={[setOpen, false]} activeClass={menuLinkActiveClass} inactiveClass={menuLinkInactiveClass} href="/presets">Presets</Link>
+            </DropdownCard>
+          </DropdownPositioner>
+        }
+      </Dropdown>
       <div class={style({
         ...mixin.textLine(),
         display: "flex",
@@ -77,7 +118,6 @@ function HeaderContent() {
     </div>
   )
 }
-
 
 const Content = styled("div", {
   base: {
@@ -127,7 +167,7 @@ function App() {
     <PlayerStatesProvider>
       <CurrentPlayerProvider>
         <Header>
-          <HeaderContent />
+          <TheHeader />
         </Header>
         <Content>
           <Outlet />
@@ -144,6 +184,8 @@ export const Pages: Component = () => {
   return (
     <Route path="/" component={App}>
       <Route path="/" component={Home} />
+      <Route path="/players" component={Players} />
+      <Route path="/presets" component={Presets} />
     </Route>
   )
 }

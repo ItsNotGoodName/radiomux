@@ -3,7 +3,7 @@ import { theme } from "./theme";
 
 export const Button = styled("button", {
   base: {
-    background: theme.color.background,
+    background: "transparent",
     color: theme.color.foreground,
     border: "none",
     cursor: "pointer",
@@ -39,7 +39,6 @@ export const Button = styled("button", {
         },
       },
       outline: {
-        background: theme.color.background,
         border: `1px solid ${theme.color.input}`,
         selectors: {
           ["&:hover:enabled"]: {

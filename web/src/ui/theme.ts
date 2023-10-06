@@ -46,6 +46,9 @@ const lightBase = {
   background: "0, 0%, 100%",
   foreground: "222.2, 84%, 4.9%",
 
+  nav: "0, 0%, 98%",
+  navForeground: "222.2, 84%, 6.9%",
+
   card: "0, 0%, 100%",
   cardForeground: "222.2, 84%, 4.9%",
 
@@ -77,6 +80,9 @@ const light = {
   background: `hsl(${lightBase.background})`,
   foreground: `hsl(${lightBase.foreground})`,
   backgroundOverlay: `hsla(${lightBase.background}, 80%)`,
+
+  nav: `hsl(${lightBase.nav})`,
+  navForeground: `hsl(${lightBase.navForeground})`,
 
   card: `hsl(${lightBase.card})`,
   cardForeground: `hsl(${lightBase.cardForeground})`,
@@ -114,6 +120,9 @@ const darkBase = {
   background: "222.2, 84%, 4.9%",
   foreground: "210, 40%, 98%",
 
+  nav: "222.2, 84%, 6.9%",
+  navForeground: "210, 40%, 96%",
+
   card: "222.2, 84%, 4.9%",
   cardForeground: "210, 40%, 98%",
 
@@ -145,6 +154,9 @@ const dark = {
   background: `hsl(${darkBase.background})`,
   foreground: `hsl(${darkBase.foreground})`,
   backgroundOverlay: `hsla(${darkBase.background}, 80%)`,
+
+  nav: `hsl(${darkBase.nav})`,
+  navForeground: `hsl(${darkBase.navForeground})`,
 
   card: `hsl(${darkBase.card})`,
   cardForeground: `hsl(${darkBase.cardForeground})`,

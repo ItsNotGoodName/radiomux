@@ -1,12 +1,11 @@
-import { For, Show } from 'solid-js'
-import { theme, mixin } from '~/ui/theme'
-import { styled, } from '@macaron-css/solid'
+import { For, Show, createMemo } from 'solid-js'
+import { mixin, theme } from '~/ui/theme'
 import { Button } from '~/ui/Button'
 import { style } from '@macaron-css/core'
-import { usePlayerPresetMutation, usePlayerMediaMutation, usePlayersQuery, usePresetsQuery } from '~/hooks/api'
+import { usePlayerPresetMutation, usePlayerMediaMutation, usePresetsQuery } from '~/hooks/api'
 import { Input } from '~/ui/Input'
 import { useCurrentPlayer } from '~/providers/currentPlayer'
-import { Table, TableBody, TableCaption, TableData, TableHead, TableHeader, TableRow } from '~/ui/Table'
+import { styled } from '@macaron-css/solid'
 
 const Root = styled("div", {
   base: {
@@ -24,7 +23,7 @@ const Content = styled("div", {
   }
 })
 
-function PlayerPresets() {
+export function Home() {
   const { currentPlayerState, currentPlayerId } = useCurrentPlayer()
   const presetsQuery = usePresetsQuery()
 
@@ -37,87 +36,30 @@ function PlayerPresets() {
   const playerPlayUriSubmit = () =>
     playerPlayUriMutation.mutate({ id: currentPlayerId(), uri: playerPlayUri.value })
 
-  return (
-    <Show when={currentPlayerState()}>
-      {currentPlayerState =>
-        <div class={style({ ...mixin.stack("2") })}>
-          <div class={style({ ...mixin.row("2"), alignItems: "center" })}>
-            <Input class={style({ flex: "1" })} disabled={playerPlayUriMutation.isLoading} ref={playerPlayUri!} type="text" placeholder="URL"></Input>
-            <Button disabled={playerPlayUriMutation.isLoading} onClick={playerPlayUriSubmit}>Play</Button>
-          </div>
-          <For each={presetsQuery.data}>
-            {preset =>
-              <Button disabled={playerPlayPresetMutation.isLoading} variant={preset.url == currentPlayerState().uri ? "default" : "outline"} onClick={() => playerPlayPresetMutation.mutate({ preset: preset.id, id: currentPlayerState().id })}>
-                <div class={style({ ...mixin.textLine() })}>
-                  {preset.name}
-                </div>
-              </Button>}
-          </For>
-        </div>
-      }
-    </Show>
-  )
-}
+  const disabled = createMemo(() => currentPlayerState() == undefined || !currentPlayerState()!.ready)
 
-function DebugCard() {
-  const presetsQuery = usePresetsQuery()
-  const playersQuery = usePlayersQuery()
-
-  return (
-    <>
-      <Table>
-        <TableCaption>Players</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead>ID</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Token</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <For each={playersQuery.data}>
-            {p => (
-              <TableRow>
-                <TableData>{p.id}</TableData>
-                <TableData>{p.name}</TableData>
-                <TableData>{p.token}</TableData>
-              </TableRow>)
-            }
-          </For>
-        </TableBody>
-      </Table>
-      <Table>
-        <TableCaption>Presets</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead>ID</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>URL</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <For each={presetsQuery.data}>
-            {p => (
-              <TableRow>
-                <TableData>{p.id}</TableData>
-                <TableData>{p.name}</TableData>
-                <TableData>{p.url}</TableData>
-              </TableRow>)
-            }
-          </For>
-        </TableBody>
-      </Table>
-    </>
-  )
-}
-
-export function Home() {
   return (
     <Root>
       <Content>
-        <PlayerPresets />
-        <DebugCard />
-      </Content>
-    </Root >
+        <Show when={currentPlayerState()}>
+          {currentPlayerState =>
+            <div class={style({ ...mixin.stack("2") })}>
+              <div class={style({ ...mixin.row("2"), alignItems: "center" })}>
+                <Input class={style({ flex: "1" })} disabled={disabled() || playerPlayUriMutation.isLoading} ref={playerPlayUri!} type="text" placeholder="URL"></Input>
+                <Button disabled={disabled() || playerPlayUriMutation.isLoading} onClick={playerPlayUriSubmit}>Play</Button>
+              </div>
+              <For each={presetsQuery.data}>
+                {preset =>
+                  <Button disabled={disabled() || playerPlayPresetMutation.isLoading} variant={preset.url == currentPlayerState().uri ? "default" : "outline"} onClick={() => playerPlayPresetMutation.mutate({ preset: preset.id, id: currentPlayerState().id })}>
+                    <div class={style({ ...mixin.textLine() })}>
+                      {preset.name}
+                    </div>
+                  </Button>}
+              </For>
+            </div>
+          }
+        </Show>
+      </Content >
+    </Root>
   )
 }

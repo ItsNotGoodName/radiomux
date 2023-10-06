@@ -4,12 +4,12 @@ import { RiDeviceDeviceFill, RiMediaPauseFill, RiMediaPlayFill, RiMediaVolumeDow
 import { For, Show, } from "solid-js";
 import { Button } from "~/ui/Button";
 import { minScreen, mixin, theme, tw } from "~/ui/theme";
-import { Dropdown, DropdownCard } from "~/ui/Dropdown";
+import { Dropdown, DropdownCard, DropdownPositioner } from "~/ui/Dropdown";
 
 const Root = styled("div", {
   base: {
-    background: theme.color.card,
-    color: theme.color.cardForeground,
+    background: theme.color.nav,
+    color: theme.color.navForeground,
     height: theme.space[28],
     borderTop: `1px solid ${theme.color.border}`,
     "@media": {
@@ -78,6 +78,7 @@ const Text = styled("p", {
 const Thumbnail = styled("img", {
   base: {
     ...mixin.size("10"),
+    background: theme.color.muted
   }
 })
 
@@ -147,6 +148,12 @@ const IconRiSystemRefreshFill = styled(RiSystemRefreshFill, {
   }
 })
 
+const PlayerTableHead = styled("th", {
+  base: {
+    textAlign: "left"
+  }
+})
+
 type Props = {
   player?: {
     id: number
@@ -177,8 +184,13 @@ type Props = {
   seekDisabled?: boolean
 }
 
+
 export function Player(props: Props) {
-  const playDisabled = () => props.player == undefined || !props.player.connected || props.playDisabled || props.seekDisabled
+  const playerDisabled = () => props.player == undefined || !props.player.connected || !props.player.ready
+
+  const seekDisabled = () => playerDisabled() || props.seekDisabled
+
+  const playDisabled = () => playerDisabled() || props.playDisabled || props.seekDisabled
   const playStatus = () => {
     if (props.player == undefined) {
       return "Unknown"
@@ -193,9 +205,8 @@ export function Player(props: Props) {
           <div class={style({ display: "flex", alignItems: "center" })}>
             <Dropdown options={{ placement: "top" }} button={
               ref =>
-                <Button disabled={props.player == undefined} title="Media" ref={ref} size="icon" variant="ghost" class={style({
+                <Button disabled={playerDisabled()} title="Media" ref={ref} size="icon" variant="ghost" class={style({
                   color: theme.color.cardForeground,
-                  border: `1px solid ${theme.color.border}`,
                   borderRadius: theme.borderRadius.full,
                   overflow: "hidden"
                 })}>
@@ -203,26 +214,26 @@ export function Player(props: Props) {
                 </Button>
             }>
               {ref =>
-                <div ref={ref} class={style({ padding: theme.space[2], maxWidth: theme.size.md, width: "100%" })}>
+                <DropdownPositioner ref={ref} class={style({ maxWidth: theme.size.md, width: "100%" })}>
                   <DropdownCard class={style({ padding: theme.space[2], overflowX: "auto" })}>
                     <Show when={props.player}>
                       {player =>
                         <table>
                           <tbody>
                             <tr>
-                              <th>Title</th>
+                              <PlayerTableHead>Title</PlayerTableHead>
                               <td>{player().title}</td>
                             </tr>
                             <tr>
-                              <th>Genre</th>
+                              <PlayerTableHead>Genre</PlayerTableHead>
                               <td>{player().genre}</td>
                             </tr>
                             <tr>
-                              <th>Station</th>
+                              <PlayerTableHead>Station</PlayerTableHead>
                               <td>{player().station}</td>
                             </tr>
                             <tr>
-                              <th>URI</th>
+                              <PlayerTableHead>URI</PlayerTableHead>
                               <td>{player().uri}</td>
                             </tr>
                           </tbody>
@@ -230,11 +241,11 @@ export function Player(props: Props) {
                       }
                     </Show>
                   </DropdownCard>
-                </div>}
+                </DropdownPositioner>}
             </Dropdown>
           </div>
           <Text title={props.player?.title}>{props.player?.title}</Text>
-          <Button size="icon" variant="ghost" title="Seek" disabled={props.player == undefined || props.seekDisabled} onClick={props.onSeekClick} class={style({ marginLeft: "auto" })}>
+          <Button size="icon" variant="ghost" title="Seek" disabled={seekDisabled()} onClick={props.onSeekClick} class={style({ marginLeft: "auto" })}>
             <IconRiSystemRefreshFill loading={props.player?.loading || props.seekDisabled} />
           </Button>
         </ContentChild>
@@ -265,17 +276,17 @@ export function Player(props: Props) {
                     <Text title={player().name}>{player().name}</Text>
                   </PlayerGroup>
                   <VolumeGroup>
-                    <Button size="icon" variant="ghost" onClick={props.onVolumeDownClick} title="Volume Down">
+                    <Button disabled={playerDisabled()} size="icon" variant="ghost" onClick={props.onVolumeDownClick} title="Volume Down">
                       <RiMediaVolumeDownFill class={style({ ...mixin.size("6") })} />
                     </Button>
-                    <Button size="icon" variant="ghost" onClick={props.onVolumeClick} title={player().muted ? "Volume Muted" : undefined}>
+                    <Button disabled={playerDisabled()} size="icon" variant="ghost" onClick={props.onVolumeClick} title={player().muted ? "Volume Muted" : undefined}>
                       <Show when={!player().muted} fallback={
                         <RiMediaVolumeMuteFill class={style({ ...mixin.size("6"), color: "red" })} />
                       }>
                         {player().volume}
                       </Show>
                     </Button>
-                    <Button size="icon" variant="ghost" onClick={props.onVolumeUpClick} title="Volume Up">
+                    <Button disabled={playerDisabled()} size="icon" variant="ghost" onClick={props.onVolumeUpClick} title="Volume Up">
                       <RiMediaVolumeUpFill class={style({ ...mixin.size("6") })} />
                     </Button>
                   </VolumeGroup>
@@ -288,7 +299,7 @@ export function Player(props: Props) {
               </Button>
             }>
               {ref =>
-                <div ref={ref} class={style({ padding: theme.space[2], maxWidth: theme.space[60], width: "100%" })}>
+                <DropdownPositioner ref={ref} class={style({ maxWidth: theme.space[60], width: "100%" })}>
                   <DropdownCard class={style({ padding: theme.space[2] })}>
                     <For each={props.players}>
                       {player => (
@@ -306,7 +317,7 @@ export function Player(props: Props) {
                       )}
                     </For>
                   </DropdownCard>
-                </div>
+                </DropdownPositioner>
               }
             </Dropdown>
           </SubControl>

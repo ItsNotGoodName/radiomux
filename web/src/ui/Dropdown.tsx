@@ -33,6 +33,12 @@ export function Dropdown(props: Props) {
   )
 }
 
+export const DropdownPositioner = styled("div", {
+  base: {
+    padding: theme.space[2],
+  }
+})
+
 export const DropdownCard = styled("div", {
   base: {
     ...tw.shadowMd,
