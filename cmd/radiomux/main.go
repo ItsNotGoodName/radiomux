@@ -83,9 +83,9 @@ func run(cfg *config.Config) lieut.Executor {
 		androidStateService := android.NewStateService(androidStatePubSub, androidStateStore)
 		androidController, close2 := android.NewController(androidStateService, bus)
 		defer close2()
-		androidWSServer := androidws.NewServer(playerStore, androidController, androidStateService)
+		androidWSServer := androidws.NewServer(playerStore, androidController, androidStateService, cfg.HTTPURL)
 		apiWSServer := apiws.NewServer(androidStateService, playerStore)
-		apiServer := api.NewServer(playerStore)
+		apiServer := api.NewServer(playerStore, androidWSServer)
 		playerService := webrpc.
 			NewPlayerServiceServer(rpc.
 				NewPlayerService(playerStore))
@@ -133,6 +133,7 @@ func run(cfg *config.Config) lieut.Executor {
 
 		// - Routes
 		e.GET("/ws", androidWSServer.Handle)
+		e.GET(androidws.Path, androidWSServer.Handle)
 		e.GET("/api/ws", apiWSServer.Handle)
 		api.MountServer(e, apiServer)
 		e.Any("/rpc/PlayerService/*", echo.WrapHandler(playerService))

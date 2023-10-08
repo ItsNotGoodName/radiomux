@@ -2,7 +2,7 @@ import { style } from "@macaron-css/core";
 import { styled } from "@macaron-css/solid";
 import { createForm } from "@modular-forms/solid";
 import { For, createMemo, } from "solid-js"
-import { playerQrCodeUrl } from "~/api";
+import { playerQrUrl } from "~/api";
 import { CreatePlayer, Player, UpdatePlayer } from "~/api/client.gen";
 import { usePlayerCreateMutation, usePlayerDeleteMutation, usePlayerListQuery, usePlayerTokenRegenerateMutation, usePlayerUpdateMutation } from "~/hooks/api";
 import { useSelection } from "~/hooks/useSelection";
@@ -104,7 +104,7 @@ export function Players() {
 
               const playerTokenRegenerateMutation = usePlayerTokenRegenerateMutation()
 
-              const imgUrl = () => playerQrCodeUrl(player().id)
+              const imgUrl = () => playerQrUrl(player().id)
 
               return (
                 <DialogContent>

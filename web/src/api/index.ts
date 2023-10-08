@@ -5,7 +5,7 @@ export const playerService = new PlayerService("", fetch)
 export const presetService = new PresetService("", fetch)
 export const stateService = new StateService("", fetch)
 
-export function playerQrCodeUrl(id: number): string {
+export function playerQrUrl(id: number): string {
   return `/api/players/${id}/qr?t=` + + new Date().getTime();
 }
 

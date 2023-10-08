@@ -41,3 +41,7 @@ type PresetStore interface {
 	Delete(ctx context.Context, id int64) error
 	Drop(ctx context.Context) ([]Preset, error)
 }
+
+type AndroidWSServer interface {
+	PlayerWSURL(p Player) string
+}

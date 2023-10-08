@@ -6,7 +6,7 @@
 
 export interface paths {
   "/players/{id}/qr": {
-    /** @description Get player token qr code */
+    /** @description Get player QR code for the Android app. */
     get: {
       parameters: {
         path: {
@@ -16,7 +16,7 @@ export interface paths {
       responses: {
         200: {
           content: {
-            "image/png": unknown;
+            "image/png": string;
           };
         };
         /** @description unexpected error */

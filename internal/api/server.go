@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/ItsNotGoodName/radiomux/internal/core"
@@ -24,14 +23,16 @@ func middlewareError(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
-func NewServer(playerStore core.PlayerStore) *Server {
+func NewServer(playerStore core.PlayerStore, androidWSServer core.AndroidWSServer) *Server {
 	return &Server{
-		playerStore: playerStore,
+		playerStore:     playerStore,
+		androidWSServer: androidWSServer,
 	}
 }
 
 type Server struct {
-	playerStore core.PlayerStore
+	playerStore     core.PlayerStore
+	androidWSServer core.AndroidWSServer
 }
 
 func (s *Server) GetPlayersIdQr(c echo.Context, id int64) error {
@@ -43,8 +44,8 @@ func (s *Server) GetPlayersIdQr(c echo.Context, id int64) error {
 	}
 
 	var png []byte
-	// TODO: use real url
-	png, err = qrcode.Encode(fmt.Sprintf("https://example.com/ws?id=%d&token=%s", player.ID, player.Token), qrcode.Medium, 256)
+	url := s.androidWSServer.PlayerWSURL(player)
+	png, err = qrcode.Encode(url, qrcode.Medium, 256)
 	if err != nil {
 		return err
 	}
