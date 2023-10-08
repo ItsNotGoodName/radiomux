@@ -6,7 +6,6 @@ import (
 	"github.com/ItsNotGoodName/radiomux/internal"
 	"github.com/ItsNotGoodName/radiomux/internal/android"
 	"github.com/ItsNotGoodName/radiomux/internal/core"
-	"github.com/samber/lo"
 )
 
 func ConvertErr(err error) error {
@@ -22,8 +21,12 @@ func ConvertErr(err error) error {
 	return ErrWebrpcInternalError.WithCause(err)
 }
 
-func ConvertPlayers(p []core.Player) []*Player {
-	return lo.Map(p, func(p core.Player, _ int) *Player { return ConvertPlayer(p) })
+func ConvertPlayers(req []core.Player) []*Player {
+	res := make([]*Player, 0, len(req))
+	for _, r := range req {
+		res = append(res, ConvertPlayer(r))
+	}
+	return res
 }
 
 func ConvertPlayer(p core.Player) *Player {
@@ -34,8 +37,12 @@ func ConvertPlayer(p core.Player) *Player {
 	}
 }
 
-func ConvertPresets(p []core.Preset) []*Preset {
-	return lo.Map(p, func(p core.Preset, _ int) *Preset { return ConvertPreset(p) })
+func ConvertPresets(req []core.Preset) []*Preset {
+	res := make([]*Preset, 0, len(req))
+	for _, r := range req {
+		res = append(res, ConvertPreset(r))
+	}
+	return res
 }
 
 func ConvertPreset(p core.Preset) *Preset {

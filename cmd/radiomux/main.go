@@ -13,6 +13,7 @@ import (
 	"github.com/ItsNotGoodName/radiomux/internal/apiws"
 	"github.com/ItsNotGoodName/radiomux/internal/build"
 	"github.com/ItsNotGoodName/radiomux/internal/bus"
+	"github.com/ItsNotGoodName/radiomux/internal/config"
 	"github.com/ItsNotGoodName/radiomux/internal/file"
 	"github.com/ItsNotGoodName/radiomux/internal/http"
 	"github.com/ItsNotGoodName/radiomux/internal/rpc"
@@ -31,16 +32,17 @@ import (
 func main() {
 	ctx := context.Background()
 
-	flags := flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+	cfg := config.New()
 
-	filePath := flags.String("file", "radiomux.json", "File path to JSON database.")
+	flags := flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+	cfg.WithFlag(flags)
 
 	app := lieut.NewSingleCommandApp(
 		lieut.AppInfo{
 			Name:    "radiomux",
 			Version: build.Current.Version,
 		},
-		run(filePath),
+		run(cfg),
 		flags,
 		os.Stdout,
 		os.Stderr,
@@ -51,8 +53,13 @@ func main() {
 	os.Exit(code)
 }
 
-func run(filePath *string) lieut.Executor {
+func run(cfg *config.Config) lieut.Executor {
 	return func(ctx context.Context, arguments []string) error {
+		err := cfg.Parse()
+		if err != nil {
+			return fmt.Errorf("failed to parse config: %w", err)
+		}
+
 		// Supervisor
 		super := suture.New("root", suture.Spec{
 			EventHook: sutureext.EventHook(),
@@ -65,7 +72,7 @@ func run(filePath *string) lieut.Executor {
 		}
 
 		// Store
-		jsonStore := file.NewStore(*filePath)
+		jsonStore := file.NewStore(cfg.File)
 		playerStore := file.NewPlayerStore(jsonStore, bus)
 		presetStore := file.NewPresetStore(jsonStore, bus)
 
@@ -132,7 +139,7 @@ func run(filePath *string) lieut.Executor {
 		e.Any("/rpc/PresetService/*", echo.WrapHandler(presetService))
 		e.Any("/rpc/StateService/*", echo.WrapHandler(stateService))
 
-		httpServer := http.NewServer(e, ":8080")
+		httpServer := http.NewServer(e, fmt.Sprintf("%s:%d", cfg.HTTPHost, cfg.HTTPPort))
 		super.Add(httpServer)
 
 		return super.Serve(ctx)

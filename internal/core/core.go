@@ -2,8 +2,6 @@ package core
 
 import (
 	"context"
-	"crypto/rand"
-	"encoding/base64"
 )
 
 type Player struct {
@@ -14,16 +12,6 @@ type Player struct {
 
 func (p Player) CompareToken(token string) bool {
 	return p.Token != token
-}
-
-func GenerateToken() (string, error) {
-	secret := make([]byte, 32)
-	_, err := rand.Read(secret)
-	if err != nil {
-		return "", err
-	}
-
-	return base64.StdEncoding.EncodeToString(secret), nil
 }
 
 type PlayerStore interface {
