@@ -7,6 +7,8 @@
 # snapshot:
 # 	goreleaser release --snapshot --clean
 
+_: init run
+
 init:
 	mkdir web/dist -p && touch web/dist/index.html
 
@@ -24,9 +26,9 @@ preview: build-web run
 # clean:
 # 	rm -rf "$(DB_DIR)" && mkdir "$(DB_DIR)"
 
-gen: gen-proto gen-openapi # db-migrate gen-jet gen-templ
+gen: gen-proto gen-openapi gen-webrpc # db-migrate gen-jet gen-templ
 
-tooling: tooling-air tooling-goreleaser tooling-protoc-gen-go tooling-oapi-codegen # tooling-jet tooling-goose tooling-atlas
+tooling: tooling-air tooling-goreleaser tooling-protoc-gen-go tooling-oapi-codegen tooling-webrpc # tooling-jet tooling-goose tooling-atlas
 
 # Development
 
@@ -57,6 +59,12 @@ gen-openapi:
 	oapi-codegen -config shared/server.cfg.yaml shared/openapi.yaml
 	cd web && pnpm run generate-openapi
 
+gen-webrpc:
+	webrpc-gen -schema=./shared/api.ridl -target=golang -pkg=webrpc -server -out=./internal/webrpc/webrpc.gen.go
+	webrpc-gen -schema=./shared/api.ridl -target=typescript -client -out=./web/src/api/client.gen.ts
+	# Convert interface to type unless it is a Service
+	awk '/interface/ && !/Service / { gsub(/interface/, "type"); gsub(/{/, "= {");} 1' ./web/src/api/client.gen.ts > tmp-3842984 && mv tmp-3842984 ./web/src/api/client.gen.ts
+
 # gen-jet:
 # 	jet -source=sqlite -dsn="$(DB_PATH)" -path=./internal/jet -ignore-tables goose_db_version,_dummy
 # 	rm -rf ./internal/jet/model
@@ -74,6 +82,9 @@ tooling-protoc-gen-go:
 
 tooling-oapi-codegen:
 	go install github.com/deepmap/oapi-codegen/cmd/oapi-codegen@latest
+
+tooling-webrpc:
+	go install -ldflags="-s -w -X github.com/webrpc/webrpc.VERSION=v0.13.1" github.com/webrpc/webrpc/cmd/webrpc-gen@v0.13.1
 
 # tooling-jet:
 # 	go install github.com/go-jet/jet/v2/cmd/jet@latest

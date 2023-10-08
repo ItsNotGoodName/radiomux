@@ -14,249 +14,9 @@ info:
   # servers:
   #   - url: /api
 paths:
-  /players/{id}/play:
-    description: Start the player
-    post:
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        "204":
-          description: OK
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  /players/{id}/pause:
-    description: Pause player
-    post:
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        "204":
-          description: OK
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  /players/{id}/stop:
-    description: Stop the player
-    post:
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        "204":
-          description: OK
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  /players/{id}/seek:
-    description: Seek to default
-    post:
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        "204":
-          description: OK
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  /players/{id}/volume:
-    description: Change volume by delta
-    post:
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-        - in: query
-          name: delta
-          schema:
-            type: integer
-        - in: query
-          name: mute
-          schema:
-            type: boolean
-      responses:
-        "204":
-          description: OK
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  /players/{id}/media:
-    description: Set media uri and play
-    post:
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-        - in: query
-          name: uri
-          required: true
-          schema:
-            type: string
-      responses:
-        "204":
-          description: OK
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  /players/{id}/preset:
-    description: Set preset and play
-    post:
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-        - in: query
-          name: preset
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        "204":
-          description: OK
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  /players:
-    post:
-      description: Create player
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-              required:
-                - name
-      responses:
-        "201":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Player"
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+  /players/{id}/qr:
     get:
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Player"
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-    delete:
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Player"
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  /players/{id}:
-    post:
-      description: Update player by id
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Player"
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-    get:
-      description: Get player by id
+      description: Get player token qr code
       parameters:
         - in: path
           name: id
@@ -267,170 +27,15 @@ paths:
       responses:
         "200":
           content:
-            application/json:
+            image/png:
               schema:
-                $ref: "#/components/schemas/Player"
         default:
           description: unexpected error
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-    delete:
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        "204":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Player"
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  /presets:
-    post:
-      description: Create preset
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                url:
-                  type: string
-              required:
-                - name
-                - url
-      responses:
-        "201":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Preset"
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-    get:
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Preset"
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-    delete:
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Preset"
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  /presets/{id}:
-    post:
-      description: Update preset by id
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                url:
-                  type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Preset"
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-    get:
-      description: Get preset by id
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Preset"
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-    delete:
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        "204":
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Preset"
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+
   # /pets:
   #   get:
   #     description: |
@@ -549,36 +154,6 @@ components:
         message:
           type: string
 
-    Player:
-      type: object
-      required:
-        - id
-        - name
-        - token
-      properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        token:
-          type: string
-
-    Preset:
-      type: object
-      required:
-        - id
-        - name
-        - url
-      properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        url:
-          type: string
-
     Event:
       oneof:
         - $ref: "#/components/schemas/EventDataPlayerState"
@@ -629,13 +204,17 @@ components:
                 $ref: "#/components/schemas/PlayerState"
 
     PlayerPlaybackState:
-      type: integer
-      enum: [1, 2, 3, 4]
-      x-enum-varnames:
-        - idle
-        - buffering
-        - ready
-        - ended
+      type: string
+      enum:
+        - IDLE
+        - BUFFERING
+        - READY
+        - ENDED
+      # x-enum-varnames:
+      #   - idle
+      #   - buffering
+      #   - ready
+      #   - ended
 
     PlayerStatePartial:
       type: object

@@ -1,6 +1,5 @@
 import { Component, } from 'solid-js'
 import { styled, } from '@macaron-css/solid'
-import { usePlayerPauseMutation, usePlayerPlayMutation, usePlayerSeekMutation, usePlayerVolumeMutation, } from '~/hooks/api'
 import { ConnectionIndicator, Player } from '~/components/Player'
 import { Link, Outlet, Route } from '@solidjs/router'
 import { Home } from './Home'
@@ -15,6 +14,8 @@ import { RiSystemMenuLine } from 'solid-icons/ri'
 import { Dropdown, DropdownCard, DropdownPositioner } from "~/ui/Dropdown";
 import { Players } from './Players'
 import { Presets } from './Presets'
+import { StateAction } from '~/api/client.gen'
+import { useStateActionSetMutation, useStateVolumeSetMutation } from '~/hooks/api'
 
 const Header = styled("div", {
   base: {
@@ -141,23 +142,21 @@ function ThePlayer() {
   const { currentPlayerId, setCurrentPlayerId, currentPlayerState } = useCurrentPlayer()
 
   // Mutations
-  const playerVolumeMutation = usePlayerVolumeMutation()
-  const playerPlayMutation = usePlayerPlayMutation()
-  const playerPauseMutation = usePlayerPauseMutation()
-  const playerSeekMutation = usePlayerSeekMutation()
+  const stateVolumeSetMutation = useStateVolumeSetMutation()
+  const stateActionSetMutation = useStateActionSetMutation()
 
   return (
     <Player
       player={currentPlayerState()}
       players={playerStates}
-      onPlayClick={() => currentPlayerState()?.playing ? playerPauseMutation.mutate(currentPlayerId()) : playerPlayMutation.mutate(currentPlayerId())}
-      playDisabled={playerPauseMutation.isLoading || playerPlayMutation.isLoading}
-      onVolumeDownClick={() => playerVolumeMutation.mutate({ id: currentPlayerId(), delta: -1 })}
-      onVolumeUpClick={() => playerVolumeMutation.mutate({ id: currentPlayerId(), delta: 1 })}
-      onVolumeClick={() => playerVolumeMutation.mutate({ id: currentPlayerId(), mute: !currentPlayerState()?.muted })}
+      onPlayClick={() => stateActionSetMutation.mutate({ id: currentPlayerId(), action: currentPlayerState()?.playing ? StateAction.PUASE : StateAction.PLAY })}
+      playDisabled={stateActionSetMutation.isLoading}
+      onVolumeDownClick={() => stateVolumeSetMutation.mutate({ id: currentPlayerId(), delta: -1 })}
+      onVolumeUpClick={() => stateVolumeSetMutation.mutate({ id: currentPlayerId(), delta: 1 })}
+      onVolumeClick={() => stateVolumeSetMutation.mutate({ id: currentPlayerId(), mute: !currentPlayerState()?.muted })}
       onPlayerClick={(id) => setCurrentPlayerId((prev) => prev == id ? 0 : id)}
-      onSeekClick={() => playerSeekMutation.mutate(currentPlayerId())}
-      seekDisabled={playerSeekMutation.isLoading}
+      onSeekClick={() => stateActionSetMutation.mutate({ id: currentPlayerId(), action: StateAction.SEEK })}
+      seekDisabled={stateActionSetMutation.isLoading}
     />
   )
 }

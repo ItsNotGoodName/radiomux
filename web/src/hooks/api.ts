@@ -1,50 +1,75 @@
-import { GET, POST, ApiPlayer } from "~/api"
-import { createMutation, createQuery } from '@tanstack/solid-query'
-import { extractApiData } from '~/common'
+import { playerService, stateService, presetService } from "~/api"
+import { createMutation, createQuery, useQueryClient } from '@tanstack/solid-query'
+import { CreatePlayer, Player, SetStateAction, SetStateMedia, SetStateVolume, UpdatePlayer, WebrpcError } from "~/api/client.gen"
 
-export const usePlayersQuery = () => createQuery(() => ["/players"], () =>
-  GET("/players", {}).
-    then(extractApiData))
+export const usePlayerListQuery = () => createQuery(() => ["/players"], () =>
+  playerService.playerList().
+    then(res => res.res))
 
-export const usePresetsQuery = () => createQuery(() => ["/presets"],
-  () => GET("/presets", {}).
-    then(extractApiData))
+export const usePresetListQuery = () => createQuery(() => ["/presets"],
+  () => presetService.presetList().
+    then(res => res.presets))
 
-export const usePlayerQuery = (id: number) => createQuery<ApiPlayer, Error>(() => ["/presets/{id}", id],
-  () => GET("/players/{id}", { params: { path: { id } } }).
-    then(extractApiData))
+export const usePlayerGetQuery = (id: number) => createQuery<Player, WebrpcError>(() => ["/presets/{id}", id],
+  () => playerService.playerGet({ id }).
+    then(res => res.player))
 
-export const usePlayerPlayMutation = () => createMutation<void, Error, number>({
-  mutationFn: (id: number) =>
-    POST("/players/{id}/play", { params: { path: { id } } })
-      .then(extractApiData)
+export const useStateActionSetMutation = () => createMutation<unknown, WebrpcError, SetStateAction>({
+  mutationFn: (req) =>
+    stateService.stateActionSet({ req })
 })
 
-export const usePlayerPauseMutation = () => createMutation<void, Error, number>({
-  mutationFn: (id: number) =>
-    POST("/players/{id}/pause", { params: { path: { id } } })
-      .then(extractApiData)
+export const useStateVolumeSetMutation = () => createMutation<unknown, WebrpcError, SetStateVolume>({
+  mutationFn: (req) =>
+    stateService.stateVolumeSet({ req })
 })
 
-export const usePlayerSeekMutation = () => createMutation<void, Error, number>({
-  mutationFn: (id: number) =>
-    POST("/players/{id}/seek", { params: { path: { id } } })
-      .then(extractApiData)
+export const useStateMediaSetMutation = () => createMutation<unknown, WebrpcError, SetStateMedia>({
+  mutationFn: (req) =>
+    stateService.stateMediaSet({ req })
 })
 
-export const usePlayerVolumeMutation = () => createMutation<void, Error, { id: number, delta?: number, mute?: boolean }>({
-  mutationFn: ({ id, delta, mute }) =>
-    POST("/players/{id}/volume", { params: { path: { id }, query: { delta, mute } } })
-      .then(extractApiData)
-})
+export const usePlayerDeleteMutation = () => {
+  const queryClient = useQueryClient()
+  return createMutation<unknown, WebrpcError, Array<number>>({
+    mutationFn: (ids) => playerService.playerDelete({ ids }),
+    onSuccess(_, ids) {
+      ids.map((id) => queryClient.invalidateQueries(["/players/{id}", id]))
+      queryClient.invalidateQueries(["/players"])
+    },
+  })
+}
 
-export const usePlayerPresetMutation = () => createMutation<void, Error, { preset: number, id: number }>({
-  mutationFn: ({ preset, id }) =>
-    POST("/players/{id}/preset", { params: { path: { id }, query: { preset } } }).
-      then(extractApiData)
-})
+export const usePlayerCreateMutation = () => {
+  const queryClient = useQueryClient()
+  return createMutation<unknown, WebrpcError, CreatePlayer>({
+    mutationFn: (req) =>
+      playerService.playerCreate({ req }),
+    onSuccess() {
+      queryClient.invalidateQueries(["/players"])
+    },
+  })
+}
 
-export const usePlayerMediaMutation = () => createMutation<void, Error, { uri: string, id: number }>({
-  mutationFn: ({ uri, id }) => POST("/players/{id}/media", { params: { path: { id }, query: { uri } } }).
-    then(extractApiData)
-})
+export const usePlayerUpdateMutation = () => {
+  const queryClient = useQueryClient()
+  return createMutation<unknown, WebrpcError, UpdatePlayer>({
+    mutationFn: (req) =>
+      playerService.playerUpdate({ req }),
+    onSuccess() {
+      queryClient.invalidateQueries(["/players"])
+    },
+  })
+}
+
+export const usePlayerTokenRegenerateMutation = () => {
+  const queryClient = useQueryClient()
+  return createMutation<unknown, WebrpcError, number>({
+    mutationFn: (id) =>
+      playerService.playerTokenRegenerate({ id }),
+    onSuccess(_, id) {
+      queryClient.invalidateQueries(["/players/{id}", id])
+      queryClient.invalidateQueries(["/players"])
+    },
+  })
+}

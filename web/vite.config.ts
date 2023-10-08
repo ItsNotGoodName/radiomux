@@ -14,7 +14,8 @@ export default defineConfig({
       "/api/ws": {
         target: "http://localhost:8080/",
         ws: true,
-      }
+      },
+      "/rpc": "http://localhost:8080/",
     }
   },
   resolve: {

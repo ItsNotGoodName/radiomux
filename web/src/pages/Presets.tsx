@@ -1,6 +1,6 @@
 import { styled } from "@macaron-css/solid";
 import { For } from "solid-js"
-import { usePresetsQuery } from "~/hooks/api"
+import { usePresetListQuery } from "~/hooks/api";
 import { Table, TableBody, TableCaption, TableData, TableHead, TableHeader, TableRow } from "~/ui/Table"
 import { mixin, theme } from "~/ui/theme";
 
@@ -8,7 +8,7 @@ const Root = styled("div", {
   base: {
     display: "flex",
     justifyContent: "center",
-    padding: theme.space[2]
+    padding: theme.space[4]
   },
 });
 
@@ -21,7 +21,7 @@ const Content = styled("div", {
 })
 
 export function Presets() {
-  const presetsQuery = usePresetsQuery()
+  const presetListQuery = usePresetListQuery()
 
   return (
     <Root>
@@ -36,7 +36,7 @@ export function Presets() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            <For each={presetsQuery.data}>
+            <For each={presetListQuery.data}>
               {p => (
                 <TableRow>
                   <TableData>{p.id}</TableData>

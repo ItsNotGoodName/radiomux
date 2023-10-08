@@ -21,10 +21,10 @@ const (
 
 // Defines values for PlayerPlaybackState.
 const (
-	Buffering PlayerPlaybackState = 2
-	Ended     PlayerPlaybackState = 4
-	Idle      PlayerPlaybackState = 1
-	Ready     PlayerPlaybackState = 3
+	BUFFERING PlayerPlaybackState = "BUFFERING"
+	ENDED     PlayerPlaybackState = "ENDED"
+	IDLE      PlayerPlaybackState = "IDLE"
+	READY     PlayerPlaybackState = "READY"
 )
 
 // Error defines model for Error.
@@ -57,15 +57,8 @@ type EventDataPlayerStatePartial struct {
 // EventType defines model for EventType.
 type EventType string
 
-// Player defines model for Player.
-type Player struct {
-	Id    int64  `json:"id"`
-	Name  string `json:"name"`
-	Token string `json:"token"`
-}
-
 // PlayerPlaybackState defines model for PlayerPlaybackState.
-type PlayerPlaybackState int
+type PlayerPlaybackState string
 
 // PlayerState defines model for PlayerState.
 type PlayerState struct {
@@ -106,63 +99,6 @@ type PlayerStatePartial struct {
 	Uri           *string              `json:"uri,omitempty"`
 	Volume        *int                 `json:"volume,omitempty"`
 }
-
-// Preset defines model for Preset.
-type Preset struct {
-	Id   int64  `json:"id"`
-	Name string `json:"name"`
-	Url  string `json:"url"`
-}
-
-// PostPlayersJSONBody defines parameters for PostPlayers.
-type PostPlayersJSONBody struct {
-	Name string `json:"name"`
-}
-
-// PostPlayersIdJSONBody defines parameters for PostPlayersId.
-type PostPlayersIdJSONBody struct {
-	Name *string `json:"name,omitempty"`
-}
-
-// PostPlayersIdMediaParams defines parameters for PostPlayersIdMedia.
-type PostPlayersIdMediaParams struct {
-	Uri string `form:"uri" json:"uri"`
-}
-
-// PostPlayersIdPresetParams defines parameters for PostPlayersIdPreset.
-type PostPlayersIdPresetParams struct {
-	Preset int64 `form:"preset" json:"preset"`
-}
-
-// PostPlayersIdVolumeParams defines parameters for PostPlayersIdVolume.
-type PostPlayersIdVolumeParams struct {
-	Delta *int  `form:"delta,omitempty" json:"delta,omitempty"`
-	Mute  *bool `form:"mute,omitempty" json:"mute,omitempty"`
-}
-
-// PostPresetsJSONBody defines parameters for PostPresets.
-type PostPresetsJSONBody struct {
-	Name string `json:"name"`
-	Url  string `json:"url"`
-}
-
-// PostPresetsIdJSONBody defines parameters for PostPresetsId.
-type PostPresetsIdJSONBody struct {
-	Name *string `json:"name,omitempty"`
-	Url  *string `json:"url,omitempty"`
-}
-
-// PostPlayersJSONRequestBody defines body for PostPlayers for application/json ContentType.
-type PostPlayersJSONRequestBody PostPlayersJSONBody
-
-// PostPlayersIdJSONRequestBody defines body for PostPlayersId for application/json ContentType.
-type PostPlayersIdJSONRequestBody PostPlayersIdJSONBody
-
-// PostPresetsJSONRequestBody defines body for PostPresets for application/json ContentType.
-type PostPresetsJSONRequestBody PostPresetsJSONBody
-
-// PostPresetsIdJSONRequestBody defines body for PostPresetsId for application/json ContentType.
-type PostPresetsIdJSONRequestBody PostPresetsIdJSONBody
 
 // AsEventDataPlayerState returns the union data inside the Event as a EventDataPlayerState
 func (t Event) AsEventDataPlayerState() (EventDataPlayerState, error) {
@@ -256,62 +192,8 @@ func (t *Event) UnmarshalJSON(b []byte) error {
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 
-	// (DELETE /players)
-	DeletePlayers(ctx echo.Context) error
-
-	// (GET /players)
-	GetPlayers(ctx echo.Context) error
-
-	// (POST /players)
-	PostPlayers(ctx echo.Context) error
-
-	// (DELETE /players/{id})
-	DeletePlayersId(ctx echo.Context, id int64) error
-
-	// (GET /players/{id})
-	GetPlayersId(ctx echo.Context, id int64) error
-
-	// (POST /players/{id})
-	PostPlayersId(ctx echo.Context, id int64) error
-
-	// (POST /players/{id}/media)
-	PostPlayersIdMedia(ctx echo.Context, id int64, params PostPlayersIdMediaParams) error
-
-	// (POST /players/{id}/pause)
-	PostPlayersIdPause(ctx echo.Context, id int64) error
-
-	// (POST /players/{id}/play)
-	PostPlayersIdPlay(ctx echo.Context, id int64) error
-
-	// (POST /players/{id}/preset)
-	PostPlayersIdPreset(ctx echo.Context, id int64, params PostPlayersIdPresetParams) error
-
-	// (POST /players/{id}/seek)
-	PostPlayersIdSeek(ctx echo.Context, id int64) error
-
-	// (POST /players/{id}/stop)
-	PostPlayersIdStop(ctx echo.Context, id int64) error
-
-	// (POST /players/{id}/volume)
-	PostPlayersIdVolume(ctx echo.Context, id int64, params PostPlayersIdVolumeParams) error
-
-	// (DELETE /presets)
-	DeletePresets(ctx echo.Context) error
-
-	// (GET /presets)
-	GetPresets(ctx echo.Context) error
-
-	// (POST /presets)
-	PostPresets(ctx echo.Context) error
-
-	// (DELETE /presets/{id})
-	DeletePresetsId(ctx echo.Context, id int64) error
-
-	// (GET /presets/{id})
-	GetPresetsId(ctx echo.Context, id int64) error
-
-	// (POST /presets/{id})
-	PostPresetsId(ctx echo.Context, id int64) error
+	// (GET /players/{id}/qr)
+	GetPlayersIdQr(ctx echo.Context, id int64) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -319,35 +201,8 @@ type ServerInterfaceWrapper struct {
 	Handler ServerInterface
 }
 
-// DeletePlayers converts echo context to params.
-func (w *ServerInterfaceWrapper) DeletePlayers(ctx echo.Context) error {
-	var err error
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.DeletePlayers(ctx)
-	return err
-}
-
-// GetPlayers converts echo context to params.
-func (w *ServerInterfaceWrapper) GetPlayers(ctx echo.Context) error {
-	var err error
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetPlayers(ctx)
-	return err
-}
-
-// PostPlayers converts echo context to params.
-func (w *ServerInterfaceWrapper) PostPlayers(ctx echo.Context) error {
-	var err error
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PostPlayers(ctx)
-	return err
-}
-
-// DeletePlayersId converts echo context to params.
-func (w *ServerInterfaceWrapper) DeletePlayersId(ctx echo.Context) error {
+// GetPlayersIdQr converts echo context to params.
+func (w *ServerInterfaceWrapper) GetPlayersIdQr(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "id" -------------
 	var id int64
@@ -358,260 +213,7 @@ func (w *ServerInterfaceWrapper) DeletePlayersId(ctx echo.Context) error {
 	}
 
 	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.DeletePlayersId(ctx, id)
-	return err
-}
-
-// GetPlayersId converts echo context to params.
-func (w *ServerInterfaceWrapper) GetPlayersId(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int64
-
-	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetPlayersId(ctx, id)
-	return err
-}
-
-// PostPlayersId converts echo context to params.
-func (w *ServerInterfaceWrapper) PostPlayersId(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int64
-
-	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PostPlayersId(ctx, id)
-	return err
-}
-
-// PostPlayersIdMedia converts echo context to params.
-func (w *ServerInterfaceWrapper) PostPlayersIdMedia(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int64
-
-	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params PostPlayersIdMediaParams
-	// ------------- Required query parameter "uri" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "uri", ctx.QueryParams(), &params.Uri)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter uri: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PostPlayersIdMedia(ctx, id, params)
-	return err
-}
-
-// PostPlayersIdPause converts echo context to params.
-func (w *ServerInterfaceWrapper) PostPlayersIdPause(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int64
-
-	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PostPlayersIdPause(ctx, id)
-	return err
-}
-
-// PostPlayersIdPlay converts echo context to params.
-func (w *ServerInterfaceWrapper) PostPlayersIdPlay(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int64
-
-	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PostPlayersIdPlay(ctx, id)
-	return err
-}
-
-// PostPlayersIdPreset converts echo context to params.
-func (w *ServerInterfaceWrapper) PostPlayersIdPreset(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int64
-
-	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params PostPlayersIdPresetParams
-	// ------------- Required query parameter "preset" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "preset", ctx.QueryParams(), &params.Preset)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter preset: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PostPlayersIdPreset(ctx, id, params)
-	return err
-}
-
-// PostPlayersIdSeek converts echo context to params.
-func (w *ServerInterfaceWrapper) PostPlayersIdSeek(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int64
-
-	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PostPlayersIdSeek(ctx, id)
-	return err
-}
-
-// PostPlayersIdStop converts echo context to params.
-func (w *ServerInterfaceWrapper) PostPlayersIdStop(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int64
-
-	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PostPlayersIdStop(ctx, id)
-	return err
-}
-
-// PostPlayersIdVolume converts echo context to params.
-func (w *ServerInterfaceWrapper) PostPlayersIdVolume(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int64
-
-	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params PostPlayersIdVolumeParams
-	// ------------- Optional query parameter "delta" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "delta", ctx.QueryParams(), &params.Delta)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter delta: %s", err))
-	}
-
-	// ------------- Optional query parameter "mute" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "mute", ctx.QueryParams(), &params.Mute)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter mute: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PostPlayersIdVolume(ctx, id, params)
-	return err
-}
-
-// DeletePresets converts echo context to params.
-func (w *ServerInterfaceWrapper) DeletePresets(ctx echo.Context) error {
-	var err error
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.DeletePresets(ctx)
-	return err
-}
-
-// GetPresets converts echo context to params.
-func (w *ServerInterfaceWrapper) GetPresets(ctx echo.Context) error {
-	var err error
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetPresets(ctx)
-	return err
-}
-
-// PostPresets converts echo context to params.
-func (w *ServerInterfaceWrapper) PostPresets(ctx echo.Context) error {
-	var err error
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PostPresets(ctx)
-	return err
-}
-
-// DeletePresetsId converts echo context to params.
-func (w *ServerInterfaceWrapper) DeletePresetsId(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int64
-
-	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.DeletePresetsId(ctx, id)
-	return err
-}
-
-// GetPresetsId converts echo context to params.
-func (w *ServerInterfaceWrapper) GetPresetsId(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int64
-
-	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetPresetsId(ctx, id)
-	return err
-}
-
-// PostPresetsId converts echo context to params.
-func (w *ServerInterfaceWrapper) PostPresetsId(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "id" -------------
-	var id int64
-
-	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.PostPresetsId(ctx, id)
+	err = w.Handler.GetPlayersIdQr(ctx, id)
 	return err
 }
 
@@ -643,24 +245,6 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 		Handler: si,
 	}
 
-	router.DELETE(baseURL+"/players", wrapper.DeletePlayers)
-	router.GET(baseURL+"/players", wrapper.GetPlayers)
-	router.POST(baseURL+"/players", wrapper.PostPlayers)
-	router.DELETE(baseURL+"/players/:id", wrapper.DeletePlayersId)
-	router.GET(baseURL+"/players/:id", wrapper.GetPlayersId)
-	router.POST(baseURL+"/players/:id", wrapper.PostPlayersId)
-	router.POST(baseURL+"/players/:id/media", wrapper.PostPlayersIdMedia)
-	router.POST(baseURL+"/players/:id/pause", wrapper.PostPlayersIdPause)
-	router.POST(baseURL+"/players/:id/play", wrapper.PostPlayersIdPlay)
-	router.POST(baseURL+"/players/:id/preset", wrapper.PostPlayersIdPreset)
-	router.POST(baseURL+"/players/:id/seek", wrapper.PostPlayersIdSeek)
-	router.POST(baseURL+"/players/:id/stop", wrapper.PostPlayersIdStop)
-	router.POST(baseURL+"/players/:id/volume", wrapper.PostPlayersIdVolume)
-	router.DELETE(baseURL+"/presets", wrapper.DeletePresets)
-	router.GET(baseURL+"/presets", wrapper.GetPresets)
-	router.POST(baseURL+"/presets", wrapper.PostPresets)
-	router.DELETE(baseURL+"/presets/:id", wrapper.DeletePresetsId)
-	router.GET(baseURL+"/presets/:id", wrapper.GetPresetsId)
-	router.POST(baseURL+"/presets/:id", wrapper.PostPresetsId)
+	router.GET(baseURL+"/players/:id/qr", wrapper.GetPlayersIdQr)
 
 }

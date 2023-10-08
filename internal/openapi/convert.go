@@ -5,11 +5,9 @@ import (
 
 	"github.com/ItsNotGoodName/radiomux/internal"
 	"github.com/ItsNotGoodName/radiomux/internal/android"
-	"github.com/ItsNotGoodName/radiomux/internal/core"
 	"github.com/ItsNotGoodName/radiomux/pkg/diff"
 	"github.com/labstack/echo/v4"
 	"github.com/rs/zerolog/log"
-	"github.com/samber/lo"
 )
 
 func ConvertErr(err error) error {
@@ -26,43 +24,19 @@ func ConvertErr(err error) error {
 	return err
 }
 
-func ConvertPlayers(p []core.Player) []Player {
-	return lo.Map(p, func(p core.Player, _ int) Player { return ConvertPlayer(p) })
-}
-
-func ConvertPlayer(p core.Player) Player {
-	return Player{
-		Id:    p.ID,
-		Name:  p.Name,
-		Token: p.Token,
-	}
-}
-
-func ConvertPresets(p []core.Preset) []Preset {
-	return lo.Map(p, func(p core.Preset, _ int) Preset { return ConvertPreset(p) })
-}
-
-func ConvertPreset(p core.Preset) Preset {
-	return Preset{
-		Id:   p.ID,
-		Name: p.Name,
-		Url:  p.URL,
-	}
-}
-
 func ConvertPlayerPlaybackState(s android.PlaybackState) PlayerPlaybackState {
 	switch s {
 	case android.PLAYBACK_STATE_IDLE:
-		return Idle
+		return IDLE
 	case android.PLAYBACK_STATE_BUFFERING:
-		return Buffering
+		return BUFFERING
 	case android.PLAYBACK_STATE_READY:
-		return Ready
+		return READY
 	case android.PLAYBACK_STATE_ENDED:
-		return Ended
+		return ENDED
 	default:
 		log.Error().Msg("invalid playback state")
-		return Idle
+		return IDLE
 	}
 }
 

@@ -1,9 +1,8 @@
 import { styled } from "@macaron-css/solid";
 import { minScreen, mixin, theme, tw } from "./theme";
-import { JSX, Setter, Show, createSignal } from "solid-js";
+import { JSX, Setter, Show, createEffect, createSignal } from "solid-js";
 import { themeModeClass } from "./theme-mode";
 import { Portal } from "solid-js/web";
-import Dismiss from "solid-dismiss";
 
 const DialogOverlay = styled("div", {
   base: {
@@ -94,6 +93,11 @@ type Props = {
 export function Dialog(props: Props) {
   const [open, setOpen] = createSignal(false);
   const [anchor, setAnchor] = createSignal<HTMLElement>();
+  createEffect(() => {
+    if (anchor()) {
+      anchor()!.onclick = () => setOpen((prev) => !prev)
+    }
+  })
 
   return (
     <>
@@ -101,11 +105,9 @@ export function Dialog(props: Props) {
       <Portal>
         <div class={themeModeClass()}>
           <Show when={open()}>
-            <DialogOverlay />
-          </Show>
-          <Dismiss menuButton={anchor()} open={open} setOpen={setOpen} >
+            <DialogOverlay onClick={[setOpen, false]} />
             {props.children(setOpen)}
-          </Dismiss>
+          </Show>
         </div>
       </Portal>
     </>

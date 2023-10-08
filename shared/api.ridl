@@ -1,0 +1,86 @@
+webrpc = v1
+
+name = radiomux
+version = v0.1.0
+
+######################## PlayerService
+
+struct Player
+  - id: int64
+  - name: string
+  - token: string
+
+struct CreatePlayer
+  - id: int64
+  - name: string
+
+struct UpdatePlayer
+  - id: int64
+  - name?: string
+
+struct PlayerListResult
+  - players: []Player
+  - count: int
+
+service PlayerService
+  - PlayerCreate(req: CreatePlayer) => (id: int64)
+  - PlayerGet(id: int64) => (player: Player)
+  - PlayerList() => (res: PlayerListResult)
+  - PlayerUpdate(req: UpdatePlayer)
+  - PlayerTokenRegenerate(id: int64)
+  - PlayerDelete(ids: []int64)
+
+######################## PresetService
+
+struct Preset
+  - id: int64
+  - name: string
+  - url: string
+
+struct CreatePreset
+  - id: int64
+  - name: string
+
+struct UpdatePreset
+  - id: int64
+  - name?: string
+  - url?: string
+
+service PresetService
+  - PresetCreate(req: CreatePreset) => (id: int64)
+  - PresetGet(id: int64) => (preset: Preset)
+  - PresetList() => (presets: []Preset)
+  - PresetUpdate(req: UpdatePreset)
+  - PresetDelete(ids: []int64)
+
+######################## StateService
+
+enum StateAction: uint32
+  - PLAY = 1
+  - PUASE = 2
+  - STOP = 3
+  - SEEK = 4
+
+struct SetStateAction
+  - id: int64
+  - action: StateAction
+
+struct SetStateVolume
+  - id: int64
+  - volume?: int
+  - delta?: int
+  - mute?: bool
+
+struct SetStateMedia 
+  - id: int64
+  - presetId?: int64
+  - uri?: string
+
+service StateService
+  - StateActionSet(req: SetStateAction)
+  - StateVolumeSet(req: SetStateVolume)
+  - StateMediaSet(req: SetStateMedia)
+
+######################## Errors
+
+error 100 NotFound     "not found"   HTTP 404

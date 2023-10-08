@@ -60,7 +60,7 @@ export const TableRow = styled("tr", {
       [`${TableBody} &:last-child`]: {
         borderBottom: "none"
       },
-      '&[data-state-selected]': {
+      '&[data-state="selected"]': {
         background: theme.color.muted
       },
     }
@@ -75,7 +75,12 @@ export const TableHead = styled("th", {
     textAlign: "left",
     verticalAlign: "middle",
     fontWeight: "500",
-    color: theme.color.mutedForeground
+    color: theme.color.mutedForeground,
+    selectors: {
+      [`&:has([role="checkbox"])`]: { // FIXME: this does not work on firefox https://caniuse.com/css-has
+        width: "0px"
+      },
+    }
     // [&:has([role=checkbox])]:pr-0"
   }
 })
@@ -84,7 +89,11 @@ export const TableData = styled("td", {
   base: {
     padding: theme.space[4],
     verticalAlign: "middle",
-    // [&:has([role=checkbox])]:pr-0", className)}
+    selectors: {
+      [`&:has([role="checkbox"])`]: { // FIXME: this does not work on firefox https://caniuse.com/css-has
+        width: "0px"
+      },
+    }
   }
 })
 

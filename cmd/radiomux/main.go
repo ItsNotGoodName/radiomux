@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/ItsNotGoodName/radiomux/internal/android"
 	"github.com/ItsNotGoodName/radiomux/internal/androidws"
@@ -14,6 +15,8 @@ import (
 	"github.com/ItsNotGoodName/radiomux/internal/bus"
 	"github.com/ItsNotGoodName/radiomux/internal/file"
 	"github.com/ItsNotGoodName/radiomux/internal/http"
+	"github.com/ItsNotGoodName/radiomux/internal/rpc"
+	"github.com/ItsNotGoodName/radiomux/internal/webrpc"
 	"github.com/ItsNotGoodName/radiomux/pkg/echoext"
 	"github.com/ItsNotGoodName/radiomux/pkg/sutureext"
 	"github.com/ItsNotGoodName/radiomux/web"
@@ -68,14 +71,23 @@ func run(filePath *string) lieut.Executor {
 
 		// Services
 		androidStatePubSub := android.NewStateMemPubSub()
-		androidStateStore, c1 := android.NewStateMemStore(androidStatePubSub, bus)
-		defer c1()
+		androidStateStore, close1 := android.NewStateMemStore(androidStatePubSub, bus)
+		defer close1()
 		androidStateService := android.NewStateService(androidStatePubSub, androidStateStore)
-		androidController, c2 := android.NewController(androidStateService, bus)
-		defer c2()
+		androidController, close2 := android.NewController(androidStateService, bus)
+		defer close2()
 		androidWSServer := androidws.NewServer(playerStore, androidController, androidStateService)
 		apiWSServer := apiws.NewServer(androidStateService, playerStore)
-		apiServer := api.NewServer(playerStore, presetStore, androidController)
+		apiServer := api.NewServer(playerStore)
+		playerService := webrpc.
+			NewPlayerServiceServer(rpc.
+				NewPlayerService(playerStore))
+		presetService := webrpc.
+			NewPresetServiceServer(rpc.
+				NewPresetService(presetStore))
+		stateService := webrpc.
+			NewStateServiceServer(rpc.
+				NewStateService(androidController, presetStore))
 
 		// DEBUG START
 		// for i := 1; i <= 10; i++ {
@@ -102,6 +114,9 @@ func run(filePath *string) lieut.Executor {
 		}))
 		e.Use(middleware.Recover())
 		e.Use(middleware.StaticWithConfig(middleware.StaticConfig{
+			Skipper: func(c echo.Context) bool {
+				return strings.HasPrefix(c.Request().RequestURI, "/api")
+			},
 			Root:       "dist",
 			Index:      "index.html",
 			Browse:     false,
@@ -112,7 +127,10 @@ func run(filePath *string) lieut.Executor {
 		// - Routes
 		e.GET("/ws", androidWSServer.Handle)
 		e.GET("/api/ws", apiWSServer.Handle)
-		api.MountServer(e, apiServer, "/api")
+		api.MountServer(e, apiServer)
+		e.Any("/rpc/PlayerService/*", echo.WrapHandler(playerService))
+		e.Any("/rpc/PresetService/*", echo.WrapHandler(presetService))
+		e.Any("/rpc/StateService/*", echo.WrapHandler(stateService))
 
 		httpServer := http.NewServer(e, ":8080")
 		super.Add(httpServer)

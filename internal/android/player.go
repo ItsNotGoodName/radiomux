@@ -1,17 +1,5 @@
 package android
 
-// import "crypto/rand"
-//
-// func GenerateToken() (string, error) {
-// 	secret := make([]byte, 32)
-// 	_, err := rand.Read(secret)
-// 	if err != nil {
-// 		return "", err
-// 	}
-//
-// 	return string(secret), nil
-// }
-
 type DeviceInfo struct {
 	MinVolume int
 	MaxVolume int

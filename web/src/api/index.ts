@@ -1,16 +1,19 @@
-import createClient from 'openapi-fetch';
-import { paths, components } from "./types"
+import { components } from "./types"
+import { PlayerService, PresetService, StateService } from './client.gen';
 
-export const { POST, GET } = createClient<paths>({ baseUrl: "/api" });
+export const playerService = new PlayerService("", fetch)
+export const presetService = new PresetService("", fetch)
+export const stateService = new StateService("", fetch)
+
+export function playerQrCodeUrl(id: number): string {
+  return `/api/players/${id}/qr?t=` + + new Date().getTime();
+}
 
 export type ApiError = components["schemas"]["Error"]
-
-export type ApiPlayer = components["schemas"]["Player"]
 
 export type ApiPlayerState = Required<components["schemas"]["PlayerStatePartial"]>
 
 export type ApiPlayerStatePartial = components["schemas"]["PlayerStatePartial"]
-
 
 export type ApiEvent = ApiEventPlayerState | ApiEventPlayerStatePartial
 
