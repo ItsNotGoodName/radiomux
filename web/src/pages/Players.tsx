@@ -4,11 +4,11 @@ import { createForm } from "@modular-forms/solid";
 import { For, createMemo, } from "solid-js"
 import { playerQrUrl } from "~/api";
 import { CreatePlayer, Player, UpdatePlayer } from "~/api/client.gen";
-import { usePlayerCreateMutation, usePlayerDeleteMutation, usePlayerListQuery, usePlayerTokenRegenerateMutation, usePlayerUpdateMutation } from "~/hooks/api";
+import { usePlayerCreateMutation, usePlayerDeleteMutation, usePlayerListQuery, usePlayerTokenRegenerateMutation, usePlayerUpdateMutation, usePlayerWsURLQuery } from "~/hooks/api";
 import { useSelection } from "~/hooks/useSelection";
 import { Button } from "~/ui/Button";
 import { Checkbox } from "~/ui/Checkbox";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "~/ui/Dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "~/ui/Dialog";
 import { Input } from "~/ui/Input";
 import { Label } from "~/ui/Label";
 import { Table, TableBody, TableCaption, TableData, TableHead, TableHeader, TableRow } from "~/ui/Table"
@@ -103,6 +103,7 @@ export function Players() {
               })
 
               const playerTokenRegenerateMutation = usePlayerTokenRegenerateMutation()
+              const playerWsURLQuery = usePlayerWsURLQuery(player().id)
 
               const imgUrl = () => playerQrUrl(player().id)
 
@@ -110,6 +111,7 @@ export function Players() {
                 <DialogContent>
                   <DialogHeader>
                     <DialogTitle>{player().name}</DialogTitle>
+                    <DialogDescription>{playerWsURLQuery.data}</DialogDescription>
                   </DialogHeader>
                   <img src={imgUrl()}></img>
                   <Button disabled={playerTokenRegenerateMutation.isLoading} size="sm" onClick={() => playerTokenRegenerateMutation.mutate(player().id)}>

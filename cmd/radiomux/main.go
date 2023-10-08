@@ -88,7 +88,7 @@ func run(cfg *config.Config) lieut.Executor {
 		apiServer := api.NewServer(playerStore, androidWSServer)
 		playerService := webrpc.
 			NewPlayerServiceServer(rpc.
-				NewPlayerService(playerStore))
+				NewPlayerService(playerStore, androidWSServer))
 		presetService := webrpc.
 			NewPresetServiceServer(rpc.
 				NewPresetService(presetStore))

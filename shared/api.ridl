@@ -28,6 +28,7 @@ service PlayerService
   - PlayerList() => (res: PlayerListResult)
   - PlayerUpdate(req: UpdatePlayer)
   - PlayerTokenRegenerate(id: int64)
+  - PlayerWsURL(id: int64) => (url: string)
   - PlayerDelete(ids: []int64)
 
 ######################## PresetService

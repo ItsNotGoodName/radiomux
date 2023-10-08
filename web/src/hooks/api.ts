@@ -14,6 +14,10 @@ export const usePlayerGetQuery = (id: number) => createQuery<Player, WebrpcError
   () => playerService.playerGet({ id }).
     then(res => res.player))
 
+export const usePlayerWsURLQuery = (id: number) => createQuery<string, WebrpcError>(() => ["playerWsURL", id],
+  () => playerService.playerWsURL({ id }).
+    then(res => res.url))
+
 export const useStateActionSetMutation = () => createMutation<unknown, WebrpcError, SetStateAction>({
   mutationFn: (req) =>
     stateService.stateActionSet({ req })
