@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import com.gurnain.radiomuxplayer.protos.Message
+import com.gurnain.radiomuxplayer.protos.MessageConverter
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -13,14 +14,16 @@ import okio.ByteString
 import okio.ByteString.Companion.toByteString
 
 class Connection constructor(private val url: String, private val listener: Listener) {
+
+    private val client = OkHttpClient()
+
     private var webSocket: WebSocket? = null
     private var shouldReconnect = true
 
     private fun initWebSocket() {
-        val client = OkHttpClient()
-        val request = Request.Builder().url(url).build()
-        webSocket = client.newWebSocket(request, webSocketListener)
-        client.dispatcher.executorService.shutdown()
+        webSocket = Request.Builder().url(url).build().let {
+            client.newWebSocket(it, webSocketListener)
+        }
     }
 
     fun connect() {
@@ -56,7 +59,13 @@ class Connection constructor(private val url: String, private val listener: List
         override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
             Log.v(TAG, "onMessage(): bytes")
             Message.Rpc.parseFrom(bytes.toByteArray())?.let {
-                Handler(Looper.getMainLooper()).post { listener.rpc(it) }
+                Handler(Looper.getMainLooper()).post {
+                    listener.rpc(it).let {
+                        MessageConverter.eventRpcReply(it)
+                    }.let {
+                        send(it)
+                    }
+                }
             }
         }
 
@@ -73,6 +82,6 @@ class Connection constructor(private val url: String, private val listener: List
     }
 
     interface Listener {
-        fun rpc(payload: Message.Rpc)
+        fun rpc(payload: Message.Rpc): Message.RpcReply.Builder
     }
 }

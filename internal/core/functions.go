@@ -12,5 +12,5 @@ func GenerateToken() (string, error) {
 		return "", err
 	}
 
-	return base64.StdEncoding.EncodeToString(secret), nil
+	return base64.URLEncoding.EncodeToString(secret), nil
 }

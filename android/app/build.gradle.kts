@@ -133,4 +133,7 @@ dependencies {
 
     // Settings
     implementation("androidx.preference:preference-ktx:1.2.0")
+
+    // QR
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
 }

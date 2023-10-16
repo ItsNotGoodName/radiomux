@@ -7,6 +7,15 @@ import androidx.media3.common.PlaybackParameters
 import com.google.protobuf.ByteString
 
 object MessageConverter {
+
+    fun rpcReply(id: Int): Message.RpcReply.Builder {
+        return Message.RpcReply.newBuilder().setId(id)
+    }
+
+    fun eventRpcReply(rpcReply: Message.RpcReply.Builder): Message.Event {
+        return Message.Event.newBuilder().setRpcReply(rpcReply).build()
+    }
+
     fun mediaMetadata(mediaMetadata: MediaMetadata): Message.MediaMetadata.Builder {
         var res = Message.MediaMetadata.newBuilder()
         mediaMetadata.title?.let { res = res.setTitle(it.toString()) }
@@ -47,10 +56,6 @@ object MessageConverter {
         return res
     }
 
-    fun rpcReply(id :Int): Message.Event {
-        return Message.RpcReply.newBuilder().setId(id)
-            .let { Message.Event.newBuilder().setRpcReply(it).build() }
-    }
     fun eventOnMediaMetadataChanged(mediaMetadata: Message.MediaMetadata.Builder): Message.Event {
         return Message.OnMediaMetadataChanged.newBuilder().setMediaMetadata(mediaMetadata)
             .let { Message.Event.newBuilder().setOnMediaMetadataChanged(it).build() }

@@ -14,22 +14,22 @@ type Server struct {
 	playerStore core.PlayerStore
 	controller  *android.Controller
 	busEvent    android.BusEvent
-	httpURL     string
+	wsURL       string
 }
 
-func NewServer(playerStore core.PlayerStore, controller *android.Controller, busEvent android.BusEvent, httpURL string) Server {
+func NewServer(playerStore core.PlayerStore, controller *android.Controller, busEvent android.BusEvent, wsURL string) Server {
 	return Server{
 		playerStore: playerStore,
 		controller:  controller,
 		busEvent:    busEvent,
-		httpURL:     httpURL,
+		wsURL:       wsURL,
 	}
 }
 
 const Path = "/api/android/ws"
 
 func (s Server) PlayerWSURL(p core.Player) string {
-	return fmt.Sprintf("%s%s?id=%d&token=%s", s.httpURL, Path, p.ID, p.Token)
+	return fmt.Sprintf("%s%s?id=%d&token=%s", s.wsURL, Path, p.ID, p.Token)
 }
 
 func (s Server) Handle(c echo.Context) error {

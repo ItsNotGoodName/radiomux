@@ -132,7 +132,7 @@ func run(cfg *config.Config) lieut.Executor {
 		}))
 
 		// - Routes
-		e.GET("/ws", androidWSServer.Handle)
+		e.GET("/ws", androidWSServer.Handle) // TODO: remove this
 		e.GET(androidws.Path, androidWSServer.Handle)
 		e.GET("/api/ws", apiWSServer.Handle)
 		api.MountServer(e, apiServer)
