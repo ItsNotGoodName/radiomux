@@ -123,7 +123,7 @@ func convertMediaMetadata(x *protos.MediaMetadata) *android.MediaMetadata {
 			IsRated:    m.OverallRating.GetIsRated(),
 			RatingType: android.RatingType(m.OverallRating.GetRatingType()),
 		},
-		ArtworkData:     m.ArtworkData,
+		// ArtworkData:     m.ArtworkData,
 		ArtworkDataType: android.PictureType(m.ArtworkDataType),
 		ArtworkUri:      m.ArtworkUri,
 		TrackNumber:     int(m.TrackNumber),

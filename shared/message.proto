@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-option java_package = "com.gurnain.radiomuxplayer.protos";
 option go_package = "internal/protos";
+option java_package = "com.gurnain.radiomuxplayer.protos";
 
 message Rating {
   bool IsRated = 1;
@@ -18,7 +18,7 @@ message MediaMetadata {
   string Description = 7;
   Rating UserRating = 8;
   Rating OverallRating = 9;
-  bytes ArtworkData = 10;
+  // bytes ArtworkData = 10; // TODO: this is way too big
   int32 ArtworkDataType = 11;
   string ArtworkUri = 12;
   int32 TrackNumber = 13;
@@ -76,34 +76,54 @@ message Event {
   }
 }
 
-message RpcReply { int32 id = 1; }
+message RpcReply {
+  int32 id = 1;
+}
 
-message OnMediaMetadataChanged { MediaMetadata media_metadata = 1; }
+message OnMediaMetadataChanged {
+  MediaMetadata media_metadata = 1;
+}
 
-message OnPlaylistMetadataChanged { MediaMetadata media_metadata = 1; }
+message OnPlaylistMetadataChanged {
+  MediaMetadata media_metadata = 1;
+}
 
-message OnIsLoadingChanged { bool is_loading = 1; }
+message OnIsLoadingChanged {
+  bool is_loading = 1;
+}
 
-message OnPlaybackStateChanged { int32 playback_state = 1; }
+message OnPlaybackStateChanged {
+  int32 playback_state = 1;
+}
 
-message OnIsPlayingChanged { bool is_playing = 1; }
+message OnIsPlayingChanged {
+  bool is_playing = 1;
+}
 
-message OnPlayerError { PlaybackException error = 1; }
+message OnPlayerError {
+  PlaybackException error = 1;
+}
 
 message OnPlaybackParametersChanged {
   PlaybackParameters playback_parameters = 1;
 }
 
-message OnVolumeChanged { float volume = 1; }
+message OnVolumeChanged {
+  float volume = 1;
+}
 
-message OnDeviceInfoChanged { DeviceInfo device_info = 1; }
+message OnDeviceInfoChanged {
+  DeviceInfo device_info = 1;
+}
 
 message OnDeviceVolumeChanged {
   int32 volume = 1;
   bool muted = 2;
 }
 
-message OnCurrentUriChanged { string uri = 1; }
+message OnCurrentUriChanged {
+  string uri = 1;
+}
 
 // Rpc
 
@@ -134,19 +154,29 @@ message Pause {}
 
 message Prepare {}
 
-message SetPlayWhenReady { bool play_when_ready = 1; }
+message SetPlayWhenReady {
+  bool play_when_ready = 1;
+}
 
-message SetMediaItem { string uri = 1; }
+message SetMediaItem {
+  string uri = 1;
+}
 
-message SetVolume { float volume = 1; }
+message SetVolume {
+  float volume = 1;
+}
 
-message SetDeviceVolume { int32 volume = 1; }
+message SetDeviceVolume {
+  int32 volume = 1;
+}
 
 message IncreaseDeviceVolume {}
 
 message DecreaseDeviceVolume {}
 
-message SetDeviceMuted { bool muted = 1; }
+message SetDeviceMuted {
+  bool muted = 1;
+}
 
 message SyncState {}
 

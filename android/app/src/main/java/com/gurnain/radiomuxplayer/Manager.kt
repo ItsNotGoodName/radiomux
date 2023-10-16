@@ -17,7 +17,7 @@ import com.google.common.util.concurrent.MoreExecutors
 import com.gurnain.radiomuxplayer.protos.Message
 import com.gurnain.radiomuxplayer.protos.MessageConverter
 
-class Manager(val context: android.content.Context) :
+class Manager(private val context: android.content.Context) :
     SharedPreferences.OnSharedPreferenceChangeListener {
 
     val TAG = "Manager"
@@ -84,6 +84,8 @@ class Manager(val context: android.content.Context) :
         private val TAG = "connectionListener"
 
         override fun rpc(payload: Message.Rpc): Message.RpcReply.Builder {
+            Log.v(TAG, payload.toString())
+
             payload.payloadCase?.let { payloadCase ->
                 when (payloadCase) {
                     Message.Rpc.PayloadCase.STOP -> {

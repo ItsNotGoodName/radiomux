@@ -6,7 +6,7 @@
 
 export interface paths {
   "/players/{id}/qr": {
-    /** @description Get player QR code for the Android app. */
+    /** @description Get player's QR code for the Android app. */
     get: {
       parameters: {
         path: {

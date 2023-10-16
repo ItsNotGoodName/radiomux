@@ -31,7 +31,7 @@ object MessageConverter {
         mediaMetadata.overallRating?.let {
             res = res.setOverallRating(Message.Rating.newBuilder().setIsRated(it.isRated))
         }
-        mediaMetadata.artworkData?.let { res = res.setArtworkData(ByteString.copyFrom(it)) }
+        // mediaMetadata.artworkData?.let { res = res.setArtworkData(ByteString.copyFrom(it)) }
         mediaMetadata.artworkDataType?.let { res = res.setArtworkDataType(it) }
         mediaMetadata.artworkUri?.let { res = res.setArtworkUri(it.toString()) }
         mediaMetadata.trackNumber?.let { res = res.setTrackNumber(it) }

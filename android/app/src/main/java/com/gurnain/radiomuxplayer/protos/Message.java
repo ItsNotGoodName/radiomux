@@ -426,12 +426,10 @@ public final class Message {
     com.gurnain.radiomuxplayer.protos.Message.Rating getOverallRating();
 
     /**
-     * <code>bytes ArtworkData = 10;</code>
-     * @return The artworkData.
-     */
-    com.google.protobuf.ByteString getArtworkData();
-
-    /**
+     * <pre>
+     * bytes ArtworkData = 10; // TODO: this is way too big
+     * </pre>
+     *
      * <code>int32 ArtworkDataType = 11;</code>
      * @return The artworkDataType.
      */
@@ -615,7 +613,6 @@ public final class Message {
       displayTitle_ = "";
       subtitle_ = "";
       description_ = "";
-      artworkData_ = com.google.protobuf.ByteString.EMPTY;
       artworkUri_ = "";
       writer_ = "";
       composer_ = "";
@@ -1046,36 +1043,13 @@ public final class Message {
       bitField0_ = (bitField0_ & ~0x00000002);
     }
 
-    public static final int ARTWORKDATA_FIELD_NUMBER = 10;
-    private com.google.protobuf.ByteString artworkData_;
-    /**
-     * <code>bytes ArtworkData = 10;</code>
-     * @return The artworkData.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString getArtworkData() {
-      return artworkData_;
-    }
-    /**
-     * <code>bytes ArtworkData = 10;</code>
-     * @param value The artworkData to set.
-     */
-    private void setArtworkData(com.google.protobuf.ByteString value) {
-      java.lang.Class<?> valueClass = value.getClass();
-  
-      artworkData_ = value;
-    }
-    /**
-     * <code>bytes ArtworkData = 10;</code>
-     */
-    private void clearArtworkData() {
-
-      artworkData_ = getDefaultInstance().getArtworkData();
-    }
-
     public static final int ARTWORKDATATYPE_FIELD_NUMBER = 11;
     private int artworkDataType_;
     /**
+     * <pre>
+     * bytes ArtworkData = 10; // TODO: this is way too big
+     * </pre>
+     *
      * <code>int32 ArtworkDataType = 11;</code>
      * @return The artworkDataType.
      */
@@ -1084,6 +1058,10 @@ public final class Message {
       return artworkDataType_;
     }
     /**
+     * <pre>
+     * bytes ArtworkData = 10; // TODO: this is way too big
+     * </pre>
+     *
      * <code>int32 ArtworkDataType = 11;</code>
      * @param value The artworkDataType to set.
      */
@@ -1092,6 +1070,10 @@ public final class Message {
       artworkDataType_ = value;
     }
     /**
+     * <pre>
+     * bytes ArtworkData = 10; // TODO: this is way too big
+     * </pre>
+     *
      * <code>int32 ArtworkDataType = 11;</code>
      */
     private void clearArtworkDataType() {
@@ -2301,34 +2283,10 @@ public final class Message {
       }
 
       /**
-       * <code>bytes ArtworkData = 10;</code>
-       * @return The artworkData.
-       */
-      @java.lang.Override
-      public com.google.protobuf.ByteString getArtworkData() {
-        return instance.getArtworkData();
-      }
-      /**
-       * <code>bytes ArtworkData = 10;</code>
-       * @param value The artworkData to set.
-       * @return This builder for chaining.
-       */
-      public Builder setArtworkData(com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setArtworkData(value);
-        return this;
-      }
-      /**
-       * <code>bytes ArtworkData = 10;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearArtworkData() {
-        copyOnWrite();
-        instance.clearArtworkData();
-        return this;
-      }
-
-      /**
+       * <pre>
+       * bytes ArtworkData = 10; // TODO: this is way too big
+       * </pre>
+       *
        * <code>int32 ArtworkDataType = 11;</code>
        * @return The artworkDataType.
        */
@@ -2337,6 +2295,10 @@ public final class Message {
         return instance.getArtworkDataType();
       }
       /**
+       * <pre>
+       * bytes ArtworkData = 10; // TODO: this is way too big
+       * </pre>
+       *
        * <code>int32 ArtworkDataType = 11;</code>
        * @param value The artworkDataType to set.
        * @return This builder for chaining.
@@ -2347,6 +2309,10 @@ public final class Message {
         return this;
       }
       /**
+       * <pre>
+       * bytes ArtworkData = 10; // TODO: this is way too big
+       * </pre>
+       *
        * <code>int32 ArtworkDataType = 11;</code>
        * @return This builder for chaining.
        */
@@ -3089,7 +3055,6 @@ public final class Message {
               "description_",
               "userRating_",
               "overallRating_",
-              "artworkData_",
               "artworkDataType_",
               "artworkUri_",
               "trackNumber_",
@@ -3113,12 +3078,12 @@ public final class Message {
               "mediaType_",
             };
             java.lang.String info =
-                "\u0000\u001f\u0000\u0001\u0001\u001f\u001f\u0000\u0000\u0000\u0001\u0208\u0002\u0208" +
+                "\u0000\u001e\u0000\u0001\u0001\u001f\u001e\u0000\u0000\u0000\u0001\u0208\u0002\u0208" +
                 "\u0003\u0208\u0004\u0208\u0005\u0208\u0006\u0208\u0007\u0208\b\u1009\u0000\t\u1009" +
-                "\u0001\n\n\u000b\u0004\f\u0208\r\u0004\u000e\u0004\u000f\u0007\u0010\u0007\u0011" +
-                "\u0004\u0012\u0004\u0013\u0004\u0014\u0004\u0015\u0004\u0016\u0004\u0017\u0208\u0018" +
-                "\u0208\u0019\u0208\u001a\u0004\u001b\u0004\u001c\u0208\u001d\u0208\u001e\u0208\u001f" +
-                "\u0004";
+                "\u0001\u000b\u0004\f\u0208\r\u0004\u000e\u0004\u000f\u0007\u0010\u0007\u0011\u0004" +
+                "\u0012\u0004\u0013\u0004\u0014\u0004\u0015\u0004\u0016\u0004\u0017\u0208\u0018\u0208" +
+                "\u0019\u0208\u001a\u0004\u001b\u0004\u001c\u0208\u001d\u0208\u001e\u0208\u001f\u0004" +
+                "";
             return newMessageInfo(DEFAULT_INSTANCE, info, objects);
         }
         // fall through
