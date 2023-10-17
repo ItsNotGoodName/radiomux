@@ -5,6 +5,8 @@ import (
 	"sync"
 
 	"github.com/ItsNotGoodName/radiomux/pkg/diff"
+	"github.com/ItsNotGoodName/radiomux/pkg/jsonext"
+	"github.com/rs/zerolog/log"
 )
 
 const (
@@ -83,6 +85,18 @@ type StateService struct {
 	states   []State
 }
 
+// PositionChanged implements BusEvent.
+func (*StateService) PositionChanged(ctx context.Context, id int64, event EventPositionChanged) error {
+	log.Debug().Int64("id", id).Msg(jsonext.String(event))
+	return nil
+}
+
+// TimelineWindowChanged implements BusEvent.
+func (*StateService) TimelineWindowChanged(ctx context.Context, id int64, event EventTimelineWindowChanged) error {
+	log.Debug().Int64("id", id).Msg(jsonext.String(event))
+	return nil
+}
+
 // CurrentURIChanged implements BusEvent.
 func (s *StateService) CurrentURIChanged(ctx context.Context, id int64, event EventCurrentURIChanged) error {
 	return s.Update(id, func(state State, changed diff.Changed) (State, diff.Changed) {
@@ -125,7 +139,7 @@ func (s *StateService) PlayerReadyChanged(id int64) error {
 
 // DeviceInfoChanged implements BusEvent.
 func (s *StateService) DeviceInfoChanged(ctx context.Context, id int64, event EventDeviceInfoChanged) error {
-	// log.Debug().Int64("id", id).Msg(helpers.JSON(event))
+	// log.Debug().Int64("id", id).Msg(jsonext.String(event))
 	return s.Update(id, func(state State, changed diff.Changed) (State, diff.Changed) {
 		if state.MinVolume != event.DeviceInfo.MinVolume {
 			state.MinVolume = event.DeviceInfo.MinVolume
@@ -141,7 +155,7 @@ func (s *StateService) DeviceInfoChanged(ctx context.Context, id int64, event Ev
 
 // DeviceVolumeChanged implements BusEvent.
 func (s *StateService) DeviceVolumeChanged(ctx context.Context, id int64, event EventDeviceVolumeChanged) error {
-	// log.Debug().Int64("id", id).Msg(helpers.JSON(event))
+	// log.Debug().Int64("id", id).Msg(jsonext.String(event))
 	return s.Update(id, func(state State, changed diff.Changed) (State, diff.Changed) {
 		if state.Volume != event.Volume {
 			state.Volume = event.Volume
@@ -157,7 +171,7 @@ func (s *StateService) DeviceVolumeChanged(ctx context.Context, id int64, event 
 
 // IsLoadingChanged implements BusEvent.
 func (s *StateService) IsLoadingChanged(ctx context.Context, id int64, event EventIsLoadingChanged) error {
-	// log.Debug().Int64("id", id).Msg(helpers.JSON(event))
+	// log.Debug().Int64("id", id).Msg(jsonext.String(event))
 	return s.Update(id, func(state State, changed diff.Changed) (State, diff.Changed) {
 		if state.Loading != event.IsLoading {
 			state.Loading = event.IsLoading
@@ -174,7 +188,7 @@ func (s *StateService) IsLoadingChanged(ctx context.Context, id int64, event Eve
 
 // IsPlayingChanged implements BusEvent.
 func (s *StateService) IsPlayingChanged(ctx context.Context, id int64, event EventIsPlayingChanged) error {
-	// log.Debug().Int64("id", id).Msg(helpers.JSON(event))
+	// log.Debug().Int64("id", id).Msg(jsonext.String(event))
 	return s.Update(id, func(state State, changed diff.Changed) (State, diff.Changed) {
 		if state.Playing != event.IsPlaying {
 			state.Playing = event.IsPlaying
@@ -186,7 +200,7 @@ func (s *StateService) IsPlayingChanged(ctx context.Context, id int64, event Eve
 
 // MediaMetadataChanged implements BusEvent.
 func (s *StateService) MediaMetadataChanged(ctx context.Context, id int64, event EventMediaMetadataChanged) error {
-	// log.Debug().Int64("id", id).Msg(helpers.JSON(event))
+	// log.Debug().Int64("id", id).Msg(jsonext.String(event))
 	return s.Update(id, func(state State, changed diff.Changed) (State, diff.Changed) {
 		if state.Title != event.MediaMetadata.Title {
 			state.Title = event.MediaMetadata.Title
@@ -211,7 +225,7 @@ func (*StateService) PlaybackParametersChanged(ctx context.Context, id int64, ev
 
 // PlaybackStateChanged implements BusEvent.
 func (s *StateService) PlaybackStateChanged(ctx context.Context, id int64, event EventPlaybackStateChanged) error {
-	// log.Debug().Msg(helpers.JSON(event))
+	// log.Debug().Msg(jsonext.String(event))
 	return s.Update(id, func(state State, changed diff.Changed) (State, diff.Changed) {
 		if state.PlaybackState != event.PlaybackState {
 			state.PlaybackState = event.PlaybackState
@@ -223,7 +237,7 @@ func (s *StateService) PlaybackStateChanged(ctx context.Context, id int64, event
 
 // PlayerError implements BusEvent.
 func (s *StateService) PlayerError(ctx context.Context, id int64, event EventPlayerError) error {
-	// log.Debug().Int64("id", id).Msg(helpers.JSON(event))
+	// log.Debug().Int64("id", id).Msg(jsonext.String(event))
 	return s.Update(id, func(state State, changed diff.Changed) (State, diff.Changed) {
 		state.PlaybackError = event.PlaybackError
 		return state, changed.Merge(StateChangedPlaybackError)

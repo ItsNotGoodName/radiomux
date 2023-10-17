@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/ItsNotGoodName/radiomux/internal"
 	"github.com/ItsNotGoodName/radiomux/internal/android"
@@ -95,6 +96,36 @@ func handleEvent(ctx context.Context, id int64, busEvent android.BusEvent, event
 	case *protos.Event_OnCurrentUriChanged:
 		return busEvent.CurrentURIChanged(ctx, id, android.EventCurrentURIChanged{
 			URI: m.OnCurrentUriChanged.GetUri(),
+		})
+	case *protos.Event_OnTimelineChanged:
+		window := m.OnTimelineChanged.GetWindow()
+		if window == nil {
+			return nil
+		}
+		return busEvent.TimelineWindowChanged(ctx, id, android.EventTimelineWindowChanged{
+			Window: android.TimelineWindow{
+				IsSeekable:      window.IsSeekable,
+				IsDynamic:       window.IsDynamic,
+				IsLive:          window.IsLive,
+				IsPlaceholder:   window.IsPlaceholder,
+				DefaultPosition: time.Duration(window.DefaultPositionMs) * time.Millisecond,
+				Duration:        time.Duration(window.DurationMs) * time.Millisecond,
+			},
+			TimeUnset: m.OnTimelineChanged.TimeUnset,
+		})
+	case *protos.Event_OnPositionChanged:
+		timestamp, err := time.Parse(time.RFC3339, m.OnPositionChanged.GetTimestamp())
+		if err != nil {
+			return err
+		}
+		return busEvent.PositionChanged(ctx, id, android.EventPositionChanged{
+			OldPositionInfo: android.PositionInfo{
+				Position: time.Duration(m.OnPositionChanged.GetOldPosition().PositionMs) * time.Millisecond,
+			},
+			NewPositionInfo: android.PositionInfo{
+				Position: time.Duration(m.OnPositionChanged.GetNewPosition().PositionMs) * time.Millisecond,
+			},
+			Time: timestamp,
 		})
 	default:
 		return fmt.Errorf("received invalid command: %T", m)

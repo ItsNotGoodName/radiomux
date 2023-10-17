@@ -4059,6 +4059,985 @@ public final class Message {
     }
   }
 
+  public interface TimelineWindowOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:TimelineWindow)
+      com.google.protobuf.MessageLiteOrBuilder {
+
+    /**
+     * <code>int64 presentation_start_time_ms = 1;</code>
+     * @return The presentationStartTimeMs.
+     */
+    long getPresentationStartTimeMs();
+
+    /**
+     * <code>int64 window_start_time_ms = 2;</code>
+     * @return The windowStartTimeMs.
+     */
+    long getWindowStartTimeMs();
+
+    /**
+     * <code>int64 elapsed_realtime_epoch_offset_ms = 3;</code>
+     * @return The elapsedRealtimeEpochOffsetMs.
+     */
+    long getElapsedRealtimeEpochOffsetMs();
+
+    /**
+     * <code>bool is_seekable = 4;</code>
+     * @return The isSeekable.
+     */
+    boolean getIsSeekable();
+
+    /**
+     * <code>bool is_dynamic = 5;</code>
+     * @return The isDynamic.
+     */
+    boolean getIsDynamic();
+
+    /**
+     * <code>bool is_live = 6;</code>
+     * @return The isLive.
+     */
+    boolean getIsLive();
+
+    /**
+     * <code>bool is_placeholder = 7;</code>
+     * @return The isPlaceholder.
+     */
+    boolean getIsPlaceholder();
+
+    /**
+     * <code>int64 default_position_ms = 8;</code>
+     * @return The defaultPositionMs.
+     */
+    long getDefaultPositionMs();
+
+    /**
+     * <code>int64 duration_ms = 9;</code>
+     * @return The durationMs.
+     */
+    long getDurationMs();
+  }
+  /**
+   * Protobuf type {@code TimelineWindow}
+   */
+  public  static final class TimelineWindow extends
+      com.google.protobuf.GeneratedMessageLite<
+          TimelineWindow, TimelineWindow.Builder> implements
+      // @@protoc_insertion_point(message_implements:TimelineWindow)
+      TimelineWindowOrBuilder {
+    private TimelineWindow() {
+    }
+    public static final int PRESENTATION_START_TIME_MS_FIELD_NUMBER = 1;
+    private long presentationStartTimeMs_;
+    /**
+     * <code>int64 presentation_start_time_ms = 1;</code>
+     * @return The presentationStartTimeMs.
+     */
+    @java.lang.Override
+    public long getPresentationStartTimeMs() {
+      return presentationStartTimeMs_;
+    }
+    /**
+     * <code>int64 presentation_start_time_ms = 1;</code>
+     * @param value The presentationStartTimeMs to set.
+     */
+    private void setPresentationStartTimeMs(long value) {
+      
+      presentationStartTimeMs_ = value;
+    }
+    /**
+     * <code>int64 presentation_start_time_ms = 1;</code>
+     */
+    private void clearPresentationStartTimeMs() {
+
+      presentationStartTimeMs_ = 0L;
+    }
+
+    public static final int WINDOW_START_TIME_MS_FIELD_NUMBER = 2;
+    private long windowStartTimeMs_;
+    /**
+     * <code>int64 window_start_time_ms = 2;</code>
+     * @return The windowStartTimeMs.
+     */
+    @java.lang.Override
+    public long getWindowStartTimeMs() {
+      return windowStartTimeMs_;
+    }
+    /**
+     * <code>int64 window_start_time_ms = 2;</code>
+     * @param value The windowStartTimeMs to set.
+     */
+    private void setWindowStartTimeMs(long value) {
+      
+      windowStartTimeMs_ = value;
+    }
+    /**
+     * <code>int64 window_start_time_ms = 2;</code>
+     */
+    private void clearWindowStartTimeMs() {
+
+      windowStartTimeMs_ = 0L;
+    }
+
+    public static final int ELAPSED_REALTIME_EPOCH_OFFSET_MS_FIELD_NUMBER = 3;
+    private long elapsedRealtimeEpochOffsetMs_;
+    /**
+     * <code>int64 elapsed_realtime_epoch_offset_ms = 3;</code>
+     * @return The elapsedRealtimeEpochOffsetMs.
+     */
+    @java.lang.Override
+    public long getElapsedRealtimeEpochOffsetMs() {
+      return elapsedRealtimeEpochOffsetMs_;
+    }
+    /**
+     * <code>int64 elapsed_realtime_epoch_offset_ms = 3;</code>
+     * @param value The elapsedRealtimeEpochOffsetMs to set.
+     */
+    private void setElapsedRealtimeEpochOffsetMs(long value) {
+      
+      elapsedRealtimeEpochOffsetMs_ = value;
+    }
+    /**
+     * <code>int64 elapsed_realtime_epoch_offset_ms = 3;</code>
+     */
+    private void clearElapsedRealtimeEpochOffsetMs() {
+
+      elapsedRealtimeEpochOffsetMs_ = 0L;
+    }
+
+    public static final int IS_SEEKABLE_FIELD_NUMBER = 4;
+    private boolean isSeekable_;
+    /**
+     * <code>bool is_seekable = 4;</code>
+     * @return The isSeekable.
+     */
+    @java.lang.Override
+    public boolean getIsSeekable() {
+      return isSeekable_;
+    }
+    /**
+     * <code>bool is_seekable = 4;</code>
+     * @param value The isSeekable to set.
+     */
+    private void setIsSeekable(boolean value) {
+      
+      isSeekable_ = value;
+    }
+    /**
+     * <code>bool is_seekable = 4;</code>
+     */
+    private void clearIsSeekable() {
+
+      isSeekable_ = false;
+    }
+
+    public static final int IS_DYNAMIC_FIELD_NUMBER = 5;
+    private boolean isDynamic_;
+    /**
+     * <code>bool is_dynamic = 5;</code>
+     * @return The isDynamic.
+     */
+    @java.lang.Override
+    public boolean getIsDynamic() {
+      return isDynamic_;
+    }
+    /**
+     * <code>bool is_dynamic = 5;</code>
+     * @param value The isDynamic to set.
+     */
+    private void setIsDynamic(boolean value) {
+      
+      isDynamic_ = value;
+    }
+    /**
+     * <code>bool is_dynamic = 5;</code>
+     */
+    private void clearIsDynamic() {
+
+      isDynamic_ = false;
+    }
+
+    public static final int IS_LIVE_FIELD_NUMBER = 6;
+    private boolean isLive_;
+    /**
+     * <code>bool is_live = 6;</code>
+     * @return The isLive.
+     */
+    @java.lang.Override
+    public boolean getIsLive() {
+      return isLive_;
+    }
+    /**
+     * <code>bool is_live = 6;</code>
+     * @param value The isLive to set.
+     */
+    private void setIsLive(boolean value) {
+      
+      isLive_ = value;
+    }
+    /**
+     * <code>bool is_live = 6;</code>
+     */
+    private void clearIsLive() {
+
+      isLive_ = false;
+    }
+
+    public static final int IS_PLACEHOLDER_FIELD_NUMBER = 7;
+    private boolean isPlaceholder_;
+    /**
+     * <code>bool is_placeholder = 7;</code>
+     * @return The isPlaceholder.
+     */
+    @java.lang.Override
+    public boolean getIsPlaceholder() {
+      return isPlaceholder_;
+    }
+    /**
+     * <code>bool is_placeholder = 7;</code>
+     * @param value The isPlaceholder to set.
+     */
+    private void setIsPlaceholder(boolean value) {
+      
+      isPlaceholder_ = value;
+    }
+    /**
+     * <code>bool is_placeholder = 7;</code>
+     */
+    private void clearIsPlaceholder() {
+
+      isPlaceholder_ = false;
+    }
+
+    public static final int DEFAULT_POSITION_MS_FIELD_NUMBER = 8;
+    private long defaultPositionMs_;
+    /**
+     * <code>int64 default_position_ms = 8;</code>
+     * @return The defaultPositionMs.
+     */
+    @java.lang.Override
+    public long getDefaultPositionMs() {
+      return defaultPositionMs_;
+    }
+    /**
+     * <code>int64 default_position_ms = 8;</code>
+     * @param value The defaultPositionMs to set.
+     */
+    private void setDefaultPositionMs(long value) {
+      
+      defaultPositionMs_ = value;
+    }
+    /**
+     * <code>int64 default_position_ms = 8;</code>
+     */
+    private void clearDefaultPositionMs() {
+
+      defaultPositionMs_ = 0L;
+    }
+
+    public static final int DURATION_MS_FIELD_NUMBER = 9;
+    private long durationMs_;
+    /**
+     * <code>int64 duration_ms = 9;</code>
+     * @return The durationMs.
+     */
+    @java.lang.Override
+    public long getDurationMs() {
+      return durationMs_;
+    }
+    /**
+     * <code>int64 duration_ms = 9;</code>
+     * @param value The durationMs to set.
+     */
+    private void setDurationMs(long value) {
+      
+      durationMs_ = value;
+    }
+    /**
+     * <code>int64 duration_ms = 9;</code>
+     */
+    private void clearDurationMs() {
+
+      durationMs_ = 0L;
+    }
+
+    public static com.gurnain.radiomuxplayer.protos.Message.TimelineWindow parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.TimelineWindow parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.TimelineWindow parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.TimelineWindow parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.TimelineWindow parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.TimelineWindow parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.TimelineWindow parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, input);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.TimelineWindow parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, input, extensionRegistry);
+    }
+
+    public static com.gurnain.radiomuxplayer.protos.Message.TimelineWindow parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+    }
+
+    public static com.gurnain.radiomuxplayer.protos.Message.TimelineWindow parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.TimelineWindow parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, input);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.TimelineWindow parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() {
+      return (Builder) DEFAULT_INSTANCE.createBuilder();
+    }
+    public static Builder newBuilder(com.gurnain.radiomuxplayer.protos.Message.TimelineWindow prototype) {
+      return DEFAULT_INSTANCE.createBuilder(prototype);
+    }
+
+    /**
+     * Protobuf type {@code TimelineWindow}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageLite.Builder<
+          com.gurnain.radiomuxplayer.protos.Message.TimelineWindow, Builder> implements
+        // @@protoc_insertion_point(builder_implements:TimelineWindow)
+        com.gurnain.radiomuxplayer.protos.Message.TimelineWindowOrBuilder {
+      // Construct using com.gurnain.radiomuxplayer.protos.Message.TimelineWindow.newBuilder()
+      private Builder() {
+        super(DEFAULT_INSTANCE);
+      }
+
+
+      /**
+       * <code>int64 presentation_start_time_ms = 1;</code>
+       * @return The presentationStartTimeMs.
+       */
+      @java.lang.Override
+      public long getPresentationStartTimeMs() {
+        return instance.getPresentationStartTimeMs();
+      }
+      /**
+       * <code>int64 presentation_start_time_ms = 1;</code>
+       * @param value The presentationStartTimeMs to set.
+       * @return This builder for chaining.
+       */
+      public Builder setPresentationStartTimeMs(long value) {
+        copyOnWrite();
+        instance.setPresentationStartTimeMs(value);
+        return this;
+      }
+      /**
+       * <code>int64 presentation_start_time_ms = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearPresentationStartTimeMs() {
+        copyOnWrite();
+        instance.clearPresentationStartTimeMs();
+        return this;
+      }
+
+      /**
+       * <code>int64 window_start_time_ms = 2;</code>
+       * @return The windowStartTimeMs.
+       */
+      @java.lang.Override
+      public long getWindowStartTimeMs() {
+        return instance.getWindowStartTimeMs();
+      }
+      /**
+       * <code>int64 window_start_time_ms = 2;</code>
+       * @param value The windowStartTimeMs to set.
+       * @return This builder for chaining.
+       */
+      public Builder setWindowStartTimeMs(long value) {
+        copyOnWrite();
+        instance.setWindowStartTimeMs(value);
+        return this;
+      }
+      /**
+       * <code>int64 window_start_time_ms = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearWindowStartTimeMs() {
+        copyOnWrite();
+        instance.clearWindowStartTimeMs();
+        return this;
+      }
+
+      /**
+       * <code>int64 elapsed_realtime_epoch_offset_ms = 3;</code>
+       * @return The elapsedRealtimeEpochOffsetMs.
+       */
+      @java.lang.Override
+      public long getElapsedRealtimeEpochOffsetMs() {
+        return instance.getElapsedRealtimeEpochOffsetMs();
+      }
+      /**
+       * <code>int64 elapsed_realtime_epoch_offset_ms = 3;</code>
+       * @param value The elapsedRealtimeEpochOffsetMs to set.
+       * @return This builder for chaining.
+       */
+      public Builder setElapsedRealtimeEpochOffsetMs(long value) {
+        copyOnWrite();
+        instance.setElapsedRealtimeEpochOffsetMs(value);
+        return this;
+      }
+      /**
+       * <code>int64 elapsed_realtime_epoch_offset_ms = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearElapsedRealtimeEpochOffsetMs() {
+        copyOnWrite();
+        instance.clearElapsedRealtimeEpochOffsetMs();
+        return this;
+      }
+
+      /**
+       * <code>bool is_seekable = 4;</code>
+       * @return The isSeekable.
+       */
+      @java.lang.Override
+      public boolean getIsSeekable() {
+        return instance.getIsSeekable();
+      }
+      /**
+       * <code>bool is_seekable = 4;</code>
+       * @param value The isSeekable to set.
+       * @return This builder for chaining.
+       */
+      public Builder setIsSeekable(boolean value) {
+        copyOnWrite();
+        instance.setIsSeekable(value);
+        return this;
+      }
+      /**
+       * <code>bool is_seekable = 4;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearIsSeekable() {
+        copyOnWrite();
+        instance.clearIsSeekable();
+        return this;
+      }
+
+      /**
+       * <code>bool is_dynamic = 5;</code>
+       * @return The isDynamic.
+       */
+      @java.lang.Override
+      public boolean getIsDynamic() {
+        return instance.getIsDynamic();
+      }
+      /**
+       * <code>bool is_dynamic = 5;</code>
+       * @param value The isDynamic to set.
+       * @return This builder for chaining.
+       */
+      public Builder setIsDynamic(boolean value) {
+        copyOnWrite();
+        instance.setIsDynamic(value);
+        return this;
+      }
+      /**
+       * <code>bool is_dynamic = 5;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearIsDynamic() {
+        copyOnWrite();
+        instance.clearIsDynamic();
+        return this;
+      }
+
+      /**
+       * <code>bool is_live = 6;</code>
+       * @return The isLive.
+       */
+      @java.lang.Override
+      public boolean getIsLive() {
+        return instance.getIsLive();
+      }
+      /**
+       * <code>bool is_live = 6;</code>
+       * @param value The isLive to set.
+       * @return This builder for chaining.
+       */
+      public Builder setIsLive(boolean value) {
+        copyOnWrite();
+        instance.setIsLive(value);
+        return this;
+      }
+      /**
+       * <code>bool is_live = 6;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearIsLive() {
+        copyOnWrite();
+        instance.clearIsLive();
+        return this;
+      }
+
+      /**
+       * <code>bool is_placeholder = 7;</code>
+       * @return The isPlaceholder.
+       */
+      @java.lang.Override
+      public boolean getIsPlaceholder() {
+        return instance.getIsPlaceholder();
+      }
+      /**
+       * <code>bool is_placeholder = 7;</code>
+       * @param value The isPlaceholder to set.
+       * @return This builder for chaining.
+       */
+      public Builder setIsPlaceholder(boolean value) {
+        copyOnWrite();
+        instance.setIsPlaceholder(value);
+        return this;
+      }
+      /**
+       * <code>bool is_placeholder = 7;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearIsPlaceholder() {
+        copyOnWrite();
+        instance.clearIsPlaceholder();
+        return this;
+      }
+
+      /**
+       * <code>int64 default_position_ms = 8;</code>
+       * @return The defaultPositionMs.
+       */
+      @java.lang.Override
+      public long getDefaultPositionMs() {
+        return instance.getDefaultPositionMs();
+      }
+      /**
+       * <code>int64 default_position_ms = 8;</code>
+       * @param value The defaultPositionMs to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDefaultPositionMs(long value) {
+        copyOnWrite();
+        instance.setDefaultPositionMs(value);
+        return this;
+      }
+      /**
+       * <code>int64 default_position_ms = 8;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearDefaultPositionMs() {
+        copyOnWrite();
+        instance.clearDefaultPositionMs();
+        return this;
+      }
+
+      /**
+       * <code>int64 duration_ms = 9;</code>
+       * @return The durationMs.
+       */
+      @java.lang.Override
+      public long getDurationMs() {
+        return instance.getDurationMs();
+      }
+      /**
+       * <code>int64 duration_ms = 9;</code>
+       * @param value The durationMs to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDurationMs(long value) {
+        copyOnWrite();
+        instance.setDurationMs(value);
+        return this;
+      }
+      /**
+       * <code>int64 duration_ms = 9;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearDurationMs() {
+        copyOnWrite();
+        instance.clearDurationMs();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:TimelineWindow)
+    }
+    @java.lang.Override
+    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
+    protected final java.lang.Object dynamicMethod(
+        com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
+        java.lang.Object arg0, java.lang.Object arg1) {
+      switch (method) {
+        case NEW_MUTABLE_INSTANCE: {
+          return new com.gurnain.radiomuxplayer.protos.Message.TimelineWindow();
+        }
+        case NEW_BUILDER: {
+          return new Builder();
+        }
+        case BUILD_MESSAGE_INFO: {
+            java.lang.Object[] objects = new java.lang.Object[] {
+              "presentationStartTimeMs_",
+              "windowStartTimeMs_",
+              "elapsedRealtimeEpochOffsetMs_",
+              "isSeekable_",
+              "isDynamic_",
+              "isLive_",
+              "isPlaceholder_",
+              "defaultPositionMs_",
+              "durationMs_",
+            };
+            java.lang.String info =
+                "\u0000\t\u0000\u0000\u0001\t\t\u0000\u0000\u0000\u0001\u0002\u0002\u0002\u0003\u0002" +
+                "\u0004\u0007\u0005\u0007\u0006\u0007\u0007\u0007\b\u0002\t\u0002";
+            return newMessageInfo(DEFAULT_INSTANCE, info, objects);
+        }
+        // fall through
+        case GET_DEFAULT_INSTANCE: {
+          return DEFAULT_INSTANCE;
+        }
+        case GET_PARSER: {
+          com.google.protobuf.Parser<com.gurnain.radiomuxplayer.protos.Message.TimelineWindow> parser = PARSER;
+          if (parser == null) {
+            synchronized (com.gurnain.radiomuxplayer.protos.Message.TimelineWindow.class) {
+              parser = PARSER;
+              if (parser == null) {
+                parser =
+                    new DefaultInstanceBasedParser<com.gurnain.radiomuxplayer.protos.Message.TimelineWindow>(
+                        DEFAULT_INSTANCE);
+                PARSER = parser;
+              }
+            }
+          }
+          return parser;
+      }
+      case GET_MEMOIZED_IS_INITIALIZED: {
+        return (byte) 1;
+      }
+      case SET_MEMOIZED_IS_INITIALIZED: {
+        return null;
+      }
+      }
+      throw new UnsupportedOperationException();
+    }
+
+
+    // @@protoc_insertion_point(class_scope:TimelineWindow)
+    private static final com.gurnain.radiomuxplayer.protos.Message.TimelineWindow DEFAULT_INSTANCE;
+    static {
+      TimelineWindow defaultInstance = new TimelineWindow();
+      // New instances are implicitly immutable so no need to make
+      // immutable.
+      DEFAULT_INSTANCE = defaultInstance;
+      com.google.protobuf.GeneratedMessageLite.registerDefaultInstance(
+        TimelineWindow.class, defaultInstance);
+    }
+
+    public static com.gurnain.radiomuxplayer.protos.Message.TimelineWindow getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static volatile com.google.protobuf.Parser<TimelineWindow> PARSER;
+
+    public static com.google.protobuf.Parser<TimelineWindow> parser() {
+      return DEFAULT_INSTANCE.getParserForType();
+    }
+  }
+
+  public interface PositionInfoOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:PositionInfo)
+      com.google.protobuf.MessageLiteOrBuilder {
+
+    /**
+     * <code>int64 position_ms = 1;</code>
+     * @return The positionMs.
+     */
+    long getPositionMs();
+  }
+  /**
+   * Protobuf type {@code PositionInfo}
+   */
+  public  static final class PositionInfo extends
+      com.google.protobuf.GeneratedMessageLite<
+          PositionInfo, PositionInfo.Builder> implements
+      // @@protoc_insertion_point(message_implements:PositionInfo)
+      PositionInfoOrBuilder {
+    private PositionInfo() {
+    }
+    public static final int POSITION_MS_FIELD_NUMBER = 1;
+    private long positionMs_;
+    /**
+     * <code>int64 position_ms = 1;</code>
+     * @return The positionMs.
+     */
+    @java.lang.Override
+    public long getPositionMs() {
+      return positionMs_;
+    }
+    /**
+     * <code>int64 position_ms = 1;</code>
+     * @param value The positionMs to set.
+     */
+    private void setPositionMs(long value) {
+      
+      positionMs_ = value;
+    }
+    /**
+     * <code>int64 position_ms = 1;</code>
+     */
+    private void clearPositionMs() {
+
+      positionMs_ = 0L;
+    }
+
+    public static com.gurnain.radiomuxplayer.protos.Message.PositionInfo parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.PositionInfo parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.PositionInfo parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.PositionInfo parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.PositionInfo parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.PositionInfo parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.PositionInfo parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, input);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.PositionInfo parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, input, extensionRegistry);
+    }
+
+    public static com.gurnain.radiomuxplayer.protos.Message.PositionInfo parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+    }
+
+    public static com.gurnain.radiomuxplayer.protos.Message.PositionInfo parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.PositionInfo parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, input);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.PositionInfo parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() {
+      return (Builder) DEFAULT_INSTANCE.createBuilder();
+    }
+    public static Builder newBuilder(com.gurnain.radiomuxplayer.protos.Message.PositionInfo prototype) {
+      return DEFAULT_INSTANCE.createBuilder(prototype);
+    }
+
+    /**
+     * Protobuf type {@code PositionInfo}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageLite.Builder<
+          com.gurnain.radiomuxplayer.protos.Message.PositionInfo, Builder> implements
+        // @@protoc_insertion_point(builder_implements:PositionInfo)
+        com.gurnain.radiomuxplayer.protos.Message.PositionInfoOrBuilder {
+      // Construct using com.gurnain.radiomuxplayer.protos.Message.PositionInfo.newBuilder()
+      private Builder() {
+        super(DEFAULT_INSTANCE);
+      }
+
+
+      /**
+       * <code>int64 position_ms = 1;</code>
+       * @return The positionMs.
+       */
+      @java.lang.Override
+      public long getPositionMs() {
+        return instance.getPositionMs();
+      }
+      /**
+       * <code>int64 position_ms = 1;</code>
+       * @param value The positionMs to set.
+       * @return This builder for chaining.
+       */
+      public Builder setPositionMs(long value) {
+        copyOnWrite();
+        instance.setPositionMs(value);
+        return this;
+      }
+      /**
+       * <code>int64 position_ms = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearPositionMs() {
+        copyOnWrite();
+        instance.clearPositionMs();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:PositionInfo)
+    }
+    @java.lang.Override
+    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
+    protected final java.lang.Object dynamicMethod(
+        com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
+        java.lang.Object arg0, java.lang.Object arg1) {
+      switch (method) {
+        case NEW_MUTABLE_INSTANCE: {
+          return new com.gurnain.radiomuxplayer.protos.Message.PositionInfo();
+        }
+        case NEW_BUILDER: {
+          return new Builder();
+        }
+        case BUILD_MESSAGE_INFO: {
+            java.lang.Object[] objects = new java.lang.Object[] {
+              "positionMs_",
+            };
+            java.lang.String info =
+                "\u0000\u0001\u0000\u0000\u0001\u0001\u0001\u0000\u0000\u0000\u0001\u0002";
+            return newMessageInfo(DEFAULT_INSTANCE, info, objects);
+        }
+        // fall through
+        case GET_DEFAULT_INSTANCE: {
+          return DEFAULT_INSTANCE;
+        }
+        case GET_PARSER: {
+          com.google.protobuf.Parser<com.gurnain.radiomuxplayer.protos.Message.PositionInfo> parser = PARSER;
+          if (parser == null) {
+            synchronized (com.gurnain.radiomuxplayer.protos.Message.PositionInfo.class) {
+              parser = PARSER;
+              if (parser == null) {
+                parser =
+                    new DefaultInstanceBasedParser<com.gurnain.radiomuxplayer.protos.Message.PositionInfo>(
+                        DEFAULT_INSTANCE);
+                PARSER = parser;
+              }
+            }
+          }
+          return parser;
+      }
+      case GET_MEMOIZED_IS_INITIALIZED: {
+        return (byte) 1;
+      }
+      case SET_MEMOIZED_IS_INITIALIZED: {
+        return null;
+      }
+      }
+      throw new UnsupportedOperationException();
+    }
+
+
+    // @@protoc_insertion_point(class_scope:PositionInfo)
+    private static final com.gurnain.radiomuxplayer.protos.Message.PositionInfo DEFAULT_INSTANCE;
+    static {
+      PositionInfo defaultInstance = new PositionInfo();
+      // New instances are implicitly immutable so no need to make
+      // immutable.
+      DEFAULT_INSTANCE = defaultInstance;
+      com.google.protobuf.GeneratedMessageLite.registerDefaultInstance(
+        PositionInfo.class, defaultInstance);
+    }
+
+    public static com.gurnain.radiomuxplayer.protos.Message.PositionInfo getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static volatile com.google.protobuf.Parser<PositionInfo> PARSER;
+
+    public static com.google.protobuf.Parser<PositionInfo> parser() {
+      return DEFAULT_INSTANCE.getParserForType();
+    }
+  }
+
   public interface EventOrBuilder extends
       // @@protoc_insertion_point(interface_extends:Event)
       com.google.protobuf.MessageLiteOrBuilder {
@@ -4195,6 +5174,28 @@ public final class Message {
      */
     com.gurnain.radiomuxplayer.protos.Message.OnCurrentUriChanged getOnCurrentUriChanged();
 
+    /**
+     * <code>.OnTimelineChanged OnTimelineChanged = 13;</code>
+     * @return Whether the onTimelineChanged field is set.
+     */
+    boolean hasOnTimelineChanged();
+    /**
+     * <code>.OnTimelineChanged OnTimelineChanged = 13;</code>
+     * @return The onTimelineChanged.
+     */
+    com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged getOnTimelineChanged();
+
+    /**
+     * <code>.OnPositionChanged OnPositionChanged = 14;</code>
+     * @return Whether the onPositionChanged field is set.
+     */
+    boolean hasOnPositionChanged();
+    /**
+     * <code>.OnPositionChanged OnPositionChanged = 14;</code>
+     * @return The onPositionChanged.
+     */
+    com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged getOnPositionChanged();
+
     public com.gurnain.radiomuxplayer.protos.Message.Event.PayloadCase getPayloadCase();
   }
   /**
@@ -4222,6 +5223,8 @@ public final class Message {
       ONDEVICEINFOCHANGED(10),
       ONDEVICEVOLUMECHANGED(11),
       ONCURRENTURICHANGED(12),
+      ONTIMELINECHANGED(13),
+      ONPOSITIONCHANGED(14),
       PAYLOAD_NOT_SET(0);
       private final int value;
       private PayloadCase(int value) {
@@ -4249,6 +5252,8 @@ public final class Message {
           case 10: return ONDEVICEINFOCHANGED;
           case 11: return ONDEVICEVOLUMECHANGED;
           case 12: return ONCURRENTURICHANGED;
+          case 13: return ONTIMELINECHANGED;
+          case 14: return ONPOSITIONCHANGED;
           case 0: return PAYLOAD_NOT_SET;
           default: return null;
         }
@@ -4865,6 +5870,106 @@ public final class Message {
      */
     private void clearOnCurrentUriChanged() {
       if (payloadCase_ == 12) {
+        payloadCase_ = 0;
+        payload_ = null;
+      }
+    }
+
+    public static final int ONTIMELINECHANGED_FIELD_NUMBER = 13;
+    /**
+     * <code>.OnTimelineChanged OnTimelineChanged = 13;</code>
+     */
+    @java.lang.Override
+    public boolean hasOnTimelineChanged() {
+      return payloadCase_ == 13;
+    }
+    /**
+     * <code>.OnTimelineChanged OnTimelineChanged = 13;</code>
+     */
+    @java.lang.Override
+    public com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged getOnTimelineChanged() {
+      if (payloadCase_ == 13) {
+         return (com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged) payload_;
+      }
+      return com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged.getDefaultInstance();
+    }
+    /**
+     * <code>.OnTimelineChanged OnTimelineChanged = 13;</code>
+     */
+    private void setOnTimelineChanged(com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged value) {
+      value.getClass();
+  payload_ = value;
+      payloadCase_ = 13;
+    }
+    /**
+     * <code>.OnTimelineChanged OnTimelineChanged = 13;</code>
+     */
+    private void mergeOnTimelineChanged(com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged value) {
+      value.getClass();
+  if (payloadCase_ == 13 &&
+          payload_ != com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged.getDefaultInstance()) {
+        payload_ = com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged.newBuilder((com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged) payload_)
+            .mergeFrom(value).buildPartial();
+      } else {
+        payload_ = value;
+      }
+      payloadCase_ = 13;
+    }
+    /**
+     * <code>.OnTimelineChanged OnTimelineChanged = 13;</code>
+     */
+    private void clearOnTimelineChanged() {
+      if (payloadCase_ == 13) {
+        payloadCase_ = 0;
+        payload_ = null;
+      }
+    }
+
+    public static final int ONPOSITIONCHANGED_FIELD_NUMBER = 14;
+    /**
+     * <code>.OnPositionChanged OnPositionChanged = 14;</code>
+     */
+    @java.lang.Override
+    public boolean hasOnPositionChanged() {
+      return payloadCase_ == 14;
+    }
+    /**
+     * <code>.OnPositionChanged OnPositionChanged = 14;</code>
+     */
+    @java.lang.Override
+    public com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged getOnPositionChanged() {
+      if (payloadCase_ == 14) {
+         return (com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged) payload_;
+      }
+      return com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged.getDefaultInstance();
+    }
+    /**
+     * <code>.OnPositionChanged OnPositionChanged = 14;</code>
+     */
+    private void setOnPositionChanged(com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged value) {
+      value.getClass();
+  payload_ = value;
+      payloadCase_ = 14;
+    }
+    /**
+     * <code>.OnPositionChanged OnPositionChanged = 14;</code>
+     */
+    private void mergeOnPositionChanged(com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged value) {
+      value.getClass();
+  if (payloadCase_ == 14 &&
+          payload_ != com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged.getDefaultInstance()) {
+        payload_ = com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged.newBuilder((com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged) payload_)
+            .mergeFrom(value).buildPartial();
+      } else {
+        payload_ = value;
+      }
+      payloadCase_ = 14;
+    }
+    /**
+     * <code>.OnPositionChanged OnPositionChanged = 14;</code>
+     */
+    private void clearOnPositionChanged() {
+      if (payloadCase_ == 14) {
         payloadCase_ = 0;
         payload_ = null;
       }
@@ -5555,6 +6660,102 @@ public final class Message {
         return this;
       }
 
+      /**
+       * <code>.OnTimelineChanged OnTimelineChanged = 13;</code>
+       */
+      @java.lang.Override
+      public boolean hasOnTimelineChanged() {
+        return instance.hasOnTimelineChanged();
+      }
+      /**
+       * <code>.OnTimelineChanged OnTimelineChanged = 13;</code>
+       */
+      @java.lang.Override
+      public com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged getOnTimelineChanged() {
+        return instance.getOnTimelineChanged();
+      }
+      /**
+       * <code>.OnTimelineChanged OnTimelineChanged = 13;</code>
+       */
+      public Builder setOnTimelineChanged(com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged value) {
+        copyOnWrite();
+        instance.setOnTimelineChanged(value);
+        return this;
+      }
+      /**
+       * <code>.OnTimelineChanged OnTimelineChanged = 13;</code>
+       */
+      public Builder setOnTimelineChanged(
+          com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged.Builder builderForValue) {
+        copyOnWrite();
+        instance.setOnTimelineChanged(builderForValue.build());
+        return this;
+      }
+      /**
+       * <code>.OnTimelineChanged OnTimelineChanged = 13;</code>
+       */
+      public Builder mergeOnTimelineChanged(com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged value) {
+        copyOnWrite();
+        instance.mergeOnTimelineChanged(value);
+        return this;
+      }
+      /**
+       * <code>.OnTimelineChanged OnTimelineChanged = 13;</code>
+       */
+      public Builder clearOnTimelineChanged() {
+        copyOnWrite();
+        instance.clearOnTimelineChanged();
+        return this;
+      }
+
+      /**
+       * <code>.OnPositionChanged OnPositionChanged = 14;</code>
+       */
+      @java.lang.Override
+      public boolean hasOnPositionChanged() {
+        return instance.hasOnPositionChanged();
+      }
+      /**
+       * <code>.OnPositionChanged OnPositionChanged = 14;</code>
+       */
+      @java.lang.Override
+      public com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged getOnPositionChanged() {
+        return instance.getOnPositionChanged();
+      }
+      /**
+       * <code>.OnPositionChanged OnPositionChanged = 14;</code>
+       */
+      public Builder setOnPositionChanged(com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged value) {
+        copyOnWrite();
+        instance.setOnPositionChanged(value);
+        return this;
+      }
+      /**
+       * <code>.OnPositionChanged OnPositionChanged = 14;</code>
+       */
+      public Builder setOnPositionChanged(
+          com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged.Builder builderForValue) {
+        copyOnWrite();
+        instance.setOnPositionChanged(builderForValue.build());
+        return this;
+      }
+      /**
+       * <code>.OnPositionChanged OnPositionChanged = 14;</code>
+       */
+      public Builder mergeOnPositionChanged(com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged value) {
+        copyOnWrite();
+        instance.mergeOnPositionChanged(value);
+        return this;
+      }
+      /**
+       * <code>.OnPositionChanged OnPositionChanged = 14;</code>
+       */
+      public Builder clearOnPositionChanged() {
+        copyOnWrite();
+        instance.clearOnPositionChanged();
+        return this;
+      }
+
       // @@protoc_insertion_point(builder_scope:Event)
     }
     @java.lang.Override
@@ -5585,11 +6786,13 @@ public final class Message {
               com.gurnain.radiomuxplayer.protos.Message.OnDeviceInfoChanged.class,
               com.gurnain.radiomuxplayer.protos.Message.OnDeviceVolumeChanged.class,
               com.gurnain.radiomuxplayer.protos.Message.OnCurrentUriChanged.class,
+              com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged.class,
+              com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged.class,
             };
             java.lang.String info =
-                "\u0000\f\u0001\u0000\u0001\f\f\u0000\u0000\u0000\u0001<\u0000\u0002<\u0000\u0003" +
-                "<\u0000\u0004<\u0000\u0005<\u0000\u0006<\u0000\u0007<\u0000\b<\u0000\t<\u0000\n<" +
-                "\u0000\u000b<\u0000\f<\u0000";
+                "\u0000\u000e\u0001\u0000\u0001\u000e\u000e\u0000\u0000\u0000\u0001<\u0000\u0002<" +
+                "\u0000\u0003<\u0000\u0004<\u0000\u0005<\u0000\u0006<\u0000\u0007<\u0000\b<\u0000" +
+                "\t<\u0000\n<\u0000\u000b<\u0000\f<\u0000\r<\u0000\u000e<\u0000";
             return newMessageInfo(DEFAULT_INSTANCE, info, objects);
         }
         // fall through
@@ -8921,6 +10124,866 @@ public final class Message {
     private static volatile com.google.protobuf.Parser<OnCurrentUriChanged> PARSER;
 
     public static com.google.protobuf.Parser<OnCurrentUriChanged> parser() {
+      return DEFAULT_INSTANCE.getParserForType();
+    }
+  }
+
+  public interface OnTimelineChangedOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:OnTimelineChanged)
+      com.google.protobuf.MessageLiteOrBuilder {
+
+    /**
+     * <code>.TimelineWindow window = 1;</code>
+     * @return Whether the window field is set.
+     */
+    boolean hasWindow();
+    /**
+     * <code>.TimelineWindow window = 1;</code>
+     * @return The window.
+     */
+    com.gurnain.radiomuxplayer.protos.Message.TimelineWindow getWindow();
+
+    /**
+     * <code>int64 time_unset = 2;</code>
+     * @return The timeUnset.
+     */
+    long getTimeUnset();
+  }
+  /**
+   * Protobuf type {@code OnTimelineChanged}
+   */
+  public  static final class OnTimelineChanged extends
+      com.google.protobuf.GeneratedMessageLite<
+          OnTimelineChanged, OnTimelineChanged.Builder> implements
+      // @@protoc_insertion_point(message_implements:OnTimelineChanged)
+      OnTimelineChangedOrBuilder {
+    private OnTimelineChanged() {
+    }
+    private int bitField0_;
+    public static final int WINDOW_FIELD_NUMBER = 1;
+    private com.gurnain.radiomuxplayer.protos.Message.TimelineWindow window_;
+    /**
+     * <code>.TimelineWindow window = 1;</code>
+     */
+    @java.lang.Override
+    public boolean hasWindow() {
+      return ((bitField0_ & 0x00000001) != 0);
+    }
+    /**
+     * <code>.TimelineWindow window = 1;</code>
+     */
+    @java.lang.Override
+    public com.gurnain.radiomuxplayer.protos.Message.TimelineWindow getWindow() {
+      return window_ == null ? com.gurnain.radiomuxplayer.protos.Message.TimelineWindow.getDefaultInstance() : window_;
+    }
+    /**
+     * <code>.TimelineWindow window = 1;</code>
+     */
+    private void setWindow(com.gurnain.radiomuxplayer.protos.Message.TimelineWindow value) {
+      value.getClass();
+  window_ = value;
+      bitField0_ |= 0x00000001;
+      }
+    /**
+     * <code>.TimelineWindow window = 1;</code>
+     */
+    @java.lang.SuppressWarnings({"ReferenceEquality"})
+    private void mergeWindow(com.gurnain.radiomuxplayer.protos.Message.TimelineWindow value) {
+      value.getClass();
+  if (window_ != null &&
+          window_ != com.gurnain.radiomuxplayer.protos.Message.TimelineWindow.getDefaultInstance()) {
+        window_ =
+          com.gurnain.radiomuxplayer.protos.Message.TimelineWindow.newBuilder(window_).mergeFrom(value).buildPartial();
+      } else {
+        window_ = value;
+      }
+      bitField0_ |= 0x00000001;
+    }
+    /**
+     * <code>.TimelineWindow window = 1;</code>
+     */
+    private void clearWindow() {  window_ = null;
+      bitField0_ = (bitField0_ & ~0x00000001);
+    }
+
+    public static final int TIME_UNSET_FIELD_NUMBER = 2;
+    private long timeUnset_;
+    /**
+     * <code>int64 time_unset = 2;</code>
+     * @return The timeUnset.
+     */
+    @java.lang.Override
+    public long getTimeUnset() {
+      return timeUnset_;
+    }
+    /**
+     * <code>int64 time_unset = 2;</code>
+     * @param value The timeUnset to set.
+     */
+    private void setTimeUnset(long value) {
+      
+      timeUnset_ = value;
+    }
+    /**
+     * <code>int64 time_unset = 2;</code>
+     */
+    private void clearTimeUnset() {
+
+      timeUnset_ = 0L;
+    }
+
+    public static com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, input);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, input, extensionRegistry);
+    }
+
+    public static com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+    }
+
+    public static com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, input);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() {
+      return (Builder) DEFAULT_INSTANCE.createBuilder();
+    }
+    public static Builder newBuilder(com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged prototype) {
+      return DEFAULT_INSTANCE.createBuilder(prototype);
+    }
+
+    /**
+     * Protobuf type {@code OnTimelineChanged}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageLite.Builder<
+          com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged, Builder> implements
+        // @@protoc_insertion_point(builder_implements:OnTimelineChanged)
+        com.gurnain.radiomuxplayer.protos.Message.OnTimelineChangedOrBuilder {
+      // Construct using com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged.newBuilder()
+      private Builder() {
+        super(DEFAULT_INSTANCE);
+      }
+
+
+      /**
+       * <code>.TimelineWindow window = 1;</code>
+       */
+      @java.lang.Override
+      public boolean hasWindow() {
+        return instance.hasWindow();
+      }
+      /**
+       * <code>.TimelineWindow window = 1;</code>
+       */
+      @java.lang.Override
+      public com.gurnain.radiomuxplayer.protos.Message.TimelineWindow getWindow() {
+        return instance.getWindow();
+      }
+      /**
+       * <code>.TimelineWindow window = 1;</code>
+       */
+      public Builder setWindow(com.gurnain.radiomuxplayer.protos.Message.TimelineWindow value) {
+        copyOnWrite();
+        instance.setWindow(value);
+        return this;
+        }
+      /**
+       * <code>.TimelineWindow window = 1;</code>
+       */
+      public Builder setWindow(
+          com.gurnain.radiomuxplayer.protos.Message.TimelineWindow.Builder builderForValue) {
+        copyOnWrite();
+        instance.setWindow(builderForValue.build());
+        return this;
+      }
+      /**
+       * <code>.TimelineWindow window = 1;</code>
+       */
+      public Builder mergeWindow(com.gurnain.radiomuxplayer.protos.Message.TimelineWindow value) {
+        copyOnWrite();
+        instance.mergeWindow(value);
+        return this;
+      }
+      /**
+       * <code>.TimelineWindow window = 1;</code>
+       */
+      public Builder clearWindow() {  copyOnWrite();
+        instance.clearWindow();
+        return this;
+      }
+
+      /**
+       * <code>int64 time_unset = 2;</code>
+       * @return The timeUnset.
+       */
+      @java.lang.Override
+      public long getTimeUnset() {
+        return instance.getTimeUnset();
+      }
+      /**
+       * <code>int64 time_unset = 2;</code>
+       * @param value The timeUnset to set.
+       * @return This builder for chaining.
+       */
+      public Builder setTimeUnset(long value) {
+        copyOnWrite();
+        instance.setTimeUnset(value);
+        return this;
+      }
+      /**
+       * <code>int64 time_unset = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearTimeUnset() {
+        copyOnWrite();
+        instance.clearTimeUnset();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:OnTimelineChanged)
+    }
+    @java.lang.Override
+    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
+    protected final java.lang.Object dynamicMethod(
+        com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
+        java.lang.Object arg0, java.lang.Object arg1) {
+      switch (method) {
+        case NEW_MUTABLE_INSTANCE: {
+          return new com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged();
+        }
+        case NEW_BUILDER: {
+          return new Builder();
+        }
+        case BUILD_MESSAGE_INFO: {
+            java.lang.Object[] objects = new java.lang.Object[] {
+              "bitField0_",
+              "window_",
+              "timeUnset_",
+            };
+            java.lang.String info =
+                "\u0000\u0002\u0000\u0001\u0001\u0002\u0002\u0000\u0000\u0000\u0001\u1009\u0000\u0002" +
+                "\u0002";
+            return newMessageInfo(DEFAULT_INSTANCE, info, objects);
+        }
+        // fall through
+        case GET_DEFAULT_INSTANCE: {
+          return DEFAULT_INSTANCE;
+        }
+        case GET_PARSER: {
+          com.google.protobuf.Parser<com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged> parser = PARSER;
+          if (parser == null) {
+            synchronized (com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged.class) {
+              parser = PARSER;
+              if (parser == null) {
+                parser =
+                    new DefaultInstanceBasedParser<com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged>(
+                        DEFAULT_INSTANCE);
+                PARSER = parser;
+              }
+            }
+          }
+          return parser;
+      }
+      case GET_MEMOIZED_IS_INITIALIZED: {
+        return (byte) 1;
+      }
+      case SET_MEMOIZED_IS_INITIALIZED: {
+        return null;
+      }
+      }
+      throw new UnsupportedOperationException();
+    }
+
+
+    // @@protoc_insertion_point(class_scope:OnTimelineChanged)
+    private static final com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged DEFAULT_INSTANCE;
+    static {
+      OnTimelineChanged defaultInstance = new OnTimelineChanged();
+      // New instances are implicitly immutable so no need to make
+      // immutable.
+      DEFAULT_INSTANCE = defaultInstance;
+      com.google.protobuf.GeneratedMessageLite.registerDefaultInstance(
+        OnTimelineChanged.class, defaultInstance);
+    }
+
+    public static com.gurnain.radiomuxplayer.protos.Message.OnTimelineChanged getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static volatile com.google.protobuf.Parser<OnTimelineChanged> PARSER;
+
+    public static com.google.protobuf.Parser<OnTimelineChanged> parser() {
+      return DEFAULT_INSTANCE.getParserForType();
+    }
+  }
+
+  public interface OnPositionChangedOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:OnPositionChanged)
+      com.google.protobuf.MessageLiteOrBuilder {
+
+    /**
+     * <code>.PositionInfo old_position = 1;</code>
+     * @return Whether the oldPosition field is set.
+     */
+    boolean hasOldPosition();
+    /**
+     * <code>.PositionInfo old_position = 1;</code>
+     * @return The oldPosition.
+     */
+    com.gurnain.radiomuxplayer.protos.Message.PositionInfo getOldPosition();
+
+    /**
+     * <code>.PositionInfo new_position = 2;</code>
+     * @return Whether the newPosition field is set.
+     */
+    boolean hasNewPosition();
+    /**
+     * <code>.PositionInfo new_position = 2;</code>
+     * @return The newPosition.
+     */
+    com.gurnain.radiomuxplayer.protos.Message.PositionInfo getNewPosition();
+
+    /**
+     * <code>string timestamp = 3;</code>
+     * @return The timestamp.
+     */
+    java.lang.String getTimestamp();
+    /**
+     * <code>string timestamp = 3;</code>
+     * @return The bytes for timestamp.
+     */
+    com.google.protobuf.ByteString
+        getTimestampBytes();
+  }
+  /**
+   * Protobuf type {@code OnPositionChanged}
+   */
+  public  static final class OnPositionChanged extends
+      com.google.protobuf.GeneratedMessageLite<
+          OnPositionChanged, OnPositionChanged.Builder> implements
+      // @@protoc_insertion_point(message_implements:OnPositionChanged)
+      OnPositionChangedOrBuilder {
+    private OnPositionChanged() {
+      timestamp_ = "";
+    }
+    private int bitField0_;
+    public static final int OLD_POSITION_FIELD_NUMBER = 1;
+    private com.gurnain.radiomuxplayer.protos.Message.PositionInfo oldPosition_;
+    /**
+     * <code>.PositionInfo old_position = 1;</code>
+     */
+    @java.lang.Override
+    public boolean hasOldPosition() {
+      return ((bitField0_ & 0x00000001) != 0);
+    }
+    /**
+     * <code>.PositionInfo old_position = 1;</code>
+     */
+    @java.lang.Override
+    public com.gurnain.radiomuxplayer.protos.Message.PositionInfo getOldPosition() {
+      return oldPosition_ == null ? com.gurnain.radiomuxplayer.protos.Message.PositionInfo.getDefaultInstance() : oldPosition_;
+    }
+    /**
+     * <code>.PositionInfo old_position = 1;</code>
+     */
+    private void setOldPosition(com.gurnain.radiomuxplayer.protos.Message.PositionInfo value) {
+      value.getClass();
+  oldPosition_ = value;
+      bitField0_ |= 0x00000001;
+      }
+    /**
+     * <code>.PositionInfo old_position = 1;</code>
+     */
+    @java.lang.SuppressWarnings({"ReferenceEquality"})
+    private void mergeOldPosition(com.gurnain.radiomuxplayer.protos.Message.PositionInfo value) {
+      value.getClass();
+  if (oldPosition_ != null &&
+          oldPosition_ != com.gurnain.radiomuxplayer.protos.Message.PositionInfo.getDefaultInstance()) {
+        oldPosition_ =
+          com.gurnain.radiomuxplayer.protos.Message.PositionInfo.newBuilder(oldPosition_).mergeFrom(value).buildPartial();
+      } else {
+        oldPosition_ = value;
+      }
+      bitField0_ |= 0x00000001;
+    }
+    /**
+     * <code>.PositionInfo old_position = 1;</code>
+     */
+    private void clearOldPosition() {  oldPosition_ = null;
+      bitField0_ = (bitField0_ & ~0x00000001);
+    }
+
+    public static final int NEW_POSITION_FIELD_NUMBER = 2;
+    private com.gurnain.radiomuxplayer.protos.Message.PositionInfo newPosition_;
+    /**
+     * <code>.PositionInfo new_position = 2;</code>
+     */
+    @java.lang.Override
+    public boolean hasNewPosition() {
+      return ((bitField0_ & 0x00000002) != 0);
+    }
+    /**
+     * <code>.PositionInfo new_position = 2;</code>
+     */
+    @java.lang.Override
+    public com.gurnain.radiomuxplayer.protos.Message.PositionInfo getNewPosition() {
+      return newPosition_ == null ? com.gurnain.radiomuxplayer.protos.Message.PositionInfo.getDefaultInstance() : newPosition_;
+    }
+    /**
+     * <code>.PositionInfo new_position = 2;</code>
+     */
+    private void setNewPosition(com.gurnain.radiomuxplayer.protos.Message.PositionInfo value) {
+      value.getClass();
+  newPosition_ = value;
+      bitField0_ |= 0x00000002;
+      }
+    /**
+     * <code>.PositionInfo new_position = 2;</code>
+     */
+    @java.lang.SuppressWarnings({"ReferenceEquality"})
+    private void mergeNewPosition(com.gurnain.radiomuxplayer.protos.Message.PositionInfo value) {
+      value.getClass();
+  if (newPosition_ != null &&
+          newPosition_ != com.gurnain.radiomuxplayer.protos.Message.PositionInfo.getDefaultInstance()) {
+        newPosition_ =
+          com.gurnain.radiomuxplayer.protos.Message.PositionInfo.newBuilder(newPosition_).mergeFrom(value).buildPartial();
+      } else {
+        newPosition_ = value;
+      }
+      bitField0_ |= 0x00000002;
+    }
+    /**
+     * <code>.PositionInfo new_position = 2;</code>
+     */
+    private void clearNewPosition() {  newPosition_ = null;
+      bitField0_ = (bitField0_ & ~0x00000002);
+    }
+
+    public static final int TIMESTAMP_FIELD_NUMBER = 3;
+    private java.lang.String timestamp_;
+    /**
+     * <code>string timestamp = 3;</code>
+     * @return The timestamp.
+     */
+    @java.lang.Override
+    public java.lang.String getTimestamp() {
+      return timestamp_;
+    }
+    /**
+     * <code>string timestamp = 3;</code>
+     * @return The bytes for timestamp.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getTimestampBytes() {
+      return com.google.protobuf.ByteString.copyFromUtf8(timestamp_);
+    }
+    /**
+     * <code>string timestamp = 3;</code>
+     * @param value The timestamp to set.
+     */
+    private void setTimestamp(
+        java.lang.String value) {
+      java.lang.Class<?> valueClass = value.getClass();
+  
+      timestamp_ = value;
+    }
+    /**
+     * <code>string timestamp = 3;</code>
+     */
+    private void clearTimestamp() {
+
+      timestamp_ = getDefaultInstance().getTimestamp();
+    }
+    /**
+     * <code>string timestamp = 3;</code>
+     * @param value The bytes for timestamp to set.
+     */
+    private void setTimestampBytes(
+        com.google.protobuf.ByteString value) {
+      checkByteStringIsUtf8(value);
+      timestamp_ = value.toStringUtf8();
+
+    }
+
+    public static com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, input);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, input, extensionRegistry);
+    }
+
+    public static com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+    }
+
+    public static com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, input);
+    }
+    public static com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() {
+      return (Builder) DEFAULT_INSTANCE.createBuilder();
+    }
+    public static Builder newBuilder(com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged prototype) {
+      return DEFAULT_INSTANCE.createBuilder(prototype);
+    }
+
+    /**
+     * Protobuf type {@code OnPositionChanged}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageLite.Builder<
+          com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged, Builder> implements
+        // @@protoc_insertion_point(builder_implements:OnPositionChanged)
+        com.gurnain.radiomuxplayer.protos.Message.OnPositionChangedOrBuilder {
+      // Construct using com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged.newBuilder()
+      private Builder() {
+        super(DEFAULT_INSTANCE);
+      }
+
+
+      /**
+       * <code>.PositionInfo old_position = 1;</code>
+       */
+      @java.lang.Override
+      public boolean hasOldPosition() {
+        return instance.hasOldPosition();
+      }
+      /**
+       * <code>.PositionInfo old_position = 1;</code>
+       */
+      @java.lang.Override
+      public com.gurnain.radiomuxplayer.protos.Message.PositionInfo getOldPosition() {
+        return instance.getOldPosition();
+      }
+      /**
+       * <code>.PositionInfo old_position = 1;</code>
+       */
+      public Builder setOldPosition(com.gurnain.radiomuxplayer.protos.Message.PositionInfo value) {
+        copyOnWrite();
+        instance.setOldPosition(value);
+        return this;
+        }
+      /**
+       * <code>.PositionInfo old_position = 1;</code>
+       */
+      public Builder setOldPosition(
+          com.gurnain.radiomuxplayer.protos.Message.PositionInfo.Builder builderForValue) {
+        copyOnWrite();
+        instance.setOldPosition(builderForValue.build());
+        return this;
+      }
+      /**
+       * <code>.PositionInfo old_position = 1;</code>
+       */
+      public Builder mergeOldPosition(com.gurnain.radiomuxplayer.protos.Message.PositionInfo value) {
+        copyOnWrite();
+        instance.mergeOldPosition(value);
+        return this;
+      }
+      /**
+       * <code>.PositionInfo old_position = 1;</code>
+       */
+      public Builder clearOldPosition() {  copyOnWrite();
+        instance.clearOldPosition();
+        return this;
+      }
+
+      /**
+       * <code>.PositionInfo new_position = 2;</code>
+       */
+      @java.lang.Override
+      public boolean hasNewPosition() {
+        return instance.hasNewPosition();
+      }
+      /**
+       * <code>.PositionInfo new_position = 2;</code>
+       */
+      @java.lang.Override
+      public com.gurnain.radiomuxplayer.protos.Message.PositionInfo getNewPosition() {
+        return instance.getNewPosition();
+      }
+      /**
+       * <code>.PositionInfo new_position = 2;</code>
+       */
+      public Builder setNewPosition(com.gurnain.radiomuxplayer.protos.Message.PositionInfo value) {
+        copyOnWrite();
+        instance.setNewPosition(value);
+        return this;
+        }
+      /**
+       * <code>.PositionInfo new_position = 2;</code>
+       */
+      public Builder setNewPosition(
+          com.gurnain.radiomuxplayer.protos.Message.PositionInfo.Builder builderForValue) {
+        copyOnWrite();
+        instance.setNewPosition(builderForValue.build());
+        return this;
+      }
+      /**
+       * <code>.PositionInfo new_position = 2;</code>
+       */
+      public Builder mergeNewPosition(com.gurnain.radiomuxplayer.protos.Message.PositionInfo value) {
+        copyOnWrite();
+        instance.mergeNewPosition(value);
+        return this;
+      }
+      /**
+       * <code>.PositionInfo new_position = 2;</code>
+       */
+      public Builder clearNewPosition() {  copyOnWrite();
+        instance.clearNewPosition();
+        return this;
+      }
+
+      /**
+       * <code>string timestamp = 3;</code>
+       * @return The timestamp.
+       */
+      @java.lang.Override
+      public java.lang.String getTimestamp() {
+        return instance.getTimestamp();
+      }
+      /**
+       * <code>string timestamp = 3;</code>
+       * @return The bytes for timestamp.
+       */
+      @java.lang.Override
+      public com.google.protobuf.ByteString
+          getTimestampBytes() {
+        return instance.getTimestampBytes();
+      }
+      /**
+       * <code>string timestamp = 3;</code>
+       * @param value The timestamp to set.
+       * @return This builder for chaining.
+       */
+      public Builder setTimestamp(
+          java.lang.String value) {
+        copyOnWrite();
+        instance.setTimestamp(value);
+        return this;
+      }
+      /**
+       * <code>string timestamp = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearTimestamp() {
+        copyOnWrite();
+        instance.clearTimestamp();
+        return this;
+      }
+      /**
+       * <code>string timestamp = 3;</code>
+       * @param value The bytes for timestamp to set.
+       * @return This builder for chaining.
+       */
+      public Builder setTimestampBytes(
+          com.google.protobuf.ByteString value) {
+        copyOnWrite();
+        instance.setTimestampBytes(value);
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:OnPositionChanged)
+    }
+    @java.lang.Override
+    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
+    protected final java.lang.Object dynamicMethod(
+        com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
+        java.lang.Object arg0, java.lang.Object arg1) {
+      switch (method) {
+        case NEW_MUTABLE_INSTANCE: {
+          return new com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged();
+        }
+        case NEW_BUILDER: {
+          return new Builder();
+        }
+        case BUILD_MESSAGE_INFO: {
+            java.lang.Object[] objects = new java.lang.Object[] {
+              "bitField0_",
+              "oldPosition_",
+              "newPosition_",
+              "timestamp_",
+            };
+            java.lang.String info =
+                "\u0000\u0003\u0000\u0001\u0001\u0003\u0003\u0000\u0000\u0000\u0001\u1009\u0000\u0002" +
+                "\u1009\u0001\u0003\u0208";
+            return newMessageInfo(DEFAULT_INSTANCE, info, objects);
+        }
+        // fall through
+        case GET_DEFAULT_INSTANCE: {
+          return DEFAULT_INSTANCE;
+        }
+        case GET_PARSER: {
+          com.google.protobuf.Parser<com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged> parser = PARSER;
+          if (parser == null) {
+            synchronized (com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged.class) {
+              parser = PARSER;
+              if (parser == null) {
+                parser =
+                    new DefaultInstanceBasedParser<com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged>(
+                        DEFAULT_INSTANCE);
+                PARSER = parser;
+              }
+            }
+          }
+          return parser;
+      }
+      case GET_MEMOIZED_IS_INITIALIZED: {
+        return (byte) 1;
+      }
+      case SET_MEMOIZED_IS_INITIALIZED: {
+        return null;
+      }
+      }
+      throw new UnsupportedOperationException();
+    }
+
+
+    // @@protoc_insertion_point(class_scope:OnPositionChanged)
+    private static final com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged DEFAULT_INSTANCE;
+    static {
+      OnPositionChanged defaultInstance = new OnPositionChanged();
+      // New instances are implicitly immutable so no need to make
+      // immutable.
+      DEFAULT_INSTANCE = defaultInstance;
+      com.google.protobuf.GeneratedMessageLite.registerDefaultInstance(
+        OnPositionChanged.class, defaultInstance);
+    }
+
+    public static com.gurnain.radiomuxplayer.protos.Message.OnPositionChanged getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static volatile com.google.protobuf.Parser<OnPositionChanged> PARSER;
+
+    public static com.google.protobuf.Parser<OnPositionChanged> parser() {
       return DEFAULT_INSTANCE.getParserForType();
     }
   }

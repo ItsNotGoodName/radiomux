@@ -2,6 +2,7 @@ package android
 
 import (
 	"context"
+	"time"
 )
 
 // BusEvent is used by the player to emit events.
@@ -17,6 +18,8 @@ type BusEvent interface {
 	DeviceInfoChanged(ctx context.Context, id int64, event EventDeviceInfoChanged) error
 	DeviceVolumeChanged(ctx context.Context, id int64, event EventDeviceVolumeChanged) error
 	CurrentURIChanged(ctx context.Context, id int64, event EventCurrentURIChanged) error
+	TimelineWindowChanged(ctx context.Context, id int64, event EventTimelineWindowChanged) error
+	PositionChanged(ctx context.Context, id int64, event EventPositionChanged) error
 }
 
 type EventMediaMetadataChanged struct {
@@ -63,4 +66,15 @@ type EventDeviceVolumeChanged struct {
 
 type EventCurrentURIChanged struct {
 	URI string
+}
+
+type EventTimelineWindowChanged struct {
+	Window    TimelineWindow
+	TimeUnset int64
+}
+
+type EventPositionChanged struct {
+	OldPositionInfo PositionInfo
+	NewPositionInfo PositionInfo
+	Time            time.Time
 }

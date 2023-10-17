@@ -57,6 +57,22 @@ message DeviceInfo {
   int32 MaxVolume = 2;
 }
 
+message TimelineWindow {
+  int64 presentation_start_time_ms = 1;
+  int64 window_start_time_ms = 2;
+  int64 elapsed_realtime_epoch_offset_ms = 3;
+  bool is_seekable = 4;
+  bool is_dynamic = 5;
+  bool is_live = 6;
+  bool is_placeholder = 7;
+  int64 default_position_ms = 8;
+  int64 duration_ms = 9;
+}
+
+message PositionInfo {
+  int64 position_ms = 1;
+}
+
 // Event
 
 message Event {
@@ -73,6 +89,8 @@ message Event {
     OnDeviceInfoChanged OnDeviceInfoChanged = 10;
     OnDeviceVolumeChanged OnDeviceVolumeChanged = 11;
     OnCurrentUriChanged OnCurrentUriChanged = 12;
+    OnTimelineChanged OnTimelineChanged = 13;
+    OnPositionChanged OnPositionChanged = 14;
   }
 }
 
@@ -123,6 +141,17 @@ message OnDeviceVolumeChanged {
 
 message OnCurrentUriChanged {
   string uri = 1;
+}
+
+message OnTimelineChanged {
+  TimelineWindow window = 1;
+  int64 time_unset = 2;
+}
+
+message OnPositionChanged {
+  PositionInfo old_position = 1;
+  PositionInfo new_position = 2;
+  string timestamp = 3;
 }
 
 // Rpc

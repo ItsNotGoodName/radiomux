@@ -10,12 +10,14 @@ import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
+import androidx.media3.common.Timeline
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import androidx.preference.PreferenceManager
 import com.google.common.util.concurrent.MoreExecutors
 import com.gurnain.radiomuxplayer.protos.Message
 import com.gurnain.radiomuxplayer.protos.MessageConverter
+import java.util.Date
 
 class Manager(private val context: android.content.Context) :
     SharedPreferences.OnSharedPreferenceChangeListener {
@@ -152,6 +154,14 @@ class Manager(private val context: android.content.Context) :
                                 controller.isDeviceMuted
                             )
                             playerListener.onCurrentUriChanged(currentMediaUri)
+                            playerListener.onTimelineChanged(
+                                controller.currentTimeline,
+                                Player.TIMELINE_CHANGE_REASON_PLAYLIST_CHANGED
+                            )
+                            playerListener.onPositionChanged(
+                                controller.currentPosition,
+                                controller.currentPosition
+                            )
                         }
                     }
 
@@ -171,6 +181,37 @@ class Manager(private val context: android.content.Context) :
 
     private val playerListener = object : Player.Listener {
         private val TAG = "playerListener"
+
+        override fun onTimelineChanged(timeline: Timeline, reason: Int) {
+            Log.v(TAG, "onTimelineChanged")
+            val index = timeline.getFirstWindowIndex(false)
+            if (index == C.INDEX_UNSET) {
+                return
+            }
+
+            Timeline.Window()
+                .also { timeline.getWindow(index, it) }
+                .let { MessageConverter.eventOnTimelineChanged(it) }
+                .let { connection?.send(it) }
+
+        }
+
+        override fun onPositionDiscontinuity(
+            oldPosition: Player.PositionInfo,
+            newPosition: Player.PositionInfo,
+            reason: Int
+        ) {
+            onPositionChanged(oldPosition.positionMs, newPosition.positionMs)
+        }
+
+        fun onPositionChanged(oldPosition: Long, newPosition: Long) {
+            Log.v(TAG, "onPositionChanged")
+            MessageConverter.eventOnPositionChanged(
+                MessageConverter.positionInfo(oldPosition),
+                MessageConverter.positionInfo(newPosition),
+                Date()
+            ).let { connection?.send(it) }
+        }
 
         override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
             Log.v(TAG, "onMediaMetadataChanged")

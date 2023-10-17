@@ -1,5 +1,28 @@
 package android
 
+import "time"
+
+type TimelineWindow struct {
+	// Whether it's possible to seek within this window.
+	IsSeekable bool
+	// Whether this window may change when the timeline is updated.
+	IsDynamic bool
+	// Whether this is a live stream.
+	IsLive bool
+	// Whether this window contains placeholder information because the real information has yet to
+	// be loaded.
+	IsPlaceholder bool
+	// Default position relative to the start of the window at which to begin playback, in microseconds.
+	// May be C.TIME_UNSET if and only if the window was populated with a non-zero default position projection, and if the specified projection cannot be performed whilst remaining within the bounds of the window.
+	DefaultPosition time.Duration
+	// Duration of the window in milliseconds, or C.TIME_UNSET if unknown.
+	Duration time.Duration
+}
+
+type PositionInfo struct {
+	Position time.Duration
+}
+
 type DeviceInfo struct {
 	MinVolume int
 	MaxVolume int
