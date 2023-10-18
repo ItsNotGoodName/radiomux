@@ -51,8 +51,7 @@ class Manager(private val context: android.content.Context) :
         val mediaControllerFuture = MediaController.Builder(context, sessionToken).buildAsync()
         mediaControllerFuture.addListener({
             mediaController = mediaControllerFuture.get()
-            PreferenceManager.getDefaultSharedPreferences(context).getString("url", "")
-                ?.let { connection = Connection(it, connectionListener) }
+            onSharedPreferenceChanged(PreferenceManager.getDefaultSharedPreferences(context), "url")
         }, MoreExecutors.directExecutor())
     }
 

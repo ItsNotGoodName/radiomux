@@ -173,6 +173,7 @@ type Props = {
     timeline_duration: number
     timeline_is_seekable: boolean
     timeline_is_placeholder: boolean
+    playback_error: string
   }
   players: Array<{
     id: number
@@ -241,6 +242,12 @@ export function Player(props: Props) {
                               <PlayerTableHead>URI</PlayerTableHead>
                               <td>{player().uri}</td>
                             </tr>
+                            <Show when={player().playback_error}>
+                              <tr>
+                                <PlayerTableHead>Error</PlayerTableHead>
+                                <td>{player().playback_error}</td>
+                              </tr>
+                            </Show>
                           </tbody>
                         </table>
                       }
