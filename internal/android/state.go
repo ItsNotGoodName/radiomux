@@ -3,10 +3,9 @@ package android
 import (
 	"context"
 	"sync"
+	"time"
 
 	"github.com/ItsNotGoodName/radiomux/pkg/diff"
-	"github.com/ItsNotGoodName/radiomux/pkg/jsonext"
-	"github.com/rs/zerolog/log"
 )
 
 const (
@@ -24,24 +23,38 @@ const (
 	StateChangedGenre
 	StateChangedStation
 	StateChangedURI
+	StateTimelineIsSeekable
+	StateTimelineIsLive
+	StateTimelineIsPlaceholder
+	StateTimelineDefaultPosition
+	StateTimelineDuration
+	StatePosition
+	StatePositionTime
 )
 
 type State struct {
-	ID            int64
-	Connected     bool
-	Ready         bool
-	MinVolume     int
-	MaxVolume     int
-	Volume        int
-	Muted         bool
-	PlaybackState PlaybackState
-	PlaybackError PlaybackError
-	Playing       bool
-	Loading       bool
-	Title         string
-	Genre         string
-	Station       string
-	URI           string
+	ID                      int64
+	Connected               bool
+	Ready                   bool
+	MinVolume               int
+	MaxVolume               int
+	Volume                  int
+	Muted                   bool
+	PlaybackState           PlaybackState
+	PlaybackError           PlaybackError
+	Playing                 bool
+	Loading                 bool
+	Title                   string
+	Genre                   string
+	Station                 string
+	URI                     string
+	TimelineIsSeekable      bool
+	TimelineIsLive          bool
+	TimelineIsPlaceholder   bool
+	TimelineDefaultPosition time.Duration
+	TimelineDuration        time.Duration
+	Position                time.Duration
+	PositionTime            time.Time
 }
 
 type StateChange struct {
@@ -86,15 +99,47 @@ type StateService struct {
 }
 
 // PositionChanged implements BusEvent.
-func (*StateService) PositionChanged(ctx context.Context, id int64, event EventPositionChanged) error {
-	log.Debug().Int64("id", id).Msg(jsonext.String(event))
-	return nil
+func (s *StateService) PositionChanged(ctx context.Context, id int64, event EventPositionChanged) error {
+	// log.Debug().Int64("id", id).Msg(jsonext.String(event))
+	return s.Update(id, func(state State, changed diff.Changed) (State, diff.Changed) {
+		if state.Position != event.NewPositionInfo.Position {
+			state.Position = event.NewPositionInfo.Position
+			changed = changed.Merge(StatePosition)
+		}
+		if state.PositionTime != event.Time {
+			state.PositionTime = event.Time
+			changed = changed.Merge(StatePositionTime)
+		}
+		return state, changed
+	})
 }
 
 // TimelineWindowChanged implements BusEvent.
-func (*StateService) TimelineWindowChanged(ctx context.Context, id int64, event EventTimelineWindowChanged) error {
-	log.Debug().Int64("id", id).Msg(jsonext.String(event))
-	return nil
+func (s *StateService) TimelineWindowChanged(ctx context.Context, id int64, event EventTimelineWindowChanged) error {
+	// log.Debug().Int64("id", id).Msg(jsonext.String(event))
+	return s.Update(id, func(state State, changed diff.Changed) (State, diff.Changed) {
+		if state.TimelineIsSeekable != event.Window.IsSeekable {
+			state.TimelineIsSeekable = event.Window.IsSeekable
+			changed = changed.Merge(StateTimelineIsSeekable)
+		}
+		if state.TimelineIsLive != event.Window.IsLive {
+			state.TimelineIsLive = event.Window.IsLive
+			changed = changed.Merge(StateTimelineIsLive)
+		}
+		if state.TimelineIsPlaceholder != event.Window.IsPlaceholder {
+			state.TimelineIsPlaceholder = event.Window.IsPlaceholder
+			changed = changed.Merge(StateTimelineIsPlaceholder)
+		}
+		if state.TimelineDefaultPosition != event.Window.DefaultPosition {
+			state.TimelineDefaultPosition = event.Window.DefaultPosition
+			changed = changed.Merge(StateTimelineDefaultPosition)
+		}
+		if state.TimelineDuration != event.Window.Duration {
+			state.TimelineDuration = event.Window.Duration
+			changed = changed.Merge(StateTimelineDuration)
+		}
+		return state, changed
+	})
 }
 
 // CurrentURIChanged implements BusEvent.

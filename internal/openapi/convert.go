@@ -57,22 +57,29 @@ func ConvertPlayerStates(states []android.State, names []string) []PlayerState {
 
 func ConvertPlayerState(s *android.State, name string) PlayerState {
 	return PlayerState{
-		Id:            s.ID,
-		Name:          name,
-		Connected:     s.Connected,
-		Ready:         s.Ready,
-		MinVolume:     s.MinVolume,
-		MaxVolume:     s.MaxVolume,
-		Volume:        s.Volume,
-		Muted:         s.Muted,
-		PlaybackState: ConvertPlayerPlaybackState(s.PlaybackState),
-		PlaybackError: ConvertPlaybackError(s.PlaybackError),
-		Playing:       s.Playing,
-		Loading:       s.Loading,
-		Title:         s.Title,
-		Genre:         s.Genre,
-		Station:       s.Station,
-		Uri:           s.URI,
+		Id:                      s.ID,
+		Name:                    name,
+		Connected:               s.Connected,
+		Ready:                   s.Ready,
+		MinVolume:               s.MinVolume,
+		MaxVolume:               s.MaxVolume,
+		Volume:                  s.Volume,
+		Muted:                   s.Muted,
+		PlaybackState:           ConvertPlayerPlaybackState(s.PlaybackState),
+		PlaybackError:           ConvertPlaybackError(s.PlaybackError),
+		Playing:                 s.Playing,
+		Loading:                 s.Loading,
+		Title:                   s.Title,
+		Genre:                   s.Genre,
+		Station:                 s.Station,
+		Uri:                     s.URI,
+		TimelineIsSeekable:      s.TimelineIsSeekable,
+		TimelineIsLive:          s.TimelineIsLive,
+		TimelineIsPlaceholder:   s.TimelineIsPlaceholder,
+		TimelineDefaultPosition: s.TimelineDefaultPosition.Milliseconds(),
+		TimelineDuration:        s.TimelineDuration.Milliseconds(),
+		Position:                s.Position.Milliseconds(),
+		PositionTime:            s.PositionTime,
 	}
 }
 
@@ -122,6 +129,30 @@ func ConvertPlayerStatePartial(s *android.State, c diff.Changed) PlayerStatePart
 	}
 	if c.Is(android.StateChangedURI) {
 		p.Uri = &s.URI
+	}
+	if c.Is(android.StateTimelineIsSeekable) {
+		p.TimelineIsSeekable = &s.TimelineIsSeekable
+	}
+	if c.Is(android.StateTimelineIsLive) {
+		p.TimelineIsLive = &s.TimelineIsLive
+	}
+	if c.Is(android.StateTimelineIsPlaceholder) {
+		p.TimelineIsPlaceholder = &s.TimelineIsPlaceholder
+	}
+	if c.Is(android.StateTimelineDefaultPosition) {
+		val := s.TimelineDefaultPosition.Milliseconds()
+		p.TimelineDefaultPosition = &val
+	}
+	if c.Is(android.StateTimelineDuration) {
+		val := s.TimelineDuration.Milliseconds()
+		p.TimelineDuration = &val
+	}
+	if c.Is(android.StatePosition) {
+		val := s.Position.Milliseconds()
+		p.Position = &val
+	}
+	if c.Is(android.StatePositionTime) {
+		p.PositionTime = &s.PositionTime
 	}
 	return p
 }

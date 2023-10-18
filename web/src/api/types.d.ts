@@ -65,6 +65,17 @@ export interface components {
       genre?: string;
       station?: string;
       uri?: string;
+      timeline_is_seekable?: boolean;
+      timeline_is_live?: boolean;
+      timeline_is_placeholder?: boolean;
+      /** Format: int64 */
+      timeline_default_position?: number;
+      /** Format: int64 */
+      timeline_duration?: number;
+      /** Format: int64 */
+      position?: number;
+      /** Format: date-time */
+      position_time?: string;
     };
     PlayerState: components["schemas"]["PlayerStatePartial"] & Record<string, never>;
   };

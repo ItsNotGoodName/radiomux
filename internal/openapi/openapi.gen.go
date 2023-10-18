@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/oapi-codegen/runtime"
@@ -62,42 +63,56 @@ type PlayerPlaybackState string
 
 // PlayerState defines model for PlayerState.
 type PlayerState struct {
-	Connected     bool                `json:"connected"`
-	Genre         string              `json:"genre"`
-	Id            int64               `json:"id"`
-	Loading       bool                `json:"loading"`
-	MaxVolume     int                 `json:"max_volume"`
-	MinVolume     int                 `json:"min_volume"`
-	Muted         bool                `json:"muted"`
-	Name          string              `json:"name"`
-	PlaybackError string              `json:"playback_error"`
-	PlaybackState PlayerPlaybackState `json:"playback_state"`
-	Playing       bool                `json:"playing"`
-	Ready         bool                `json:"ready"`
-	Station       string              `json:"station"`
-	Title         string              `json:"title"`
-	Uri           string              `json:"uri"`
-	Volume        int                 `json:"volume"`
+	Connected               bool                `json:"connected"`
+	Genre                   string              `json:"genre"`
+	Id                      int64               `json:"id"`
+	Loading                 bool                `json:"loading"`
+	MaxVolume               int                 `json:"max_volume"`
+	MinVolume               int                 `json:"min_volume"`
+	Muted                   bool                `json:"muted"`
+	Name                    string              `json:"name"`
+	PlaybackError           string              `json:"playback_error"`
+	PlaybackState           PlayerPlaybackState `json:"playback_state"`
+	Playing                 bool                `json:"playing"`
+	Position                int64               `json:"position"`
+	PositionTime            time.Time           `json:"position_time"`
+	Ready                   bool                `json:"ready"`
+	Station                 string              `json:"station"`
+	TimelineDefaultPosition int64               `json:"timeline_default_position"`
+	TimelineDuration        int64               `json:"timeline_duration"`
+	TimelineIsLive          bool                `json:"timeline_is_live"`
+	TimelineIsPlaceholder   bool                `json:"timeline_is_placeholder"`
+	TimelineIsSeekable      bool                `json:"timeline_is_seekable"`
+	Title                   string              `json:"title"`
+	Uri                     string              `json:"uri"`
+	Volume                  int                 `json:"volume"`
 }
 
 // PlayerStatePartial defines model for PlayerStatePartial.
 type PlayerStatePartial struct {
-	Connected     *bool                `json:"connected,omitempty"`
-	Genre         *string              `json:"genre,omitempty"`
-	Id            int64                `json:"id"`
-	Loading       *bool                `json:"loading,omitempty"`
-	MaxVolume     *int                 `json:"max_volume,omitempty"`
-	MinVolume     *int                 `json:"min_volume,omitempty"`
-	Muted         *bool                `json:"muted,omitempty"`
-	Name          *string              `json:"name,omitempty"`
-	PlaybackError *string              `json:"playback_error,omitempty"`
-	PlaybackState *PlayerPlaybackState `json:"playback_state,omitempty"`
-	Playing       *bool                `json:"playing,omitempty"`
-	Ready         *bool                `json:"ready,omitempty"`
-	Station       *string              `json:"station,omitempty"`
-	Title         *string              `json:"title,omitempty"`
-	Uri           *string              `json:"uri,omitempty"`
-	Volume        *int                 `json:"volume,omitempty"`
+	Connected               *bool                `json:"connected,omitempty"`
+	Genre                   *string              `json:"genre,omitempty"`
+	Id                      int64                `json:"id"`
+	Loading                 *bool                `json:"loading,omitempty"`
+	MaxVolume               *int                 `json:"max_volume,omitempty"`
+	MinVolume               *int                 `json:"min_volume,omitempty"`
+	Muted                   *bool                `json:"muted,omitempty"`
+	Name                    *string              `json:"name,omitempty"`
+	PlaybackError           *string              `json:"playback_error,omitempty"`
+	PlaybackState           *PlayerPlaybackState `json:"playback_state,omitempty"`
+	Playing                 *bool                `json:"playing,omitempty"`
+	Position                *int64               `json:"position,omitempty"`
+	PositionTime            *time.Time           `json:"position_time,omitempty"`
+	Ready                   *bool                `json:"ready,omitempty"`
+	Station                 *string              `json:"station,omitempty"`
+	TimelineDefaultPosition *int64               `json:"timeline_default_position,omitempty"`
+	TimelineDuration        *int64               `json:"timeline_duration,omitempty"`
+	TimelineIsLive          *bool                `json:"timeline_is_live,omitempty"`
+	TimelineIsPlaceholder   *bool                `json:"timeline_is_placeholder,omitempty"`
+	TimelineIsSeekable      *bool                `json:"timeline_is_seekable,omitempty"`
+	Title                   *string              `json:"title,omitempty"`
+	Uri                     *string              `json:"uri,omitempty"`
+	Volume                  *int                 `json:"volume,omitempty"`
 }
 
 // AsEventDataPlayerState returns the union data inside the Event as a EventDataPlayerState

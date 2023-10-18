@@ -132,6 +132,24 @@ components:
           type: string
         uri:
           type: string
+        timeline_is_seekable:
+          type: boolean
+        timeline_is_live:
+          type: boolean
+        timeline_is_placeholder:
+          type: boolean
+        timeline_default_position:
+          type: integer
+          format: int64
+        timeline_duration:
+          type: integer
+          format: int64
+        position:
+          type: integer
+          format: int64
+        position_time:
+          type: string
+          format: date-time
 
     PlayerState:
       allOf:
@@ -153,3 +171,10 @@ components:
             - genre
             - station
             - uri
+            - timeline_is_seekable
+            - timeline_is_live
+            - timeline_is_placeholder
+            - timeline_default_position
+            - timeline_duration
+            - position
+            - position_time

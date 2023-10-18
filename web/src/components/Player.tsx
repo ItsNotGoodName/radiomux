@@ -5,6 +5,8 @@ import { For, Show, } from "solid-js";
 import { Button } from "~/ui/Button";
 import { minScreen, mixin, theme, tw } from "~/ui/theme";
 import { Dropdown, DropdownCard, DropdownPositioner } from "~/ui/Dropdown";
+import { Progress, } from "@kobalte/core";
+import { durationHumanize } from "~/common";
 
 const Root = styled("div", {
   base: {
@@ -69,7 +71,7 @@ const SubControl = styled("div", {
   }
 })
 
-const Text = styled("p", {
+const Text = styled("div", {
   base: {
     ...mixin.textLine()
   }
@@ -168,6 +170,9 @@ type Props = {
     genre: string
     station: string
     uri: string
+    timeline_duration: number
+    timeline_is_seekable: boolean
+    timeline_is_placeholder: boolean
   }
   players: Array<{
     id: number
@@ -244,7 +249,20 @@ export function Player(props: Props) {
                 </DropdownPositioner>}
             </Dropdown>
           </div>
-          <Text title={props.player?.title}>{props.player?.title}</Text>
+          <div class={style({ overflowX: "hidden", flex: 1 })}>
+            <Text title={props.player?.title}>{props.player?.title}</Text>
+            <div class={style({ ...mixin.row("1"), alignItems: 'center' })}>
+              <Show when={props.player?.timeline_is_seekable && !props.player.timeline_is_placeholder}>
+                <Text>{durationHumanize(0)}</Text>
+                <Progress.Root value={75} class={style({ flex: 1 })}>
+                  <Progress.Track class={style({ height: theme.space[2] })}>
+                    <Progress.Fill class={style({ height: "100%", width: "var(--kb-progress-fill-width)", background: theme.color.navForeground, borderRadius: theme.borderRadius.ok })} />
+                  </Progress.Track>
+                </Progress.Root>
+                <Text>{durationHumanize(props.player?.timeline_duration ?? 0)}</Text>
+              </Show>
+            </div>
+          </div>
           <Button size="icon" variant="ghost" title="Seek" disabled={seekDisabled()} onClick={props.onSeekClick} class={style({ marginLeft: "auto" })}>
             <IconRiSystemRefreshFill loading={props.player?.loading || props.seekDisabled} />
           </Button>
