@@ -15,16 +15,13 @@
     "@macaron-css/core": "^1.2.0",
     "@macaron-css/solid": "^1.4.1",
     "@modular-forms/solid": "^0.20.0",
-    "@popperjs/core": "^2.11.8",
     "@solid-primitives/storage": "^2.1.1",
     "@solid-primitives/websocket": "^1.1.0",
     "@solidjs/router": "^0.8.3",
     "@tanstack/solid-query": "^4.35.3",
     "modern-normalize": "^2.0.0",
-    "solid-dismiss": "^1.7.121",
     "solid-icons": "^1.0.12",
-    "solid-js": "^1.7.8",
-    "solid-popper": "^0.3.0"
+    "solid-js": "^1.7.8"
   },
   "devDependencies": {
     "@macaron-css/vite": "^1.4.3",

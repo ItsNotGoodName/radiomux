@@ -19,7 +19,7 @@ build: build-web
 	CGO_ENABLED=0 go build ./cmd/radiomux
 
 build-web:
-	cd web && pnpm run build
+	cd web && pnpm install && pnpm run build
 
 preview: build-web run
 

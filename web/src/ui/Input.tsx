@@ -12,6 +12,7 @@ export const Input = styled("input", {
     background: theme.color.background,
     padding: `${theme.space[2]} ${theme.space[3]}`,
     color: theme.color.foreground,
+    // file:border-0 file:bg-transparent file:text-sm file:font-medium
     "::placeholder": {
       color: theme.color.mutedForeground
     },

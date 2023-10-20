@@ -1,30 +1,34 @@
 import { Outlet, Route, Routes } from '@solidjs/router'
 import { Debug } from './pages/debug';
 import { Pages } from './pages';
-import { themeModeClass } from './ui/theme-mode';
+import { useTheme } from './ui/theme-mode';
 import { theme } from './ui/theme';
 import { styled } from '@macaron-css/solid';
 
-const Root = styled("div", {
+const TheRoot = styled("div", {
   base: {
-    minHeight: "100vh",
+    inset: 0,
+    position: "fixed",
+    overflowY: "auto",
     background: theme.color.background,
     color: theme.color.foreground,
   },
 });
 
-function TheRoot() {
+function Root() {
   return (
-    <Root class={themeModeClass()}>
+    <TheRoot>
       <Outlet />
-    </Root>
+    </TheRoot>
   )
 }
 
 function App() {
+  useTheme()
+
   return (
     <Routes>
-      <Route path="/" component={TheRoot}>
+      <Route path="/" component={Root}>
         <Pages />
         <Debug />
       </Route>

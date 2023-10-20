@@ -11,11 +11,12 @@ import { Button } from '~/ui/Button'
 import { ThemeIcon } from '~/ui/ThemeIcon'
 import { style } from '@macaron-css/core'
 import { RiSystemMenuLine } from 'solid-icons/ri'
-import { Dropdown, DropdownCard, DropdownPositioner } from "~/ui/Dropdown";
 import { Players } from './Players'
 import { Presets } from './Presets'
 import { StateAction } from '~/api/client.gen'
 import { useStateActionSetMutation, useStateVolumeSetMutation } from '~/hooks/api'
+import { As, DropdownMenu } from '@kobalte/core'
+import { DropdownMenuContent } from '~/ui/DropdownMenu'
 
 const Header = styled("div", {
   base: {
@@ -78,25 +79,31 @@ function TheHeader() {
       paddingLeft: theme.space[2],
       paddingRight: theme.space[2],
     })}>
-      <Dropdown button={ref =>
-        <Button ref={ref} size='icon' variant='ghost' title="Menu">
-          <RiSystemMenuLine class={style({ ...mixin.size("6") })} />
-        </Button>
-      }>
-        {(ref, setOpen) =>
-          <DropdownPositioner ref={ref} class={style({ maxWidth: theme.space[60], width: "100%" })}>
-            <DropdownCard class={style({
-              display: "flex",
-              flexDirection: "column",
-              padding: theme.space[2],
-            })}>
-              <Link onClick={[setOpen, false]} activeClass={menuLinkActiveClass} inactiveClass={menuLinkInactiveClass} href="/" end>Home</Link>
-              <Link onClick={[setOpen, false]} activeClass={menuLinkActiveClass} inactiveClass={menuLinkInactiveClass} href="/players">Players</Link>
-              <Link onClick={[setOpen, false]} activeClass={menuLinkActiveClass} inactiveClass={menuLinkInactiveClass} href="/presets">Presets</Link>
-            </DropdownCard>
-          </DropdownPositioner>
-        }
-      </Dropdown>
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger asChild>
+          <As component={Button} size='icon' variant='ghost' title="Menu">
+            <RiSystemMenuLine class={style({ ...mixin.size("6") })} />
+          </As>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Portal>
+          <DropdownMenuContent class={style({
+            ...mixin.stack("1"),
+            width: theme.space[48],
+            padding: theme.space[1],
+          })}>
+            <DropdownMenu.Arrow />
+            <DropdownMenu.Item asChild>
+              <As component={Link} activeClass={menuLinkActiveClass} inactiveClass={menuLinkInactiveClass} href="/" end>Home</As>
+            </DropdownMenu.Item>
+            <DropdownMenu.Item asChild>
+              <As component={Link} activeClass={menuLinkActiveClass} inactiveClass={menuLinkInactiveClass} href="/players">Players</As>
+            </DropdownMenu.Item>
+            <DropdownMenu.Item asChild>
+              <As component={Link} activeClass={menuLinkActiveClass} inactiveClass={menuLinkInactiveClass} href="/presets">Presets</As>
+            </DropdownMenu.Item>
+          </DropdownMenuContent>
+        </DropdownMenu.Portal>
+      </DropdownMenu.Root>
       <div class={style({
         ...mixin.textLine(),
         display: "flex",
@@ -123,16 +130,14 @@ function TheHeader() {
 const Content = styled("div", {
   base: {
     flex: "1",
-    paddingBottom: theme.space[28]
+    minHeight: "100%",
   },
 });
 
 const Footer = styled("div", {
   base: {
     bottom: "0",
-    left: "0",
-    right: "0",
-    position: "fixed",
+    position: "sticky",
   }
 })
 

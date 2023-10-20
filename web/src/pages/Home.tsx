@@ -30,11 +30,14 @@ const Text = styled("div", {
 })
 
 export function Home() {
-  const { currentPlayerState, currentPlayerId } = useCurrentPlayer()
+  // Queries
   const presetListQuery = usePresetListQuery()
 
+  // Mutations
   const stateMediaSetMutation = useStateMediaSetMutation()
 
+  const { currentPlayerState, currentPlayerId } = useCurrentPlayer()
+  // TODO: if this is called more than once in other components, then move it into useCurrentPlayer 
   const disabled = createMemo(() => currentPlayerState() == undefined || !currentPlayerState()!.ready || stateMediaSetMutation.isLoading)
 
   let uriElement: HTMLInputElement
@@ -46,34 +49,33 @@ export function Home() {
 
   return (
     <Root>
-      <Content>
-        <div class={style({ ...mixin.stack("2") })}>
-          <div class={style({ ...mixin.row("2"), alignItems: "center" })}>
-            <Input
-              class={style({ flex: "1" })}
-              type="text"
-              placeholder="URL"
-              disabled={disabled()}
-              ref={uriElement!}
-            />
+      <Content class={style({ ...mixin.stack("2") })}>
+        <div class={style({ ...mixin.row("2"), alignItems: "center" })}>
+          <Input
+            class={style({ flex: "1" })}
+            type="text"
+            placeholder="URL"
+            disabled={disabled()}
+            ref={uriElement!}
+          />
+          <Button
+            disabled={disabled()}
+            onClick={onUriSubmit}
+          >
+            Play
+          </Button>
+        </div>
+        <For each={presetListQuery.data}>
+          {preset =>
             <Button
               disabled={disabled()}
-              onClick={onUriSubmit}
+              variant={preset.url == currentPlayerState()?.uri ? "default" : "outline"}
+              onClick={[onPresetClick, preset.id]}
             >
-              Play
+              <Text>{preset.name}</Text>
             </Button>
-          </div>
-          <For each={presetListQuery.data}>
-            {preset =>
-              <Button
-                disabled={disabled()}
-                variant={preset.url == currentPlayerState()?.uri ? "default" : "outline"}
-                onClick={[onPresetClick, preset.id]}
-              >
-                <Text>{preset.name}</Text>
-              </Button>}
-          </For>
-        </div>
+          }
+        </For>
       </Content>
     </Root>
   )

@@ -3,13 +3,15 @@ import { For } from "solid-js";
 import { Button } from "~/ui/Button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/ui/Card";
 import { mixin, theme } from "~/ui/theme";
-import { Dropdown, DropdownCard, DropdownCardContent } from "~/ui/Dropdown";
 import { Input } from "~/ui/Input";
 import { Table, TableBody, TableCaption, TableData, TableHead, TableHeader, TableRow } from "~/ui/Table";
 import { Badge } from "~/ui/Badge";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "~/ui/Dialog";
+import { DialogContent, DialogHeaderDescription, DialogFooter, DialogHeader, DialogHeaderTitle, DialogRoot, DialogPortal, DialogOverlay, DialogTrigger } from "~/ui/Dialog";
 import { Textarea } from "~/ui/Textarea";
 import { Label } from "~/ui/Label";
+import { As } from "@kobalte/core";
+import { style } from "@macaron-css/core";
+import { DropdownMenuArrow, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuRoot, DropdownMenuTrigger } from "~/ui/DropdownMenu";
 
 const Root = styled("div", {
   base: {
@@ -70,15 +72,28 @@ export function Ui() {
           }
         </For>
       </Stack>
-      <Dropdown button={ref => <Button ref={ref}>Dropdown</Button>}>
-        {ref => (
-          <DropdownCard ref={ref}>
-            <DropdownCardContent>
-              Dropdown Card Content
-            </DropdownCardContent>
-          </DropdownCard>
-        )}
-      </Dropdown>
+      <DropdownMenuRoot>
+        <DropdownMenuTrigger asChild>
+          <As component={Button}>
+            Dropdown
+          </As>
+        </DropdownMenuTrigger>
+        <DropdownMenuPortal>
+          <DropdownMenuContent>
+            <DropdownMenuArrow />
+            <DropdownMenuItem asChild>
+              <As component={Button} class={style({ width: "100%" })}>
+                Button
+              </As>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <As component={Button} class={style({ width: "100%" })}>
+                Button
+              </As>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenuPortal>
+      </DropdownMenuRoot>
       <Stack>
         <Label>Input Label</Label>
         <Input placeholder="Placeholder" />
@@ -109,26 +124,30 @@ export function Ui() {
           }
         </For>
       </Row>
-      <Dialog button={ref => <Button ref={ref}>Dialog</Button>}>
-        {setOpen =>
+      <DialogRoot>
+        <DialogTrigger asChild>
+          <As component={Button}>Dialog</As>
+        </DialogTrigger>
+        <DialogPortal>
+          <DialogOverlay />
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Header Title</DialogTitle>
-              <DialogDescription>
+              <DialogHeaderTitle>Header Title</DialogHeaderTitle>
+              <DialogHeaderDescription>
                 Header Description
-              </DialogDescription>
+              </DialogHeaderDescription>
             </DialogHeader>
             <DialogFooter>
-              <Button onClick={[setOpen, false]}>Footer Button</Button>
+              <Button>Footer Button</Button>
             </DialogFooter>
           </DialogContent>
-        }
-      </Dialog>
+        </DialogPortal>
+      </DialogRoot>
       <Stack>
         <Label>Textarea Label</Label>
         <Textarea placeholder="Placeholder"></Textarea>
       </Stack>
-    </Root >
+    </Root>
   )
 }
 

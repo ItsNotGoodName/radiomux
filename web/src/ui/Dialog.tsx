@@ -1,20 +1,27 @@
 import { styled } from "@macaron-css/solid";
-import { minScreen, mixin, theme, tw } from "./theme";
-import { JSX, Setter, Show, createEffect, createSignal } from "solid-js";
-import { themeModeClass } from "./theme-mode";
-import { Portal } from "solid-js/web";
+import { animation, minScreen, mixin, theme, tw } from "./theme";
+import { Dialog } from "@kobalte/core";
 
-const DialogOverlay = styled("div", {
+export const DialogRoot = Dialog.Root
+export const DialogTrigger = Dialog.Trigger
+export const DialogPortal = Dialog.Portal
+
+export const DialogOverlay = styled(Dialog.Overlay, {
   base: {
     position: "fixed",
     inset: 0,
     zIndex: 50,
-    background: theme.color.backgroundOverlay
-    // backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0
+    background: theme.color.backgroundOverlay,
+    animation: `${animation.overlayHide} 150ms ease 50ms forwards`,
+    selectors: {
+      '&[data-expanded]': {
+        animation: `${animation.overlayShow} 150ms ease`,
+      },
+    },
   }
 })
 
-export const DialogContent = styled("div", {
+export const DialogContent = styled(Dialog.Content, {
   base: {
     ...tw.shadowLg,
     position: "fixed",
@@ -31,7 +38,12 @@ export const DialogContent = styled("div", {
     color: theme.color.foreground,
     padding: theme.space[6],
     animationDuration: "300ms",
-    // data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] 
+    animation: `${animation.contentHide} 150ms ease-in forwards`,
+    selectors: {
+      '&[data-expanded]': {
+        animation: `${animation.contentShow} 150ms ease-out`,
+      },
+    },
     "@media": {
       [minScreen.sm]: {
         borderRadius: theme.borderRadius.lg,
@@ -55,6 +67,26 @@ export const DialogHeader = styled("div", {
   }
 })
 
+export const DialogHeaderCloseButton = Dialog.CloseButton
+
+export const DialogHeaderTitle = styled(Dialog.Title, {
+  base: {
+    ...tw.textLg,
+    fontWeight: "600",
+    lineHeight: "1",
+    letterSpacing: "-0.025em",
+    margin: "0px",
+  }
+})
+
+export const DialogHeaderDescription = styled(Dialog.Description, {
+  base: {
+    ...tw.textSm,
+    color: theme.color.mutedForeground,
+    margin: "0px",
+  }
+})
+
 export const DialogFooter = styled("div", {
   base: {
     display: "flex",
@@ -69,47 +101,3 @@ export const DialogFooter = styled("div", {
   }
 })
 
-export const DialogTitle = styled("div", {
-  base: {
-    ...tw.textLg,
-    fontWeight: "600",
-    lineHeight: "1",
-    letterSpacing: "-0.025em"
-  }
-})
-
-export const DialogDescription = styled("div", {
-  base: {
-    ...tw.textSm,
-    color: theme.color.mutedForeground
-  }
-})
-
-type Props = {
-  button: (ref: Setter<HTMLElement | undefined>) => JSX.Element,
-  children: (setOpen: Setter<boolean>) => JSX.Element
-}
-
-export function Dialog(props: Props) {
-  const [open, setOpen] = createSignal(false);
-  const [anchor, setAnchor] = createSignal<HTMLElement>();
-  createEffect(() => {
-    if (anchor()) {
-      anchor()!.onclick = () => setOpen((prev) => !prev)
-    }
-  })
-
-  return (
-    <>
-      {props.button(setAnchor)}
-      <Portal>
-        <div class={themeModeClass()}>
-          <Show when={open()}>
-            <DialogOverlay onClick={[setOpen, false]} />
-            {props.children(setOpen)}
-          </Show>
-        </div>
-      </Portal>
-    </>
-  )
-}

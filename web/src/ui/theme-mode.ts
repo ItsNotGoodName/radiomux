@@ -1,4 +1,4 @@
-import { createSignal, untrack } from "solid-js";
+import { createEffect, createSignal, untrack } from "solid-js";
 import { darkClass, lightClass } from "./theme";
 
 const THEME_KEY = "theme";
@@ -48,3 +48,9 @@ export const themeModeClass = () => {
   }
   return themeMode() == DARK_MODE ? darkClass : lightClass;
 };
+
+export const useTheme = () => {
+  return createEffect(() => {
+    document.getElementsByTagName("body")![0].className = themeModeClass()
+  })
+}

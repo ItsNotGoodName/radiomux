@@ -4,9 +4,10 @@ import { RiDeviceDeviceFill, RiMediaPauseFill, RiMediaPlayFill, RiMediaVolumeDow
 import { For, Show, } from "solid-js";
 import { Button } from "~/ui/Button";
 import { minScreen, mixin, theme, tw } from "~/ui/theme";
-import { Dropdown, DropdownCard, DropdownPositioner } from "~/ui/Dropdown";
-import { Progress, } from "@kobalte/core";
+import { As, Popover, Progress, } from "@kobalte/core";
 import { durationHumanize } from "~/common";
+import { DropdownMenuArrow, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuRoot, DropdownMenuTrigger } from "~/ui/DropdownMenu";
+import { PopoverContent } from "~/ui/Popover";
 
 const Root = styled("div", {
   base: {
@@ -152,7 +153,7 @@ const IconRiSystemRefreshFill = styled(RiSystemRefreshFill, {
 
 const PlayerTableHead = styled("th", {
   base: {
-    textAlign: "left"
+    textAlign: "left",
   }
 })
 
@@ -209,22 +210,23 @@ export function Player(props: Props) {
       <Content>
         <ContentChild>
           <div class={style({ display: "flex", alignItems: "center" })}>
-            <Dropdown options={{ placement: "top" }} button={
-              ref =>
-                <Button disabled={playerDisabled()} title="Media" ref={ref} size="icon" variant="ghost" class={style({
+            <Popover.Root>
+              <Popover.Trigger asChild>
+                <As component={Button} disabled={playerDisabled()} title="Media" size="icon" variant="ghost" class={style({
                   color: theme.color.cardForeground,
                   borderRadius: theme.borderRadius.full,
                   overflow: "hidden"
                 })}>
                   <Thumbnail src="/favicon.svg" alt="Media Thumbnail" />
-                </Button>
-            }>
-              {ref =>
-                <DropdownPositioner ref={ref} class={style({ maxWidth: theme.size.md, width: "100%" })}>
-                  <DropdownCard class={style({ padding: theme.space[2], overflowX: "auto" })}>
-                    <Show when={props.player}>
-                      {player =>
-                        <table>
+                </As>
+              </Popover.Trigger>
+              <Popover.Portal>
+                <PopoverContent class={style({ padding: theme.space[2], minWidth: theme.space[96] })}>
+                  <Popover.Arrow />
+                  <Show when={props.player}>
+                    {player =>
+                      <div class={style({ overflowX: "auto" })}>
+                        <table class={style({ borderCollapse: "collapse", })}>
                           <tbody>
                             <tr>
                               <PlayerTableHead>Title</PlayerTableHead>
@@ -250,11 +252,12 @@ export function Player(props: Props) {
                             </Show>
                           </tbody>
                         </table>
-                      }
-                    </Show>
-                  </DropdownCard>
-                </DropdownPositioner>}
-            </Dropdown>
+                      </div>
+                    }
+                  </Show>
+                </PopoverContent>
+              </Popover.Portal>
+            </Popover.Root>
           </div>
           <div class={style({ overflowX: "hidden", flex: 1 })}>
             <Text title={props.player?.title}>{props.player?.title}</Text>
@@ -318,17 +321,19 @@ export function Player(props: Props) {
                 </>
               )}
             </Show>
-            <Dropdown button={ref =>
-              <Button ref={ref} size="icon" variant="ghost" title="Players" >
-                <IconRiDeviceDeviceFill selected={!!props.player?.id} />
-              </Button>
-            }>
-              {ref =>
-                <DropdownPositioner ref={ref} class={style({ maxWidth: theme.space[60], width: "100%" })}>
-                  <DropdownCard class={style({ padding: theme.space[2] })}>
-                    <For each={props.players}>
-                      {player => (
-                        <Button
+            <DropdownMenuRoot>
+              <DropdownMenuTrigger asChild>
+                <As component={Button} size="icon" variant="ghost" title="Players">
+                  <IconRiDeviceDeviceFill selected={!!props.player?.id} />
+                </As>
+              </DropdownMenuTrigger>
+              <DropdownMenuPortal>
+                <DropdownMenuContent class={style({ ...mixin.stack("1"), padding: theme.space[1], width: theme.space[48] })}>
+                  <DropdownMenuArrow />
+                  <For each={props.players}>
+                    {player => (
+                      <DropdownMenuItem asChild closeOnSelect={false}>
+                        <As component={Button}
                           onClick={[props.onPlayerClick, player.id]}
                           size="sm"
                           variant={player.id == props.player?.id ? "default" : "ghost"}
@@ -338,16 +343,16 @@ export function Player(props: Props) {
                             <ConnectionIndicator connected={player.connected} disconnected={!player.connected} />
                           </div>
                           <Text title={player.name}>{player.name}</Text>
-                        </Button>
-                      )}
-                    </For>
-                  </DropdownCard>
-                </DropdownPositioner>
-              }
-            </Dropdown>
+                        </As>
+                      </DropdownMenuItem>
+                    )}
+                  </For>
+                </DropdownMenuContent>
+              </DropdownMenuPortal>
+            </DropdownMenuRoot>
           </SubControl>
         </ContentChild>
       </Content>
-    </Root>
+    </Root >
   )
 }

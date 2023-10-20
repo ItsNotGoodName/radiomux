@@ -349,3 +349,45 @@ export const mixin = {
     };
   },
 };
+
+export const animation = {
+  contentShow: keyframes({
+    from: {
+      opacity: 0,
+      transform: "scale(0.96)"
+    },
+    to: {
+      opacity: 1,
+      transform: "scale(1)"
+    }
+  }),
+
+  contentHide: keyframes({
+    from: {
+      opacity: 1,
+      transform: "scale(1)"
+    },
+    to: {
+      opacity: 0,
+      transform: "scale(0.96)"
+    }
+  }),
+
+  overlayShow: keyframes({
+    from: {
+      opacity: 0,
+    },
+    to: {
+      opacity: 1,
+    }
+  }),
+
+  overlayHide: keyframes({
+    from: {
+      opacity: 1,
+    },
+    to: {
+      opacity: 0,
+    }
+  })
+}
