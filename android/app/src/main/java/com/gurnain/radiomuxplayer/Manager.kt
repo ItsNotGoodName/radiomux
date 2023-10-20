@@ -74,10 +74,8 @@ class Manager(private val context: android.content.Context) :
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         sharedPreferences.getString("url", "")?.let { url ->
-            connection?.let {
-                it.disconnect()
-                connection = Connection(url, connectionListener)
-            }
+            connection?.disconnect()
+            connection = Connection(url, connectionListener)
         }
     }
 
