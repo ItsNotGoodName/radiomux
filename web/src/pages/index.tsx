@@ -1,4 +1,4 @@
-import { Component, } from 'solid-js'
+import { Component } from 'solid-js'
 import { styled, } from '@macaron-css/solid'
 import { ConnectionIndicator, Player } from '~/components/Player'
 import { Link, Outlet, Route } from '@solidjs/router'
@@ -17,6 +17,8 @@ import { StateAction } from '~/api/client.gen'
 import { useStateActionSetMutation, useStateVolumeSetMutation } from '~/hooks/api'
 import { As, DropdownMenu } from '@kobalte/core'
 import { DropdownMenuContent } from '~/ui/DropdownMenu'
+import { ToastList, ToastRegion } from '~/ui/Toast'
+import { Portal } from 'solid-js/web'
 
 const Header = styled("div", {
   base: {
@@ -170,6 +172,11 @@ function App() {
   return (
     <PlayerStatesProvider>
       <CurrentPlayerProvider>
+        <Portal>
+          <ToastRegion>
+            <ToastList class={style({ paddingTop: theme.space[16] })} />
+          </ToastRegion>
+        </Portal>
         <Header>
           <TheHeader />
         </Header>

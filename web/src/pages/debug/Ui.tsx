@@ -1,17 +1,19 @@
 import { styled } from "@macaron-css/solid";
-import { For } from "solid-js";
+import { For, } from "solid-js";
 import { Button } from "~/ui/Button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/ui/Card";
 import { mixin, theme } from "~/ui/theme";
 import { Input } from "~/ui/Input";
 import { Table, TableBody, TableCaption, TableData, TableHead, TableHeader, TableRow } from "~/ui/Table";
 import { Badge } from "~/ui/Badge";
-import { DialogContent, DialogHeaderDescription, DialogFooter, DialogHeader, DialogHeaderTitle, DialogRoot, DialogPortal, DialogOverlay, DialogTrigger } from "~/ui/Dialog";
+import { DialogContent, DialogHeaderDescription, DialogFooter, DialogHeader, DialogHeaderTitle, DialogRoot, DialogPortal, DialogOverlay, DialogTrigger, DialogCloseButton } from "~/ui/Dialog";
 import { Textarea } from "~/ui/Textarea";
 import { Label } from "~/ui/Label";
 import { As } from "@kobalte/core";
 import { style } from "@macaron-css/core";
 import { DropdownMenuArrow, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuRoot, DropdownMenuTrigger } from "~/ui/DropdownMenu";
+import { ToastList, ToastRegion, ToastTitle, ToastCloseButton, ToastContent, ToastProgressTrack, ToastProgressFill, ToastDescription, toast } from "~/ui/Toast";
+import { Portal } from "solid-js/web";
 
 const Root = styled("div", {
   base: {
@@ -43,8 +45,27 @@ const buttonSizes = ["icon", "sm", "default", "lg"]
 const badgeVariants = ["default", "secondary", "destructive", "outline"]
 
 export function Ui() {
+  const showToast = () => {
+    toast.custom(() =>
+      <ToastContent>
+        <ToastCloseButton />
+        <ToastTitle>Title</ToastTitle>
+        <ToastDescription>Description</ToastDescription>
+        <ToastProgressTrack>
+          <ToastProgressFill />
+        </ToastProgressTrack>
+      </ToastContent>
+    )
+    toast.show("Hello World")
+  }
+
   return (
     <Root>
+      <Portal>
+        <ToastRegion>
+          <ToastList />
+        </ToastRegion>
+      </Portal>
       <Card>
         <CardHeader>
           <CardTitle>Title</CardTitle>
@@ -55,6 +76,7 @@ export function Ui() {
         </CardContent>
         <CardFooter>Footer</CardFooter>
       </Card>
+      <Button onClick={showToast} >Toast</Button>
       <Stack>
         <For each={buttonSizes}>
           {size =>
@@ -132,6 +154,7 @@ export function Ui() {
           <DialogOverlay />
           <DialogContent>
             <DialogHeader>
+              <DialogCloseButton />
               <DialogHeaderTitle>Header Title</DialogHeaderTitle>
               <DialogHeaderDescription>
                 Header Description

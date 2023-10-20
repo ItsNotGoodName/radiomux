@@ -9,7 +9,7 @@ import { usePlayerCreateMutation, usePlayerDeleteMutation, usePlayerGetQuery, us
 import { useSelection } from "~/hooks/useSelection";
 import { Button } from "~/ui/Button";
 import { PopoverArrow, PopoverCloseButton, PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigger } from "~/ui/Popover";
-import { DialogContent, DialogHeader, DialogHeaderTitle, DialogOverlay, DialogPortal, DialogRoot, DialogTrigger } from "~/ui/Dialog";
+import { DialogCloseButton, DialogContent, DialogHeader, DialogHeaderTitle, DialogOverlay, DialogPortal, DialogRoot, DialogTrigger } from "~/ui/Dialog";
 import { Input } from "~/ui/Input";
 import { Label } from "~/ui/Label";
 import { Table, TableBody, TableCaption, TableData, TableHead, TableHeader, TableRow } from "~/ui/Table"
@@ -65,6 +65,7 @@ function CreateDialog(props: { disabled: boolean }) {
       <DialogPortal>
         <DialogOverlay />
         <DialogContent>
+          <DialogCloseButton />
           <DialogHeader>
             <DialogHeaderTitle>Create Player</DialogHeaderTitle>
           </DialogHeader>
@@ -99,6 +100,7 @@ function ViewDialog(props: { disabled: boolean, id?: number }) {
       <DialogPortal>
         <DialogOverlay />
         <DialogContent>
+          <DialogCloseButton />
           <Show when={props.id}>
             {id => {
               // Queries
@@ -144,6 +146,7 @@ function UpdateDialog(props: { disabled: boolean, id: number }) {
       <DialogPortal>
         <DialogOverlay />
         <DialogContent>
+          <DialogCloseButton />
           <DialogHeader>
             <DialogHeaderTitle>Update Player</DialogHeaderTitle>
           </DialogHeader>

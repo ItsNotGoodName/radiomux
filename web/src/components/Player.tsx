@@ -221,11 +221,11 @@ export function Player(props: Props) {
                 </As>
               </Popover.Trigger>
               <Popover.Portal>
-                <PopoverContent class={style({ padding: theme.space[2], minWidth: theme.space[96] })}>
+                <PopoverContent class={style({ padding: theme.space[2], width: theme.size.sm })}>
                   <Popover.Arrow />
                   <Show when={props.player}>
                     {player =>
-                      <div class={style({ overflowX: "auto" })}>
+                      <div class={style({ overflowX: "auto", })}>
                         <table class={style({ borderCollapse: "collapse", })}>
                           <tbody>
                             <tr>

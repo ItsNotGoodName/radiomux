@@ -1,6 +1,8 @@
 import { styled } from "@macaron-css/solid";
 import { animation, minScreen, mixin, theme, tw } from "./theme";
 import { Dialog } from "@kobalte/core";
+import { ComponentProps } from "solid-js";
+import { RiSystemCloseLine } from "solid-icons/ri";
 
 export const DialogRoot = Dialog.Root
 export const DialogTrigger = Dialog.Trigger
@@ -57,7 +59,7 @@ export const DialogContent = styled(Dialog.Content, {
 
 export const DialogHeader = styled("div", {
   base: {
-    ...mixin.stack("1.5"), // flex flex-col space-y-1.5
+    ...mixin.stack("1.5"),
     textAlign: "center",
     "@media": {
       [minScreen.sm]: {
@@ -67,7 +69,37 @@ export const DialogHeader = styled("div", {
   }
 })
 
-export const DialogHeaderCloseButton = Dialog.CloseButton
+const TheDialogCloseButton = styled(Dialog.CloseButton, {
+  base: {
+    ...tw.transitionOpacity,
+    display: "flex",
+    background: "transparent",
+    color: theme.color.mutedForeground,
+    padding: 0,
+    border: "none",
+    cursor: "pointer",
+    position: "absolute",
+    right: theme.space[4],
+    top: theme.space[4],
+    borderRadius: theme.borderRadius.sm,
+    opacity: "70%",
+    ":hover": {
+      color: theme.color.foreground,
+      opacity: "100%"
+    },
+    ":disabled": {
+      pointerEvents: "none",
+    },
+  }
+})
+
+export function DialogCloseButton(props: Omit<ComponentProps<typeof Dialog.CloseButton>, "title">) {
+  return (
+    <TheDialogCloseButton title="Close" {...props}>
+      <RiSystemCloseLine />
+    </TheDialogCloseButton>
+  )
+}
 
 export const DialogHeaderTitle = styled(Dialog.Title, {
   base: {

@@ -79,6 +79,7 @@ const light = {
   ...base,
   background: `hsl(${lightBase.background})`,
   foreground: `hsl(${lightBase.foreground})`,
+  foregroundUnfocused: `hsla(${lightBase.foreground}, 50%)`,
   backgroundOverlay: `hsla(${lightBase.background}, 80%)`,
 
   nav: `hsl(${lightBase.nav})`,
@@ -153,6 +154,7 @@ const dark = {
   ...base,
   background: `hsl(${darkBase.background})`,
   foreground: `hsl(${darkBase.foreground})`,
+  foregroundUnfocused: `hsla(${darkBase.foreground}, 50%)`,
   backgroundOverlay: `hsla(${darkBase.background}, 80%)`,
 
   nav: `hsl(${darkBase.nav})`,
@@ -315,7 +317,13 @@ export const tw = {
     transitionProperty: "color, background-color, border-color, text-decoration-color, fill, stroke",
     transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
     transitionDuration: "150ms"
-  } as CSSProperties
+  } as CSSProperties,
+
+  transitionOpacity: {
+    transitionProperty: "opacity",
+    transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+    transitionDuration: "150ms",
+  } as CSSProperties,
 }
 
 export const mixin = {
@@ -389,5 +397,5 @@ export const animation = {
     to: {
       opacity: 0,
     }
-  })
+  }),
 }
