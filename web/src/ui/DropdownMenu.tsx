@@ -28,7 +28,7 @@ export const DropdownMenuContent = styled(DropdownMenu.Content, {
     variant: {
       default: {
         ...mixin.stack("1"),
-        padding: theme.space[1],
+        padding: theme.space[2],
         width: theme.space[48]
       }
     }

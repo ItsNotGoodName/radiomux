@@ -202,7 +202,7 @@ function DeletePopover(props: { disabled: boolean, ids: Array<number>, onDelete:
   return (
     <PopoverRoot open={open()} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <As component={Button} disabled={props.disabled} variant="destructive">
+        <As component={Button} disabled={props.disabled} variant="destructive" size="sm">
           Delete
         </As>
       </PopoverTrigger>

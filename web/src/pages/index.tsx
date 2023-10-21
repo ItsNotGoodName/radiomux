@@ -23,7 +23,6 @@ import { toastWebrpcError } from '~/common/toast'
 
 const Header = styled("div", {
   base: {
-    ...tw.textXl,
     height: theme.space[14],
     position: "sticky",
     top: "0",
@@ -126,6 +125,7 @@ function HeaderContent(props: { onMenuClick?: () => void }) {
         <MenuIcon />
       </Button>
       <div class={style({
+        ...tw.textXl,
         ...mixin.textLine(),
         display: "flex",
         flex: "1",
@@ -151,11 +151,69 @@ function HeaderContent(props: { onMenuClick?: () => void }) {
 const Root = styled("div", {
   base: {
     display: "flex",
-    justifyContent: "center",
     minHeight: "100vh",
-    overflowX: "hidden",
   },
 });
+
+const TheMenuRoot = styled("aside", {
+  base: {
+    background: theme.color.nav,
+    transition: "border-width 250ms",
+    borderRight: `0px solid ${theme.color.border}`,
+    "@media": {
+      [minScreen.md]: {
+        selectors: {
+          [`&[data-open]`]: {
+            borderRight: `1px solid ${theme.color.border}`,
+          }
+        }
+      }
+    }
+  }
+})
+
+function MenuRoot(props: Omit<ComponentProps<typeof TheMenuRoot>, "ref"> & { menuOpen?: boolean }) {
+  let ref: HTMLDivElement
+  createEffect(() => {
+    if (props.menuOpen) {
+      ref.dataset.open = ""
+    } else {
+      delete ref.dataset.open
+    }
+  })
+  return <TheMenuRoot ref={ref!} {...props} />
+}
+
+const MenuContent = styled("div", {
+  base: {
+    transition: "width 250ms",
+    overflowX: "hidden",
+    width: theme.space[0],
+    "@media": {
+      [minScreen.md]: {
+        selectors: {
+          [`${TheMenuRoot}[data-open] &`]: {
+            width: theme.space[48],
+          }
+        }
+      }
+    }
+  }
+})
+
+const MenuLinks = styled("div", {
+  base: {
+    ...mixin.stack("1"),
+    padding: theme.space[2]
+  }
+})
+
+const Content = styled("div", {
+  base: {
+    flex: "1",
+    overflowX: "hidden",
+  }
+})
 
 const Footer = styled("div", {
   base: {
@@ -189,50 +247,6 @@ function FooterPlayer() {
   )
 }
 
-const TheSideMenu = styled("div", {
-  base: {
-    overflowX: "hidden",
-    background: theme.color.nav,
-    transition: "width 250ms",
-    width: theme.space[0],
-    "@media": {
-      [minScreen.md]: {
-        selectors: {
-          "&[data-open]": {
-            borderRight: `1px solid ${theme.color.border}`,
-            width: theme.space[48]
-          }
-        }
-      }
-    }
-  }
-})
-
-function Menu(props: Omit<ComponentProps<typeof TheSideMenu>, "ref"> & { menuOpen?: boolean }) {
-  let ref: HTMLDivElement
-  createEffect(() => {
-    if (props.menuOpen) {
-      ref.dataset.open = ""
-    } else {
-      delete ref.dataset.open
-    }
-  })
-  return <TheSideMenu {...props} ref={ref!} />
-}
-
-const MenuContent = styled("div", {
-  base: {
-    ...mixin.stack("1"),
-    padding: theme.space[2]
-  }
-})
-
-const Content = styled("div", {
-  base: {
-    flex: "1",
-    overflowX: "hidden",
-  }
-})
 
 function App() {
   const [menuOpen, setMenuOpen] = createSignal(true)
@@ -249,13 +263,15 @@ function App() {
           <HeaderContent onMenuClick={() => setMenuOpen((prev) => !prev)} />
         </Header>
         <Root>
-          <Menu menuOpen={menuOpen()}>
+          <MenuRoot menuOpen={menuOpen()}>
             <MenuContent>
-              <MenuLink activeClass={menuLinkActiveClass} inactiveClass={menuLinkInactiveClass} href='/' end>Home</MenuLink>
-              <MenuLink activeClass={menuLinkActiveClass} inactiveClass={menuLinkInactiveClass} href='/players'>Players</MenuLink>
-              <MenuLink activeClass={menuLinkActiveClass} inactiveClass={menuLinkInactiveClass} href='/presets'>Presets</MenuLink>
+              <MenuLinks>
+                <MenuLink activeClass={menuLinkActiveClass} inactiveClass={menuLinkInactiveClass} href='/' end>Home</MenuLink>
+                <MenuLink activeClass={menuLinkActiveClass} inactiveClass={menuLinkInactiveClass} href='/players'>Players</MenuLink>
+                <MenuLink activeClass={menuLinkActiveClass} inactiveClass={menuLinkInactiveClass} href='/presets'>Presets</MenuLink>
+              </MenuLinks>
             </MenuContent>
-          </Menu>
+          </MenuRoot>
           <Content>
             <Outlet />
           </Content>
