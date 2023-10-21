@@ -1,9 +1,9 @@
-import { Component } from 'solid-js'
+import { Component, ComponentProps, createEffect, createSignal } from 'solid-js'
 import { styled, } from '@macaron-css/solid'
 import { ConnectionIndicator, Player } from '~/components/Player'
 import { Link, Outlet, Route } from '@solidjs/router'
 import { Home } from './Home'
-import { mixin, theme, tw } from '~/ui/theme'
+import { minScreen, mixin, theme, tw } from '~/ui/theme'
 import { AUTO_MODE, DARK_MODE, LIGHT_MODE, themeMode, toggleThemeMode } from '~/ui/theme-mode'
 import { PlayerStatesProvider, WebSocketState, usePlayerStates } from '~/providers/playerStates'
 import { CurrentPlayerProvider, useCurrentPlayer } from '~/providers/currentPlayer'
@@ -35,28 +35,34 @@ const Header = styled("div", {
   },
 });
 
-const menuLinkInactiveClass = style({
-  textDecoration: "none",
-  padding: theme.space[2],
-  borderRadius: theme.borderRadius.ok,
+const MenuLink = styled(Link, {
+  base: {
+    textDecoration: "none",
+    padding: theme.space[2],
+    borderRadius: theme.borderRadius.ok,
+  }
+})
 
+const menuLinkInactiveClass = style({
   color: theme.color.foreground,
   ":hover": {
-    background: theme.color.accent,
-    color: theme.color.accentForeground,
+    background: theme.color.primary,
+    color: theme.color.primaryForeground,
   },
 })
 
 const menuLinkActiveClass = style({
-  textDecoration: "none",
-  padding: theme.space[2],
-  borderRadius: theme.borderRadius.ok,
-
-  background: theme.color.accent,
-  color: theme.color.accentForeground,
+  background: theme.color.primary,
+  color: theme.color.primaryForeground,
 })
 
-function TheHeader() {
+const MenuIcon = styled(RiSystemMenuLine, {
+  base: {
+    ...mixin.size("6")
+  }
+})
+
+function HeaderContent(props: { onMenuClick?: () => void }) {
   const themeTitle = () => {
     switch (themeMode()) {
       case AUTO_MODE:
@@ -84,25 +90,41 @@ function TheHeader() {
     })}>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
-          <As component={Button} size='icon' variant='ghost' title="Menu">
-            <RiSystemMenuLine class={style({ ...mixin.size("6") })} />
+          <As component={Button} size='icon' variant='ghost' title="Menu" class={style({
+            "@media": {
+              [minScreen.md]: {
+                display: "none"
+              },
+            },
+          })}>
+            <MenuIcon />
           </As>
         </DropdownMenu.Trigger>
         <DropdownMenu.Portal>
           <DropdownMenuContent>
             <DropdownMenu.Arrow />
             <DropdownMenu.Item asChild>
-              <As component={Link} activeClass={menuLinkActiveClass} inactiveClass={menuLinkInactiveClass} href="/" end>Home</As>
+              <As component={MenuLink} activeClass={menuLinkActiveClass} inactiveClass={menuLinkInactiveClass} href="/" end>Home</As>
             </DropdownMenu.Item>
             <DropdownMenu.Item asChild>
-              <As component={Link} activeClass={menuLinkActiveClass} inactiveClass={menuLinkInactiveClass} href="/players">Players</As>
+              <As component={MenuLink} activeClass={menuLinkActiveClass} inactiveClass={menuLinkInactiveClass} href="/players">Players</As>
             </DropdownMenu.Item>
             <DropdownMenu.Item asChild>
-              <As component={Link} activeClass={menuLinkActiveClass} inactiveClass={menuLinkInactiveClass} href="/presets">Presets</As>
+              <As component={MenuLink} activeClass={menuLinkActiveClass} inactiveClass={menuLinkInactiveClass} href="/presets">Presets</As>
             </DropdownMenu.Item>
           </DropdownMenuContent>
         </DropdownMenu.Portal>
       </DropdownMenu.Root>
+      <Button onClick={props.onMenuClick} size='icon' variant='ghost' title="Menu" class={style({
+        display: "none",
+        "@media": {
+          [minScreen.md]: {
+            display: "flex"
+          },
+        }
+      })}>
+        <MenuIcon />
+      </Button>
       <div class={style({
         ...mixin.textLine(),
         display: "flex",
@@ -122,14 +144,16 @@ function TheHeader() {
           <ThemeIcon class={style({ ...mixin.size("6") })} />
         </Button>
       </div>
-    </div>
+    </div >
   )
 }
 
-const Content = styled("div", {
+const Root = styled("div", {
   base: {
-    flex: "1",
+    display: "flex",
+    justifyContent: "center",
     minHeight: "100vh",
+    overflowX: "hidden",
   },
 });
 
@@ -140,7 +164,7 @@ const Footer = styled("div", {
   }
 })
 
-function ThePlayer() {
+function FooterPlayer() {
   // Queries
   const { playerStates } = usePlayerStates()
   const { currentPlayerId, setCurrentPlayerId, currentPlayerState } = useCurrentPlayer()
@@ -165,7 +189,54 @@ function ThePlayer() {
   )
 }
 
+const TheSideMenu = styled("div", {
+  base: {
+    overflowX: "hidden",
+    background: theme.color.nav,
+    transition: "width 250ms",
+    width: theme.space[0],
+    "@media": {
+      [minScreen.md]: {
+        selectors: {
+          "&[data-open]": {
+            borderRight: `1px solid ${theme.color.border}`,
+            width: theme.space[48]
+          }
+        }
+      }
+    }
+  }
+})
+
+function Menu(props: Omit<ComponentProps<typeof TheSideMenu>, "ref"> & { menuOpen?: boolean }) {
+  let ref: HTMLDivElement
+  createEffect(() => {
+    if (props.menuOpen) {
+      ref.dataset.open = ""
+    } else {
+      delete ref.dataset.open
+    }
+  })
+  return <TheSideMenu {...props} ref={ref!} />
+}
+
+const MenuContent = styled("div", {
+  base: {
+    ...mixin.stack("1"),
+    padding: theme.space[2]
+  }
+})
+
+const Content = styled("div", {
+  base: {
+    flex: "1",
+    overflowX: "hidden",
+  }
+})
+
 function App() {
+  const [menuOpen, setMenuOpen] = createSignal(true)
+
   return (
     <PlayerStatesProvider>
       <CurrentPlayerProvider>
@@ -175,13 +246,22 @@ function App() {
           </ToastRegion>
         </Portal>
         <Header>
-          <TheHeader />
+          <HeaderContent onMenuClick={() => setMenuOpen((prev) => !prev)} />
         </Header>
-        <Content>
-          <Outlet />
-        </Content>
+        <Root>
+          <Menu menuOpen={menuOpen()}>
+            <MenuContent>
+              <MenuLink activeClass={menuLinkActiveClass} inactiveClass={menuLinkInactiveClass} href='/' end>Home</MenuLink>
+              <MenuLink activeClass={menuLinkActiveClass} inactiveClass={menuLinkInactiveClass} href='/players'>Players</MenuLink>
+              <MenuLink activeClass={menuLinkActiveClass} inactiveClass={menuLinkInactiveClass} href='/presets'>Presets</MenuLink>
+            </MenuContent>
+          </Menu>
+          <Content>
+            <Outlet />
+          </Content>
+        </Root>
         <Footer>
-          <ThePlayer />
+          <FooterPlayer />
         </Footer>
       </CurrentPlayerProvider>
     </PlayerStatesProvider>
