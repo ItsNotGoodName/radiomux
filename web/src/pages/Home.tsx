@@ -6,6 +6,7 @@ import { Input } from '~/ui/Input'
 import { useCurrentPlayer } from '~/providers/currentPlayer'
 import { styled } from '@macaron-css/solid'
 import { usePresetListQuery, useStateMediaSetMutation } from '~/hooks/api'
+import { toastWebrpcError } from '~/common/toast'
 
 const Root = styled("div", {
   base: {
@@ -42,10 +43,10 @@ export function Home() {
 
   let uriElement: HTMLInputElement
   const onUriSubmit = () =>
-    stateMediaSetMutation.mutate({ id: currentPlayerId(), uri: uriElement.value })
+    stateMediaSetMutation.mutateAsync({ id: currentPlayerId(), uri: uriElement.value }).catch(toastWebrpcError)
 
   const onPresetClick = (presetId: number) =>
-    stateMediaSetMutation.mutate({ presetId: presetId, id: currentPlayerState()?.id || 0 })
+    stateMediaSetMutation.mutateAsync({ presetId: presetId, id: currentPlayerState()?.id || 0 }).catch(toastWebrpcError)
 
   return (
     <Root>

@@ -19,6 +19,7 @@ import { As, DropdownMenu } from '@kobalte/core'
 import { DropdownMenuContent } from '~/ui/DropdownMenu'
 import { ToastList, ToastRegion } from '~/ui/Toast'
 import { Portal } from 'solid-js/web'
+import { toastWebrpcError } from '~/common/toast'
 
 const Header = styled("div", {
   base: {
@@ -152,13 +153,13 @@ function ThePlayer() {
     <Player
       player={currentPlayerState()}
       players={playerStates}
-      onPlayClick={() => stateActionSetMutation.mutate({ id: currentPlayerId(), action: currentPlayerState()?.playing ? StateAction.PUASE : StateAction.PLAY })}
+      onPlayClick={() => stateActionSetMutation.mutateAsync({ id: currentPlayerId(), action: currentPlayerState()?.playing ? StateAction.PUASE : StateAction.PLAY }).catch(toastWebrpcError)}
       playDisabled={stateActionSetMutation.isLoading}
-      onVolumeDownClick={() => stateVolumeSetMutation.mutate({ id: currentPlayerId(), delta: -1 })}
-      onVolumeUpClick={() => stateVolumeSetMutation.mutate({ id: currentPlayerId(), delta: 1 })}
-      onVolumeClick={() => stateVolumeSetMutation.mutate({ id: currentPlayerId(), mute: !currentPlayerState()?.muted })}
+      onVolumeDownClick={() => stateVolumeSetMutation.mutateAsync({ id: currentPlayerId(), delta: -1 }).catch(toastWebrpcError)}
+      onVolumeUpClick={() => stateVolumeSetMutation.mutateAsync({ id: currentPlayerId(), delta: 1 }).catch(toastWebrpcError)}
+      onVolumeClick={() => stateVolumeSetMutation.mutateAsync({ id: currentPlayerId(), mute: !currentPlayerState()?.muted }).catch(toastWebrpcError)}
       onPlayerClick={(id) => setCurrentPlayerId((prev) => prev == id ? 0 : id)}
-      onSeekClick={() => stateActionSetMutation.mutate({ id: currentPlayerId(), action: StateAction.SEEK })}
+      onSeekClick={() => stateActionSetMutation.mutateAsync({ id: currentPlayerId(), action: StateAction.SEEK }).catch(toastWebrpcError)}
       seekDisabled={stateActionSetMutation.isLoading}
     />
   )

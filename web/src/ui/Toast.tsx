@@ -87,6 +87,8 @@ export const ToastRoot = styled(Toast.Root, {
         border: `1px solid ${theme.color.border}`,
       },
       destructive: {
+        background: theme.color.destructive,
+        color: theme.color.destructiveForeground,
       }
     }
   },
@@ -125,6 +127,7 @@ export const TheToastCloseButton = styled(Toast.CloseButton, {
     //   [`${ToastRoot}:hover &`]: {
     //     opacity: "100%",
     //   },
+    // TODO: add destructive variant but is blocked by the bug above
     // },
   }
 })
@@ -192,12 +195,15 @@ function success(message: string) {
   ));
 }
 
-function error(message: string) {
+function error(title: string, message: string) {
   return toaster.show(props => (
-    <ToastRoot toastId={props.toastId}>
+    <ToastRoot toastId={props.toastId} variant="destructive">
       <ToastContent>
         <ToastCloseButton />
-        {message}
+        <ToastTitle>{title}</ToastTitle>
+        <ToastDescription>
+          {message}
+        </ToastDescription>
       </ToastContent>
     </ToastRoot>
   ));
