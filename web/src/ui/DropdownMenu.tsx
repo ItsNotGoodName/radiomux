@@ -1,6 +1,6 @@
 import { DropdownMenu } from "@kobalte/core";
 import { styled } from "@macaron-css/solid";
-import { animation, theme, tw } from "./theme";
+import { animation, mixin, theme, tw } from "./theme";
 
 export const DropdownMenuRoot = DropdownMenu.Root
 export const DropdownMenuTrigger = DropdownMenu.Trigger
@@ -24,6 +24,18 @@ export const DropdownMenuContent = styled(DropdownMenu.Content, {
       },
     },
   },
+  variants: {
+    variant: {
+      default: {
+        ...mixin.stack("1"),
+        padding: theme.space[1],
+        width: theme.space[48]
+      }
+    }
+  },
+  defaultVariants: {
+    variant: "default"
+  }
 })
 
 export const DropdownMenuArrow = DropdownMenu.Arrow

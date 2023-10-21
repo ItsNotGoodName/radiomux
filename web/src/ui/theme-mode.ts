@@ -1,5 +1,6 @@
 import { createEffect, createSignal, untrack } from "solid-js";
-import { darkClass, lightClass } from "./theme";
+import { darkClass, lightClass, theme } from "./theme";
+import { style } from "@macaron-css/core";
 
 const THEME_KEY = "theme";
 
@@ -51,6 +52,9 @@ export const themeModeClass = () => {
 
 export const useTheme = () => {
   return createEffect(() => {
-    document.getElementsByTagName("body")![0].className = themeModeClass()
+    document.getElementsByTagName("body")![0].className = themeModeClass() + " " + style({
+      background: theme.color.background,
+      color: theme.color.foreground,
+    })
   })
 }

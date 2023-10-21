@@ -13,7 +13,10 @@ import { As } from "@kobalte/core";
 import { style } from "@macaron-css/core";
 import { DropdownMenuArrow, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuRoot, DropdownMenuTrigger } from "~/ui/DropdownMenu";
 import { ToastList, ToastRegion, ToastTitle, ToastCloseButton, ToastContent, ToastProgressTrack, ToastProgressFill, ToastDescription, toast } from "~/ui/Toast";
+import { SeparatorRoot } from "~/ui/Seperator";
 import { Portal } from "solid-js/web";
+import { SkeletonRoot } from "~/ui/Skeleton";
+import { SwitchControl, SwitchDescription, SwitchErrorMessage, SwitchInput, SwitchLabel, SwitchRoot } from "~/ui/Switch";
 
 const Root = styled("div", {
   base: {
@@ -161,7 +164,7 @@ export function Ui() {
               </DialogHeaderDescription>
             </DialogHeader>
             <DialogFooter>
-              <Button>Footer Button</Button>
+              Footer
             </DialogFooter>
           </DialogContent>
         </DialogPortal>
@@ -170,6 +173,15 @@ export function Ui() {
         <Label>Textarea Label</Label>
         <Textarea placeholder="Placeholder"></Textarea>
       </Stack>
+      <SeparatorRoot />
+      <SkeletonRoot height={50} />
+      <SwitchRoot>
+        <SwitchLabel>Label</SwitchLabel>
+        <SwitchDescription>Description</SwitchDescription>
+        <SwitchErrorMessage>Error Message</SwitchErrorMessage>
+        <SwitchInput />
+        <SwitchControl />
+      </SwitchRoot>
     </Root>
   )
 }

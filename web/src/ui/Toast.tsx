@@ -13,7 +13,7 @@ export const ToastList = styled(Toast.List, {
     top: 0,
     left: 0,
     right: 0,
-    zIndex: "100",
+    zIndex: 150,
     display: "flex",
     maxHeight: "100vh",
     width: "100%",

@@ -324,6 +324,12 @@ export const tw = {
     transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
     transitionDuration: "150ms",
   } as CSSProperties,
+
+  transitionTransform: {
+    transitionProperty: "transform",
+    transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+    transitionDuration: "150ms"
+  } as CSSProperties,
 }
 
 export const mixin = {

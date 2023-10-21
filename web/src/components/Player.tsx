@@ -328,7 +328,7 @@ export function Player(props: Props) {
                 </As>
               </DropdownMenuTrigger>
               <DropdownMenuPortal>
-                <DropdownMenuContent class={style({ ...mixin.stack("1"), padding: theme.space[1], width: theme.space[48] })}>
+                <DropdownMenuContent>
                   <DropdownMenuArrow />
                   <For each={props.players}>
                     {player => (

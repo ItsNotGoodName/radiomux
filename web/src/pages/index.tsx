@@ -38,12 +38,12 @@ const menuLinkInactiveClass = style({
   textDecoration: "none",
   padding: theme.space[2],
   borderRadius: theme.borderRadius.ok,
+
+  color: theme.color.foreground,
   ":hover": {
     background: theme.color.accent,
     color: theme.color.accentForeground,
   },
-
-  color: theme.color.foreground,
 })
 
 const menuLinkActiveClass = style({
@@ -88,11 +88,7 @@ function TheHeader() {
           </As>
         </DropdownMenu.Trigger>
         <DropdownMenu.Portal>
-          <DropdownMenuContent class={style({
-            ...mixin.stack("1"),
-            width: theme.space[48],
-            padding: theme.space[1],
-          })}>
+          <DropdownMenuContent>
             <DropdownMenu.Arrow />
             <DropdownMenu.Item asChild>
               <As component={Link} activeClass={menuLinkActiveClass} inactiveClass={menuLinkInactiveClass} href="/" end>Home</As>
@@ -132,7 +128,7 @@ function TheHeader() {
 const Content = styled("div", {
   base: {
     flex: "1",
-    minHeight: "100%",
+    minHeight: "100vh",
   },
 });
 
