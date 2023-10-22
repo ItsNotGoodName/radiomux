@@ -71,21 +71,12 @@ func (m Mock) Serve(ctx context.Context) error {
 		case android.CommandStop:
 			m.busEvent.IsPlayingChanged(ctx, m.id, android.EventIsPlayingChanged{IsPlaying: false})
 			return nil
-			// rpc.Payload = &protos.Rpc_Stop{}
 		case android.CommandPlay:
 			return m.busEvent.IsPlayingChanged(ctx, m.id, android.EventIsPlayingChanged{IsPlaying: true})
-			// rpc.Payload = &protos.Rpc_Play{}
 		case android.CommandPause:
 			return m.busEvent.IsPlayingChanged(ctx, m.id, android.EventIsPlayingChanged{IsPlaying: false})
-			// rpc.Payload = &protos.Rpc_Pause{}
 		case android.CommandPrepare:
-			// rpc.Payload = &protos.Rpc_Prepare{}
 		case android.CommandSetPlayWhenReady:
-			// rpc.Payload = &protos.Rpc_SetPlayWhenReady{
-			// 	SetPlayWhenReady: &protos.SetPlayWhenReady{
-			// 		PlayWhenReady: t.PlayWhenReady,
-			// 	},
-			// }
 		case android.CommandSetMediaItem:
 			err := m.busEvent.CurrentURIChanged(ctx, m.id, android.EventCurrentURIChanged{
 				URI: t.URI,
@@ -98,37 +89,20 @@ func (m Mock) Serve(ctx context.Context) error {
 					Title: t.URI,
 				},
 			})
-			// rpc.Payload = &protos.Rpc_SetMediaItem{
-			// 	SetMediaItem: &protos.SetMediaItem{
-			// 		Uri: t.URI,
-			// 	},
-			// }
 		case android.CommandSetVolume:
-			// rpc.Payload = &protos.Rpc_SetVolume{
-			// 	SetVolume: &protos.SetVolume{
-			// 		Volume: float32(t.Volume),
-			// 	},
-			// }
 		case android.CommandSetDeviceVolume:
-			// rpc.Payload = &protos.Rpc_SetDeviceVolume{
-			// 	SetDeviceVolume: &protos.SetDeviceVolume{
-			// 		Volume: int32(t.Volume),
-			// 	},
-			// }
 		case android.CommandIncreaseDeviceVolume:
 			s := s.update(func(s *state) {
 				s.Volume += 1
 				s.Muted = false
 			})
 			return m.busEvent.DeviceVolumeChanged(ctx, m.id, android.EventDeviceVolumeChanged{Volume: s.Volume, Muted: s.Muted})
-			// rpc.Payload = &protos.Rpc_IncreaseDeviceVolume{}
 		case android.CommandDecreaseDeviceVolume:
 			s := s.update(func(s *state) {
 				s.Volume -= 1
 				s.Muted = false
 			})
 			return m.busEvent.DeviceVolumeChanged(ctx, m.id, android.EventDeviceVolumeChanged{Volume: s.Volume, Muted: s.Muted})
-			// rpc.Payload = &protos.Rpc_DecreaseDeviceVolume{}
 		case android.CommandSetDeviceMuted:
 			s := s.update(func(s *state) {
 				s.Muted = t.Muted
@@ -137,18 +111,11 @@ func (m Mock) Serve(ctx context.Context) error {
 				}
 			})
 			return m.busEvent.DeviceVolumeChanged(ctx, m.id, android.EventDeviceVolumeChanged{Volume: s.Volume, Muted: s.Muted})
-			// rpc.Payload = &protos.Rpc_SetDeviceMuted{
-			// 	SetDeviceMuted: &protos.SetDeviceMuted{
-			// 		Muted: t.Muted,
-			// 	},
-			// }
 		case android.CommandSyncState:
-			// rpc.Payload = &protos.Rpc_SyncState{}
 		case android.CommandSeekToDefaultPosition:
-			// rpc.Payload = &protos.Rpc_SeekToDefaultPosition{}
 		default:
 		}
-		return errors.New("not implemented")
+		return errors.ErrUnsupported
 	})
 	if err != nil {
 		return err

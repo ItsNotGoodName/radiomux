@@ -9,20 +9,6 @@ import (
 	qrcode "github.com/skip2/go-qrcode"
 )
 
-func MountServer(e *echo.Echo, s openapi.ServerInterface) {
-	g := e.Group("/api", middlewareError)
-	openapi.RegisterHandlers(g, s)
-}
-
-func middlewareError(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		if err := next(c); err != nil {
-			return openapi.ConvertErr(err)
-		}
-		return nil
-	}
-}
-
 func NewServer(playerStore core.PlayerStore, androidWSServer core.AndroidWSServer) *Server {
 	return &Server{
 		playerStore:     playerStore,

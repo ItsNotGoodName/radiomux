@@ -17,6 +17,9 @@ func ConvertErr(err error) error {
 	if errors.Is(err, internal.ErrNotFound) {
 		return echo.ErrNotFound.WithInternal(err)
 	}
+	if errors.Is(err, errors.ErrUnsupported) {
+		return echo.ErrNotImplemented.WithInternal(err)
+	}
 	if errors.Is(err, android.ErrPlayerNotReady) {
 		return echo.ErrTooEarly.WithInternal(err)
 	}

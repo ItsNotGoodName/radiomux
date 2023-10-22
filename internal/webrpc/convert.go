@@ -15,6 +15,9 @@ func ConvertErr(err error) error {
 	if errors.Is(err, internal.ErrNotFound) {
 		return ErrNotFound.WithCause(err)
 	}
+	if errors.Is(err, errors.ErrUnsupported) {
+		return ErrNotImplemented.WithCause(err)
+	}
 	if errors.Is(err, android.ErrPlayerNotReady) {
 		return ErrWebrpcInternalError.WithCause(err)
 	}

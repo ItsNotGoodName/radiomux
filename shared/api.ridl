@@ -84,4 +84,5 @@ service StateService
 
 ######################## Errors
 
-error 100 NotFound     "not found"   HTTP 404
+error 100 NotFound         "not found"       HTTP 404
+error 101 NotImplemented   "not implemented" HTTP 501

@@ -7,13 +7,12 @@ import (
 	"os"
 
 	"github.com/ItsNotGoodName/radiomux/internal/android"
-	"github.com/ItsNotGoodName/radiomux/internal/androidws"
+	"github.com/ItsNotGoodName/radiomux/internal/androidmock"
 	"github.com/ItsNotGoodName/radiomux/internal/api"
 	"github.com/ItsNotGoodName/radiomux/internal/apiws"
 	"github.com/ItsNotGoodName/radiomux/internal/build"
 	"github.com/ItsNotGoodName/radiomux/internal/bus"
-	"github.com/ItsNotGoodName/radiomux/internal/config"
-	"github.com/ItsNotGoodName/radiomux/internal/file"
+	"github.com/ItsNotGoodName/radiomux/internal/demo"
 	"github.com/ItsNotGoodName/radiomux/internal/http"
 	"github.com/ItsNotGoodName/radiomux/internal/rpc"
 	"github.com/ItsNotGoodName/radiomux/internal/webrpc"
@@ -27,7 +26,7 @@ import (
 func main() {
 	ctx := context.Background()
 
-	cfg := config.New()
+	cfg := demo.New()
 
 	flags := flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 	cfg.WithFlag(flags)
@@ -48,7 +47,7 @@ func main() {
 	os.Exit(code)
 }
 
-func run(cfg *config.Config) lieut.Executor {
+func run(cfg *demo.Config) lieut.Executor {
 	return func(ctx context.Context, arguments []string) error {
 		err := cfg.Parse()
 		if err != nil {
@@ -67,9 +66,8 @@ func run(cfg *config.Config) lieut.Executor {
 		}
 
 		// Store
-		jsonStore := file.NewStore(cfg.File)
-		playerStore := file.NewPlayerStore(jsonStore, bus)
-		presetStore := file.NewPresetStore(jsonStore, bus)
+		playerStore := demo.NewPlayerStore()
+		presetStore := demo.NewPresetStore()
 
 		// Services
 		androidStatePubSub := android.NewStateMemPubSub()
@@ -78,7 +76,7 @@ func run(cfg *config.Config) lieut.Executor {
 		androidStateService := android.NewStateService(androidStatePubSub, androidStateStore)
 		androidController, close2 := android.NewController(androidStateService, bus)
 		defer close2()
-		androidWSServer := androidws.NewServer(playerStore, androidController, androidStateService, cfg.HTTPURL)
+		androidWSServer := demo.NewAndroidWSServer()
 		apiWSServer := apiws.NewServer(androidStateService, playerStore)
 		apiServer := api.NewServer(playerStore, androidWSServer)
 		playerService := webrpc.
@@ -88,8 +86,14 @@ func run(cfg *config.Config) lieut.Executor {
 			NewPresetServiceServer(rpc.
 				NewPresetService(presetStore))
 		stateService := webrpc.
-			NewStateServiceServer(rpc.
-				NewStateService(androidController, presetStore))
+			NewStateServiceServer(
+				demo.NewStateService(
+					rpc.NewStateService(androidController, presetStore)))
+
+		for _, mockPlayer := range demo.MockPlayers {
+			mock := androidmock.NewMock(mockPlayer.ID, androidController, androidStateService)
+			super.Add(mock)
+		}
 
 		// HTTP
 		httpRouter := http.NewRouter(
@@ -100,7 +104,7 @@ func run(cfg *config.Config) lieut.Executor {
 			presetService,
 			stateService,
 		)
-		httpServer := http.NewServer(httpRouter, fmt.Sprintf("%s:%d", cfg.HTTPHost, cfg.HTTPPort))
+		httpServer := http.NewServer(httpRouter, fmt.Sprintf("%s:%d", cfg.Host, cfg.Port))
 		super.Add(httpServer)
 
 		return super.Serve(ctx)

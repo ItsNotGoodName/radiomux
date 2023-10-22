@@ -4,4 +4,7 @@ import (
 	"errors"
 )
 
-var ErrNotFound = errors.New("not found")
+var (
+	// ErrNotFound means the resource was not found.
+	ErrNotFound = errors.New("not found")
+)

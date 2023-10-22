@@ -32,7 +32,7 @@ func (s Server) PlayerWSURL(p core.Player) string {
 	return fmt.Sprintf("%s%s?id=%d&token=%s", s.wsURL, Path, p.ID, p.Token)
 }
 
-func (s Server) Handle(c echo.Context) error {
+func (s Server) ServeEcho(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	// Auth
@@ -56,7 +56,7 @@ func (s Server) Handle(c echo.Context) error {
 	r := c.Request()
 	conn, err := wsUpgrade(w, r)
 	if err != nil {
-		return err
+		return nil
 	}
 
 	newConnection().handle(ctx, id, conn, s.controller, s.busEvent)

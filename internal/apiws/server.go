@@ -23,12 +23,12 @@ func NewServer(stateService *android.StateService, playerStore core.PlayerStore)
 	}
 }
 
-func (s Server) Handle(c echo.Context) error {
+func (s Server) ServeEcho(c echo.Context) error {
 	w := c.Response()
 	r := c.Request()
 	conn, err := wsUpgrade(w, r)
 	if err != nil {
-		return err
+		return nil
 	}
 
 	s.handle(r.Context(), conn)

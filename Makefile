@@ -35,6 +35,9 @@ tooling: tooling-air tooling-goreleaser tooling-protoc-gen-go tooling-oapi-codeg
 dev:
 	air
 
+dev-demo:
+	air -build.cmd="go build -o ./tmp/main ./cmd/radiomux-demo"
+
 dev-web:
 	cd web && pnpm install && pnpm run dev
 
