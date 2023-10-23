@@ -17,6 +17,8 @@ import { SeparatorRoot } from "~/ui/Seperator";
 import { Portal } from "solid-js/web";
 import { SkeletonRoot } from "~/ui/Skeleton";
 import { SwitchControl, SwitchDescription, SwitchErrorMessage, SwitchInput, SwitchLabel, SwitchRoot } from "~/ui/Switch";
+import { AlertDescription, AlertRoot, AlertTitle } from "~/ui/Alert";
+import { RiDevelopmentTerminalLine } from "solid-icons/ri";
 
 const Root = styled("div", {
   base: {
@@ -182,6 +184,11 @@ export function Ui() {
         <SwitchInput />
         <SwitchControl />
       </SwitchRoot>
+      <AlertRoot variant="destructive">
+        <RiDevelopmentTerminalLine />
+        <AlertTitle>Alert Title</AlertTitle>
+        <AlertDescription>Alert Description</AlertDescription>
+      </AlertRoot>
     </Root>
   )
 }

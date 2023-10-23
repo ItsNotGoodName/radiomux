@@ -19,7 +19,7 @@ import { As, DropdownMenu } from '@kobalte/core'
 import { DropdownMenuContent } from '~/ui/DropdownMenu'
 import { ToastList, ToastRegion } from '~/ui/Toast'
 import { Portal } from 'solid-js/web'
-import { toastWebrpcError } from '~/common/toast'
+import { toastWebrpcError } from '~/common/error'
 
 const Header = styled("div", {
   base: {
@@ -256,7 +256,7 @@ function App() {
       <CurrentPlayerProvider>
         <Portal>
           <ToastRegion>
-            <ToastList class={style({ paddingTop: theme.space[16] })} />
+            <ToastList class={style({ top: theme.space[14] })} />
           </ToastRegion>
         </Portal>
         <Header>

@@ -15,6 +15,8 @@ import { Label } from "~/ui/Label";
 import { Table, TableBody, TableCaption, TableData, TableHead, TableHeader, TableRow } from "~/ui/Table"
 import { mixin, theme } from "~/ui/theme";
 import { CheckboxInput, CheckboxControl, CheckboxIndicator, CheckboxRoot, CheckboxIcon } from "~/ui/Checkbox";
+import { AlertDescription, AlertRoot } from "~/ui/Alert";
+import { toastWebrpcError, webrpcErrorMessage } from "~/common/error";
 
 const Root = styled("div", {
   base: {
@@ -82,6 +84,9 @@ function CreateDialog(props: { disabled: boolean }) {
               )}
             </Field>
             <Button disabled={form.submitting} type="submit">Create</Button>
+            <Show when={playerCreateMutation.error}>
+              {e => <AlertRoot variant="destructive"><AlertDescription>{webrpcErrorMessage(e())}</AlertDescription></AlertRoot>}
+            </Show>
           </Form>
         </DialogContent>
       </DialogPortal>
@@ -123,6 +128,9 @@ function ViewDialog(props: { disabled: boolean, id?: number }) {
                   <Button disabled={playerTokenRegenerateMutation.isLoading} size="sm" onClick={() => playerTokenRegenerateMutation.mutate(id())}>
                     Regenereate Token
                   </Button>
+                  <Show when={playerTokenRegenerateMutation.error}>
+                    {e => <AlertRoot variant="destructive"><AlertDescription>{webrpcErrorMessage(e())}</AlertDescription></AlertRoot>}
+                  </Show>
                 </>
               )
             }}
@@ -181,6 +189,9 @@ function UpdateDialog(props: { disabled: boolean, id: number }) {
                           )}
                         </Field>
                         <Button disabled={form.submitting} type="submit">Update</Button>
+                        <Show when={playerUpdateMutation.error}>
+                          {e => <AlertRoot variant="destructive"><AlertDescription>{webrpcErrorMessage(e())}</AlertDescription></AlertRoot>}
+                        </Show>
                       </Form>
                     )
                   }}
@@ -198,6 +209,10 @@ function DeletePopover(props: { disabled: boolean, ids: Array<number>, onDelete:
   const [open, setOpen] = createSignal(false);
 
   const playerDeleteMutation = usePlayerDeleteMutation()
+  const onYes = () => playerDeleteMutation.mutateAsync(props.ids).then(() => {
+    props.onDelete()
+    setOpen(false)
+  }).catch(toastWebrpcError)
 
   return (
     <PopoverRoot open={open()} onOpenChange={setOpen}>
@@ -217,10 +232,7 @@ function DeletePopover(props: { disabled: boolean, ids: Array<number>, onDelete:
               </As>
             </PopoverCloseButton>
             <Button
-              onClick={() => playerDeleteMutation.mutateAsync(props.ids).then(() => {
-                props.onDelete()
-                setOpen(false)
-              })}
+              onClick={onYes}
               disabled={props.disabled || playerDeleteMutation.isLoading}
               size="sm"
               variant="destructive"

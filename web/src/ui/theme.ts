@@ -111,6 +111,7 @@ const light = {
   destructiveForeground: `hsl(${lightBase.destructiveForeground})`,
   destructiveHover: `hsla(${lightBase.destructive}, 90%)`,
   destructiveOverlay: `hsla(${lightBase.destructive}, 80%)`,
+  destructiveBorder: `hsla(${lightBase.destructive}, 50%)`,
 
   border: `hsl(${lightBase.border})`,
   input: `hsl(${lightBase.input})`,
@@ -186,6 +187,7 @@ const dark = {
   destructiveForeground: `hsl(${darkBase.destructiveForeground})`,
   destructiveHover: `hsla(${darkBase.destructive}, 90%)`,
   destructiveOverlay: `hsla(${darkBase.destructive}, 80%)`,
+  destructiveBorder: `hsla(${darkBase.destructive}, 50%)`,
 
   border: `hsl(${darkBase.border})`,
   input: `hsl(${darkBase.input})`,

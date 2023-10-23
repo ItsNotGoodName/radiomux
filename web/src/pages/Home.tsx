@@ -6,7 +6,7 @@ import { Input } from '~/ui/Input'
 import { useCurrentPlayer } from '~/providers/currentPlayer'
 import { styled } from '@macaron-css/solid'
 import { usePresetListQuery, useStateMediaSetMutation } from '~/hooks/api'
-import { toastWebrpcError } from '~/common/toast'
+import { toastWebrpcError } from '~/common/error'
 
 const Root = styled("div", {
   base: {
