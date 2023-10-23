@@ -30,6 +30,11 @@ gen: gen-proto gen-openapi gen-webrpc # db-migrate gen-jet gen-templ
 
 tooling: tooling-air tooling-goreleaser tooling-protoc-gen-go tooling-oapi-codegen tooling-webrpc # tooling-jet tooling-goose tooling-atlas
 
+# Docker
+
+docker-build-demo:
+	docker build . -f docker/radiomux-demo.Dockerfile -t itsnotgoodname/radiomux-demo
+
 # Development
 
 dev:
