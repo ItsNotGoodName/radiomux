@@ -30,18 +30,30 @@ type Controller struct {
 	handlers map[int64]func(ctx context.Context, cmd Command) error
 }
 
-func NewController(hooks ControllerHook, bus core.Bus) (*Controller, func()) {
+func NewController(hooks ControllerHook, bus core.Bus) *Controller {
 	c := &Controller{
 		mu:       sync.Mutex{},
 		hook:     hooks,
 		players:  make(map[int64]struct{}),
 		handlers: make(map[int64]func(ctx context.Context, cmd Command) error),
 	}
-	return c, bus.OnPlayerDeleted(c.onPlayerDeleted)
+
+	bus.OnPlayerTokenUpdated(c.onPlayerTokenUpdated)
+	bus.OnPlayerDeleted(c.onPlayerDeleted)
+
+	return c
+}
+
+func (c *Controller) onPlayerTokenUpdated(ctx context.Context, evt core.EventPlayerTokenUpdated) error {
+	return c.onPlayerDeleted(ctx, core.EventPlayerDeleted{ID: evt.ID})
 }
 
 func (c *Controller) onPlayerDeleted(ctx context.Context, evt core.EventPlayerDeleted) error {
-	return c.Handle(ctx, evt.ID, CommandDisconnect{})
+	err := c.Handle(ctx, evt.ID, CommandDisconnect{})
+	if !errors.Is(err, ErrPlayerNotConnected) {
+		return err
+	}
+	return nil
 }
 
 func (s *Controller) Handle(ctx context.Context, id int64, cmd Command) error {

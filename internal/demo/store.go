@@ -3,6 +3,7 @@ package demo
 import (
 	"context"
 	"errors"
+	"slices"
 
 	"github.com/ItsNotGoodName/radiomux/internal"
 	"github.com/ItsNotGoodName/radiomux/internal/core"
@@ -57,7 +58,7 @@ func (PlayerStore) Get(ctx context.Context, id int64) (core.Player, error) {
 
 // List implements core.PlayerStore.
 func (PlayerStore) List(ctx context.Context) ([]core.Player, error) {
-	return MockPlayers, nil
+	return slices.Clone(MockPlayers), nil
 }
 
 // Update implements core.PlayerStore.
@@ -124,7 +125,7 @@ func (PresetStore) Get(ctx context.Context, id int64) (core.Preset, error) {
 
 // List implements core.PresetStore.
 func (PresetStore) List(ctx context.Context) ([]core.Preset, error) {
-	return MockPresets, nil
+	return slices.Clone(MockPresets), nil
 }
 
 // Update implements core.PresetStore.

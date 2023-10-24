@@ -45,7 +45,7 @@ func (s PresetStore) List(ctx context.Context) ([]core.Preset, error) {
 
 // Delete implements models.PresetStore.
 func (s PresetStore) Delete(ctx context.Context, id int64) error {
-	return s.store.Update(func(db *db) error {
+	err := s.store.Update(func(db *db) error {
 		found := false
 		db.Presets = lo.Filter(db.Presets, func(item presetModel, index int) bool {
 			if item.ID == id {
@@ -59,6 +59,13 @@ func (s PresetStore) Delete(ctx context.Context, id int64) error {
 		}
 		return nil
 	})
+	if err != nil {
+		return err
+	}
+
+	s.bus.PlayerDeleted(ctx, core.EventPlayerDeleted{ID: id})
+
+	return nil
 }
 
 // Update implements models.PresetStore.

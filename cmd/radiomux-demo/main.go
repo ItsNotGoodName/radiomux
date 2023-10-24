@@ -60,10 +60,7 @@ func run(cfg *demo.Config) lieut.Executor {
 		})
 
 		// Bus
-		bus, err := bus.New()
-		if err != nil {
-			return fmt.Errorf("failed to create bus: %w", err)
-		}
+		bus := bus.New()
 
 		// Store
 		playerStore := demo.NewPlayerStore()
@@ -71,11 +68,9 @@ func run(cfg *demo.Config) lieut.Executor {
 
 		// Services
 		androidStatePubSub := android.NewStateMemPubSub()
-		androidStateStore, close1 := android.NewStateMemStore(androidStatePubSub, bus)
-		defer close1()
+		androidStateStore := android.NewStateMemStore(androidStatePubSub, bus, playerStore)
 		androidStateService := android.NewStateService(androidStatePubSub, androidStateStore)
-		androidController, close2 := android.NewController(androidStateService, bus)
-		defer close2()
+		androidController := android.NewController(androidStateService, bus)
 		androidWSServer := demo.NewAndroidWSServer()
 		apiWSServer := apiws.NewServer(androidStateService, playerStore)
 		apiServer := api.NewServer(playerStore, androidWSServer)

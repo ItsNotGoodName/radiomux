@@ -76,9 +76,13 @@ func (s PlayerStore) Delete(ctx context.Context, id int64) error {
 
 // Update implements models.PlayerStore.
 func (s PlayerStore) Update(ctx context.Context, player core.Player) (core.Player, error) {
+	var tokenUpdated bool
 	err := s.store.Update(func(db *db) error {
 		for i := range db.Players {
 			if db.Players[i].ID == player.ID {
+				if db.Players[i].Token != player.Token {
+					tokenUpdated = true
+				}
 				db.Players[i] = unconvertPlayer(player)
 				return nil
 			}
@@ -88,6 +92,10 @@ func (s PlayerStore) Update(ctx context.Context, player core.Player) (core.Playe
 	})
 	if err != nil {
 		return core.Player{}, err
+	}
+
+	if tokenUpdated {
+		s.bus.PlayerTokenUpdated(ctx, core.EventPlayerTokenUpdated{ID: player.ID})
 	}
 
 	return player, nil
@@ -110,6 +118,8 @@ func (s PlayerStore) Create(ctx context.Context, player core.Player) (core.Playe
 	if err != nil {
 		return core.Player{}, err
 	}
+
+	s.bus.PlayerCreated(ctx, core.EventPlayerCreated{ID: player.ID})
 
 	return player, nil
 }

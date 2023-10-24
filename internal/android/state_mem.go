@@ -1,7 +1,9 @@
 package android
 
 import (
+	"cmp"
 	"context"
+	"slices"
 	"sync"
 	"sync/atomic"
 
@@ -9,7 +11,6 @@ import (
 	"github.com/ItsNotGoodName/radiomux/internal/core"
 	"github.com/ItsNotGoodName/radiomux/pkg/diff"
 	"github.com/rs/zerolog/log"
-	"github.com/samber/lo"
 )
 
 func NewStateMemPubSub() *StateMemPubSub {
@@ -61,30 +62,52 @@ func (s *StateMemPubSub) Subscribe() (<-chan StateChange, func()) {
 
 var _ StatePubSub = (*StateMemPubSub)(nil)
 
-func NewStateMemStore(statePubSub StatePubSub, bus core.Bus) (*StateMemStore, func()) {
+func NewStateMemStore(statePubSub StatePubSub, bus core.Bus, playerStore core.PlayerStore) *StateMemStore {
 	s := &StateMemStore{
-		statePubSub:    statePubSub,
-		statesMu:       sync.Mutex{},
-		states:         []State{},
-		deletedPlayers: make(map[int64]struct{}),
+		statePubSub: statePubSub,
+		playerStore: playerStore,
+		statesMu:    sync.Mutex{},
+		states:      []State{},
 	}
 
-	return s, bus.OnPlayerDeleted(s.onPlayerDeleted)
+	_, err := s.sync(context.TODO())
+	if err != nil {
+		panic(err)
+	}
+
+	bus.OnPlayerCreated(s.onPlayerCreated)
+	bus.OnPlayerDeleted(s.onPlayerDeleted)
+
+	return s
 }
 
 type StateMemStore struct {
 	statePubSub StatePubSub
+	playerStore core.PlayerStore
 
 	statesMu sync.Mutex
 	states   []State
-	// TODO: do a db call instead of keeping track of deleted players
-	deletedPlayers map[int64]struct{}
+}
+
+func (s *StateMemStore) onPlayerCreated(ctx context.Context, evt core.EventPlayerCreated) error {
+	s.statesMu.Lock()
+	_, found := s.get(evt.ID)
+	if found {
+		s.statesMu.Unlock()
+	} else {
+		state := NewState(evt.ID)
+		s.states = append(s.states, state)
+		s.statesMu.Unlock()
+
+		s.statePubSub.Broadcast(evt.ID, diff.ChangedAll)
+	}
+
+	return nil
 }
 
 func (s *StateMemStore) onPlayerDeleted(ctx context.Context, evt core.EventPlayerDeleted) error {
 	s.statesMu.Lock()
-	s.states = lo.Filter(s.states, func(s State, i int) bool { return s.ID != evt.ID })
-	s.deletedPlayers[evt.ID] = struct{}{}
+	s.states = slices.DeleteFunc(s.states, func(s State) bool { return s.ID == evt.ID })
 	s.statesMu.Unlock()
 
 	s.statePubSub.Broadcast(evt.ID, diff.ChangedAll)
@@ -92,59 +115,79 @@ func (s *StateMemStore) onPlayerDeleted(ctx context.Context, evt core.EventPlaye
 	return nil
 }
 
+func (s *StateMemStore) get(id int64) (int, bool) {
+	return slices.BinarySearchFunc(s.states, State{ID: id}, func(s1, s2 State) int {
+		return cmp.Compare(s1.ID, s2.ID)
+	})
+}
+
+func (s *StateMemStore) sync(ctx context.Context) (bool, error) {
+	ids, err := core.PlayerIDS(ctx, s.playerStore)
+	if err != nil {
+		return false, err
+	}
+	slices.SortFunc(ids, func(a, b int64) int {
+		return cmp.Compare(a, b)
+	})
+
+	// Create merge new states with old states
+	var createdStateIDS []int64
+	var states []State
+	for _, id := range ids {
+		_, found := slices.BinarySearchFunc(s.states, State{ID: id}, func(s1, s2 State) int {
+			return cmp.Compare(s1.ID, s2.ID)
+		})
+		if !found {
+			state := NewState(id)
+			states = append(states, state)
+			createdStateIDS = append(createdStateIDS, id)
+		}
+	}
+
+	// Check which states were deleted
+	var deletedStateIDS []int64
+	for _, old := range s.states {
+		_, found := slices.BinarySearchFunc(states, State{ID: old.ID}, func(s1, s2 State) int {
+			return cmp.Compare(s1.ID, s2.ID)
+		})
+		if !found {
+			deletedStateIDS = append(deletedStateIDS, old.ID)
+		}
+	}
+
+	s.states = states
+
+	return len(createdStateIDS)+len(deletedStateIDS) > 0, nil
+}
+
 func (s *StateMemStore) List() []State {
 	s.statesMu.Lock()
-	states := make([]State, 0, len(s.states))
-	for _, state := range s.states {
-		states = append(states, state)
-	}
+	states := slices.Clone(s.states)
 	s.statesMu.Unlock()
 
 	return states
 }
 
-func (s *StateMemStore) get(id int64) (State, int, error) {
-	if _, found := s.deletedPlayers[id]; found {
-		return State{}, 0, internal.ErrNotFound
-	}
-
-	for i := range s.states {
-		if s.states[i].ID == id {
-			return s.states[i], i, nil
-		}
-	}
-
-	return State{}, -1, nil
-}
-
 func (s *StateMemStore) Get(id int64) (State, error) {
 	s.statesMu.Lock()
-	state, index, err := s.get(id)
-	if err != nil {
+	index, found := s.get(id)
+	if !found {
 		s.statesMu.Unlock()
-		return State{}, err
+		return State{}, internal.ErrNotFound
 	}
 	s.statesMu.Unlock()
 
-	if index == -1 {
-		return State{}, internal.ErrNotFound
-	}
-
-	return state, nil
+	return s.states[index], nil
 }
 
 func (s *StateMemStore) Update(id int64, fn func(state State, changed diff.Changed) (State, diff.Changed)) error {
 	s.statesMu.Lock()
-	state, index, err := s.get(id)
-	if err != nil {
+	index, found := s.get(id)
+	if !found {
 		s.statesMu.Unlock()
-		return err
+		return internal.ErrNotFound
 	}
-	if index == -1 {
-		state = NewState(id)
-		s.states = append(s.states, state)
-		index = len(s.states) - 1
-	}
+	state := s.states[index]
 
 	state, changed := fn(state, diff.ChangedNone)
 	s.states[index] = state
