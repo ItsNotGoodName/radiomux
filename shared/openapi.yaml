@@ -41,11 +41,13 @@ components:
       oneof:
         - $ref: "#/components/schemas/EventDataPlayerState"
         - $ref: "#/components/schemas/EventDataPlayerStatePartial"
+        - $ref: "#/components/schemas/EventDataNotification"
       discriminator:
         propertyName: "type"
         mapping:
           player_state: "#/components/schemas/EventDataPlayerState"
           player_state_partial: "#/components/schemas/EventDataPlayerStatePartial"
+          notification: "#/components/schemas/EventDataNotification"
 
     EventBase:
       type: "object"
@@ -61,6 +63,7 @@ components:
       enum:
         - player_state
         - player_state_partial
+        - notification
 
     EventDataPlayerStatePartial:
       allof:
@@ -85,6 +88,31 @@ components:
               type: array
               items:
                 $ref: "#/components/schemas/PlayerState"
+
+    EventDataNotification:
+      allof:
+        - $ref: "#/components/schemas/EventBase"
+        - properties:
+            type:
+              $ref: "#/components/schemas/EventType"
+              value: "notification"
+            data:
+              type: object
+              $ref: "#/components/schemas/Notification"
+
+    Notification:
+      type: object
+      required:
+        - error
+        - title
+        - description
+      properties:
+        error:
+          type: boolean
+        title:
+          type: string
+        description:
+          type: string
 
     PlayerPlaybackState:
       type: string

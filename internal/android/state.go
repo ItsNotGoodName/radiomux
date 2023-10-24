@@ -153,8 +153,8 @@ func (s *StateService) CurrentURIChanged(ctx context.Context, id int64, event Ev
 	})
 }
 
-// PlayerConnectChanged implements ControllerHooks.
-func (s *StateService) PlayerConnectChanged(id int64) error {
+// PlayerConnecting implements ControllerMiddleware.
+func (s *StateService) PlayerConnecting(id int64) error {
 	return s.Update(id, func(state State, changed diff.Changed) (State, diff.Changed) {
 		if !state.Connected {
 			state.Connected = true
@@ -164,15 +164,15 @@ func (s *StateService) PlayerConnectChanged(id int64) error {
 	})
 }
 
-// PlayerDisconnectChanged implements ControllerHooks.
-func (s *StateService) PlayerDisconnectChanged(id int64) error {
+// PlayerDisconnected implements ControllerMiddleware.
+func (s *StateService) PlayerDisconnected(id int64) error {
 	return s.Update(id, func(state State, changed diff.Changed) (State, diff.Changed) {
 		return NewState(id), diff.ChangedAll
 	})
 }
 
-// PlayerReadyChanged implements ControllerHooks.
-func (s *StateService) PlayerReadyChanged(id int64) error {
+// PlayerReadying implements ControllerMiddleware.
+func (s *StateService) PlayerReadying(id int64) error {
 	return s.Update(id, func(state State, changed diff.Changed) (State, diff.Changed) {
 		if !state.Ready {
 			state.Ready = true
@@ -300,4 +300,4 @@ func (s *StateService) VolumeChanged(ctx context.Context, id int64, event EventV
 }
 
 var _ BusEvent = (*StateService)(nil)
-var _ ControllerHook = (*StateService)(nil)
+var _ ControllerMiddleware = (*StateService)(nil)

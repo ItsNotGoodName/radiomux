@@ -15,7 +15,9 @@ export type ApiPlayerState = Required<components["schemas"]["PlayerStatePartial"
 
 export type ApiPlayerStatePartial = components["schemas"]["PlayerStatePartial"]
 
-export type ApiEvent = ApiEventPlayerState | ApiEventPlayerStatePartial
+export type ApiNotification = components["schemas"]["Notification"]
+
+export type ApiEvent = ApiEventPlayerState | ApiEventPlayerStatePartial | ApiEventNotification
 
 type EventBase<T extends components["schemas"]["EventType"], D> = {
   type: T,
@@ -25,3 +27,5 @@ type EventBase<T extends components["schemas"]["EventType"], D> = {
 export type ApiEventPlayerState = EventBase<"player_state", Array<ApiPlayerState>>
 
 export type ApiEventPlayerStatePartial = EventBase<"player_state_partial", Array<ApiPlayerStatePartial>>
+
+export type ApiEventNotification = EventBase<"notification", ApiNotification>

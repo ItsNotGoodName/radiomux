@@ -74,7 +74,8 @@ func run(cfg *config.Config) lieut.Executor {
 		androidStateService := android.NewStateService(androidStatePubSub, androidStateStore)
 		androidController := android.NewController(androidStateService, bus)
 		androidWSServer := androidws.NewServer(playerStore, androidController, androidStateService, cfg.HTTPURL)
-		apiWSServer := apiws.NewServer(androidStateService, playerStore)
+		notificationServer := apiws.NewNotificationServer(bus, playerStore)
+		apiWSServer := apiws.NewServer(androidStateService, playerStore, notificationServer)
 		apiServer := api.NewServer(playerStore, androidWSServer)
 		playerService := webrpc.
 			NewPlayerServiceServer(rpc.
@@ -85,6 +86,10 @@ func run(cfg *config.Config) lieut.Executor {
 		stateService := webrpc.
 			NewStateServiceServer(rpc.
 				NewStateService(androidController, presetStore))
+
+		if _, err = androidStateStore.Sync(ctx); err != nil {
+			return err
+		}
 
 		// HTTP
 		httpRouter := http.NewRouter(

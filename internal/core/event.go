@@ -4,12 +4,24 @@ import "context"
 
 // Bus is a synchronous event bus.
 type Bus interface {
-	PlayerCreated(ctx context.Context, evt EventPlayerCreated)
-	OnPlayerCreated(func(ctx context.Context, evt EventPlayerCreated) error)
-	PlayerTokenUpdated(ctx context.Context, evt EventPlayerTokenUpdated)
-	OnPlayerTokenUpdated(func(ctx context.Context, evt EventPlayerTokenUpdated) error)
-	PlayerDeleted(ctx context.Context, evt EventPlayerDeleted)
-	OnPlayerDeleted(func(ctx context.Context, evt EventPlayerDeleted) error)
+	PlayerDisconnected(evt EventPlayerDisconnected)
+	OnPlayerDisconnected(h func(ctx context.Context, evt EventPlayerDisconnected) error)
+	PlayerConnected(evt EventPlayerConnected)
+	OnPlayerConnected(h func(ctx context.Context, evt EventPlayerConnected) error)
+	PlayerCreated(evt EventPlayerCreated)
+	OnPlayerCreated(h func(ctx context.Context, evt EventPlayerCreated) error)
+	PlayerTokenUpdated(evt EventPlayerTokenUpdated)
+	OnPlayerTokenUpdated(h func(ctx context.Context, evt EventPlayerTokenUpdated) error)
+	PlayerDeleted(evt EventPlayerDeleted)
+	OnPlayerDeleted(h func(ctx context.Context, evt EventPlayerDeleted) error)
+}
+
+type EventPlayerDisconnected struct {
+	ID int64
+}
+
+type EventPlayerConnected struct {
+	ID int64
 }
 
 type EventPlayerCreated struct {

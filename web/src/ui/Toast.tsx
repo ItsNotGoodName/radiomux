@@ -195,7 +195,7 @@ function success(message: string) {
   ));
 }
 
-function error(title: string, message: string) {
+function error(title: string, message: string): number {
   return toaster.show(props => (
     <ToastRoot toastId={props.toastId} variant="destructive">
       <ToastContent>
@@ -209,8 +209,8 @@ function error(title: string, message: string) {
   ));
 }
 
-function custom(ele: () => JSX.Element) {
-  return toaster.show(props => <ToastRoot toastId={props.toastId}>{ele as any}</ToastRoot>);
+function custom(ele: () => JSX.Element, rootProps?: Omit<ComponentProps<typeof ToastRoot>, "toastId">) {
+  return toaster.show(props => <ToastRoot toastId={props.toastId} {...rootProps}>{ele as any}</ToastRoot>);
 }
 
 function dismiss(id: number) {

@@ -5,7 +5,7 @@ import { Link, Outlet, Route } from '@solidjs/router'
 import { Home } from './Home'
 import { minScreen, mixin, theme, tw } from '~/ui/theme'
 import { AUTO_MODE, DARK_MODE, LIGHT_MODE, themeMode, toggleThemeMode } from '~/ui/theme-mode'
-import { PlayerStatesProvider, WebSocketState, usePlayerStates } from '~/providers/playerStates'
+import { WSProvider, WebSocketState, useWS } from '~/providers/ws'
 import { CurrentPlayerProvider, useCurrentPlayer } from '~/providers/currentPlayer'
 import { Button } from '~/ui/Button'
 import { ThemeIcon } from '~/ui/ThemeIcon'
@@ -75,7 +75,7 @@ function HeaderContent(props: { onMenuClick?: () => void }) {
     }
   }
 
-  const { webSocketState } = usePlayerStates()
+  const { webSocketState } = useWS()
 
   const wsStates = ["Connecting", "Connected", "Disconnecting", "Disconnected"];
 
@@ -224,7 +224,7 @@ const Footer = styled("div", {
 
 function FooterPlayer() {
   // Queries
-  const { playerStates } = usePlayerStates()
+  const { playerStates } = useWS()
   const { currentPlayerId, setCurrentPlayerId, currentPlayerState } = useCurrentPlayer()
 
   // Mutations
@@ -252,7 +252,7 @@ function App() {
   const [menuOpen, setMenuOpen] = createSignal(true)
 
   return (
-    <PlayerStatesProvider>
+    <WSProvider>
       <CurrentPlayerProvider>
         <Portal>
           <ToastRegion>
@@ -280,7 +280,7 @@ function App() {
           <FooterPlayer />
         </Footer>
       </CurrentPlayerProvider>
-    </PlayerStatesProvider>
+    </WSProvider>
   )
 }
 

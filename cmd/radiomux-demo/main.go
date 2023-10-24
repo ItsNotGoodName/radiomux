@@ -72,7 +72,8 @@ func run(cfg *demo.Config) lieut.Executor {
 		androidStateService := android.NewStateService(androidStatePubSub, androidStateStore)
 		androidController := android.NewController(androidStateService, bus)
 		androidWSServer := demo.NewAndroidWSServer()
-		apiWSServer := apiws.NewServer(androidStateService, playerStore)
+		notificationServer := apiws.NewNotificationServer(bus, playerStore)
+		apiWSServer := apiws.NewServer(androidStateService, playerStore, notificationServer)
 		apiServer := api.NewServer(playerStore, androidWSServer)
 		playerService := webrpc.
 			NewPlayerServiceServer(rpc.
@@ -84,6 +85,10 @@ func run(cfg *demo.Config) lieut.Executor {
 			NewStateServiceServer(
 				demo.NewStateService(
 					rpc.NewStateService(androidController, presetStore)))
+
+		if _, err = androidStateStore.Sync(ctx); err != nil {
+			return err
+		}
 
 		for _, mockPlayer := range demo.MockPlayers {
 			mock := androidmock.NewMock(mockPlayer.ID, androidController, androidStateService)

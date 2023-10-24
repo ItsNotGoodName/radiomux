@@ -1,14 +1,27 @@
 package openapi
 
 import (
+	"encoding/json"
 	"errors"
 
 	"github.com/ItsNotGoodName/radiomux/internal"
 	"github.com/ItsNotGoodName/radiomux/internal/android"
+	"github.com/ItsNotGoodName/radiomux/internal/core"
 	"github.com/ItsNotGoodName/radiomux/pkg/diff"
 	"github.com/labstack/echo/v4"
 	"github.com/rs/zerolog/log"
 )
+
+func ConvertNotification(notification Notification) ([]byte, error) {
+	evt := Event{}
+	err := evt.MergeEventDataNotification(EventDataNotification{
+		Data: notification,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return json.Marshal(evt)
+}
 
 func ConvertErr(err error) error {
 	if errors.Is(err, android.ErrPlayerNotConnected) {
@@ -50,18 +63,18 @@ func ConvertPlaybackError(e android.PlaybackError) string {
 	return e.String()
 }
 
-func ConvertPlayerStates(states []android.State, names []string) []PlayerState {
-	players := make([]PlayerState, 0, len(states))
+func ConvertPlayerStates(states []android.State, players []core.Player) []PlayerState {
+	playersStates := make([]PlayerState, 0, len(states))
 	for i, s := range states {
-		players = append(players, ConvertPlayerState(&s, names[i]))
+		playersStates = append(playersStates, ConvertPlayerState(&s, players[i]))
 	}
-	return players
+	return playersStates
 }
 
-func ConvertPlayerState(s *android.State, name string) PlayerState {
+func ConvertPlayerState(s *android.State, p core.Player) PlayerState {
 	return PlayerState{
 		Id:                      s.ID,
-		Name:                    name,
+		Name:                    p.Name,
 		Connected:               s.Connected,
 		Ready:                   s.Ready,
 		MinVolume:               s.MinVolume,

@@ -11,6 +11,7 @@ import (
 	"github.com/ItsNotGoodName/radiomux/internal/core"
 	"github.com/ItsNotGoodName/radiomux/pkg/diff"
 	"github.com/rs/zerolog/log"
+	"github.com/samber/lo"
 )
 
 func NewStateMemPubSub() *StateMemPubSub {
@@ -70,12 +71,9 @@ func NewStateMemStore(statePubSub StatePubSub, bus core.Bus, playerStore core.Pl
 		states:      []State{},
 	}
 
-	_, err := s.sync(context.TODO())
-	if err != nil {
-		panic(err)
-	}
-
+	// Create state when player created
 	bus.OnPlayerCreated(s.onPlayerCreated)
+	// Delete state when player deleted
 	bus.OnPlayerDeleted(s.onPlayerDeleted)
 
 	return s
@@ -121,14 +119,15 @@ func (s *StateMemStore) get(id int64) (int, bool) {
 	})
 }
 
-func (s *StateMemStore) sync(ctx context.Context) (bool, error) {
-	ids, err := core.PlayerIDS(ctx, s.playerStore)
+func (s *StateMemStore) Sync(ctx context.Context) (bool, error) {
+	s.statesMu.Lock()
+	defer s.statesMu.Unlock()
+
+	players, err := s.playerStore.List(ctx)
 	if err != nil {
 		return false, err
 	}
-	slices.SortFunc(ids, func(a, b int64) int {
-		return cmp.Compare(a, b)
-	})
+	ids := lo.Map(players, func(player core.Player, _ int) int64 { return player.ID })
 
 	// Create merge new states with old states
 	var createdStateIDS []int64

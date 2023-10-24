@@ -42,9 +42,15 @@ export interface components {
       type: components["schemas"]["EventType"];
     };
     /** @enum {string} */
-    EventType: "player_state" | "player_state_partial";
+    EventType: "player_state" | "player_state_partial" | "notification";
     EventDataPlayerStatePartial: unknown;
     EventDataPlayerState: unknown;
+    EventDataNotification: unknown;
+    Notification: {
+      error: boolean;
+      title: string;
+      description: string;
+    };
     /** @enum {string} */
     PlayerPlaybackState: "IDLE" | "BUFFERING" | "READY" | "ENDED";
     PlayerStatePartial: {

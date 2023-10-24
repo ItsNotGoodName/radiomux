@@ -15,30 +15,39 @@ var (
 	ErrPlayerNotReady     error = errors.New("player not ready")
 )
 
-// ControllerHook must not have a reference to the Controller to prevent deadlocks.
-type ControllerHook interface {
-	PlayerConnectChanged(id int64) error
-	PlayerDisconnectChanged(id int64) error
-	PlayerReadyChanged(id int64) error
+// ControllerMiddleware must not have a reference to the Controller to prevent deadlocks.
+type ControllerMiddleware interface {
+	// PlayerConnecting is fired before a player connects.
+	PlayerConnecting(id int64) error
+	// PlayerDisconnected is fired after a player diconnects.
+	PlayerDisconnected(id int64) error
+	// PlayerReadying is fired before a player is ready.
+	PlayerReadying(id int64) error
 }
 
 // Controller handles player connections.
 type Controller struct {
+	bus        core.Bus
+	middleware ControllerMiddleware
+
 	mu       sync.Mutex
-	hook     ControllerHook
 	players  map[int64]struct{}
 	handlers map[int64]func(ctx context.Context, cmd Command) error
 }
 
-func NewController(hooks ControllerHook, bus core.Bus) *Controller {
+func NewController(middleware ControllerMiddleware, bus core.Bus) *Controller {
 	c := &Controller{
+		bus:        bus,
+		middleware: middleware,
+
 		mu:       sync.Mutex{},
-		hook:     hooks,
 		players:  make(map[int64]struct{}),
 		handlers: make(map[int64]func(ctx context.Context, cmd Command) error),
 	}
 
+	// Disconnect player when player's token changes
 	bus.OnPlayerTokenUpdated(c.onPlayerTokenUpdated)
+	// Disconnect player when player is deleted
 	bus.OnPlayerDeleted(c.onPlayerDeleted)
 
 	return c
@@ -56,6 +65,7 @@ func (c *Controller) onPlayerDeleted(ctx context.Context, evt core.EventPlayerDe
 	return nil
 }
 
+// Handle sends command to player by ID.
 func (s *Controller) Handle(ctx context.Context, id int64, cmd Command) error {
 	s.mu.Lock()
 	handler, ok := s.handlers[id]
@@ -82,12 +92,13 @@ func (s *Controller) PlayerConnect(id int64) (func(), error) {
 		return nil, ErrPlayerConflict
 	}
 
-	err := s.hook.PlayerConnectChanged(id)
+	err := s.middleware.PlayerConnecting(id)
 	if err != nil {
 		return nil, err
 	}
-
 	s.players[id] = struct{}{}
+	s.bus.PlayerConnected(core.EventPlayerConnected{ID: id})
+
 	return func() {
 		s.mu.Lock()
 		defer s.mu.Unlock()
@@ -96,10 +107,14 @@ func (s *Controller) PlayerConnect(id int64) (func(), error) {
 		if _, found := s.players[id]; !found {
 			return
 		}
+
 		delete(s.players, id)
 		delete(s.handlers, id)
-
-		_ = s.hook.PlayerDisconnectChanged(id)
+		err := s.middleware.PlayerDisconnected(id)
+		if err != nil {
+			log.Err(err).Send()
+		}
+		s.bus.PlayerDisconnected(core.EventPlayerDisconnected{ID: id})
 	}, nil
 }
 
@@ -110,12 +125,13 @@ func (s *Controller) PlayerReady(id int64, handler func(ctx context.Context, cmd
 	if _, found := s.handlers[id]; found {
 		return errors.New("duplicate player ready handler")
 	}
-	err := s.hook.PlayerReadyChanged(id)
+
+	err := s.middleware.PlayerReadying(id)
 	if err != nil {
 		return err
 	}
-
 	s.handlers[id] = handler
+
 	return nil
 }
 

@@ -16,6 +16,7 @@ import (
 
 // Defines values for EventType.
 const (
+	EventTypeNotification       EventType = "notification"
 	EventTypePlayerState        EventType = "player_state"
 	EventTypePlayerStatePartial EventType = "player_state_partial"
 )
@@ -43,6 +44,12 @@ type EventBase struct {
 	Type EventType `json:"type"`
 }
 
+// EventDataNotification defines model for EventDataNotification.
+type EventDataNotification struct {
+	Data Notification `json:"data"`
+	Type EventType    `json:"type"`
+}
+
 // EventDataPlayerState defines model for EventDataPlayerState.
 type EventDataPlayerState struct {
 	Data []PlayerState `json:"data"`
@@ -57,6 +64,13 @@ type EventDataPlayerStatePartial struct {
 
 // EventType defines model for EventType.
 type EventType string
+
+// Notification defines model for Notification.
+type Notification struct {
+	Description string `json:"description"`
+	Error       bool   `json:"error"`
+	Title       string `json:"title"`
+}
 
 // PlayerPlaybackState defines model for PlayerPlaybackState.
 type PlayerPlaybackState string
@@ -171,6 +185,34 @@ func (t *Event) MergeEventDataPlayerStatePartial(v EventDataPlayerStatePartial) 
 	return err
 }
 
+// AsEventDataNotification returns the union data inside the Event as a EventDataNotification
+func (t Event) AsEventDataNotification() (EventDataNotification, error) {
+	var body EventDataNotification
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromEventDataNotification overwrites any union data inside the Event as the provided EventDataNotification
+func (t *Event) FromEventDataNotification(v EventDataNotification) error {
+	v.Type = "notification"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeEventDataNotification performs a merge with any union data inside the Event, using the provided EventDataNotification
+func (t *Event) MergeEventDataNotification(v EventDataNotification) error {
+	v.Type = "notification"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JsonMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
 func (t Event) Discriminator() (string, error) {
 	var discriminator struct {
 		Discriminator string `json:"type"`
@@ -185,6 +227,8 @@ func (t Event) ValueByDiscriminator() (interface{}, error) {
 		return nil, err
 	}
 	switch discriminator {
+	case "notification":
+		return t.AsEventDataNotification()
 	case "player_state":
 		return t.AsEventDataPlayerState()
 	case "player_state_partial":

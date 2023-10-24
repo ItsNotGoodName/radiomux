@@ -14,30 +14,73 @@ func logErr(err error) {
 	}
 }
 
+func (*Bus) context() context.Context {
+	return context.TODO()
+}
+
 func New() *Bus {
 	return &Bus{}
 }
 
 type Bus struct {
 	mu                   sync.Mutex
-	onPlayerTokenChanged []func(ctx context.Context, evt core.EventPlayerTokenUpdated) error
+	onPlayerDisconnected []func(ctx context.Context, evt core.EventPlayerDisconnected) error
+	onPlayerConnected    []func(ctx context.Context, evt core.EventPlayerConnected) error
 	onPlayerCreated      []func(ctx context.Context, evt core.EventPlayerCreated) error
+	onPlayerTokenUpdated []func(ctx context.Context, evt core.EventPlayerTokenUpdated) error
 	onPlayerDeleted      []func(ctx context.Context, evt core.EventPlayerDeleted) error
+}
+
+// OnPlayerDisconnected implements core.Bus.
+func (b *Bus) OnPlayerDisconnected(h func(ctx context.Context, evt core.EventPlayerDisconnected) error) {
+	b.mu.Lock()
+	b.onPlayerDisconnected = append(b.onPlayerDisconnected, h)
+	b.mu.Unlock()
+}
+
+// PlayerDisconnected implements core.Bus.
+func (b *Bus) PlayerDisconnected(evt core.EventPlayerDisconnected) {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+
+	ctx := b.context()
+	for _, v := range b.onPlayerDisconnected {
+		logErr(v(ctx, evt))
+	}
+}
+
+// OnPlayerConnected implements core.Bus.
+func (b *Bus) OnPlayerConnected(h func(ctx context.Context, evt core.EventPlayerConnected) error) {
+	b.mu.Lock()
+	b.onPlayerConnected = append(b.onPlayerConnected, h)
+	b.mu.Unlock()
+}
+
+// PlayerConnected implements core.Bus.
+func (b *Bus) PlayerConnected(evt core.EventPlayerConnected) {
+	b.mu.Lock()
+	defer b.mu.Unlock()
+
+	ctx := b.context()
+	for _, v := range b.onPlayerConnected {
+		logErr(v(ctx, evt))
+	}
 }
 
 // OnPlayerTokenUpdated implements core.Bus.
 func (b *Bus) OnPlayerTokenUpdated(h func(ctx context.Context, evt core.EventPlayerTokenUpdated) error) {
 	b.mu.Lock()
-	b.onPlayerTokenChanged = append(b.onPlayerTokenChanged, h)
+	b.onPlayerTokenUpdated = append(b.onPlayerTokenUpdated, h)
 	b.mu.Unlock()
 }
 
 // PlayerTokenUpdated implements core.Bus.
-func (b *Bus) PlayerTokenUpdated(ctx context.Context, evt core.EventPlayerTokenUpdated) {
+func (b *Bus) PlayerTokenUpdated(evt core.EventPlayerTokenUpdated) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
 
-	for _, v := range b.onPlayerTokenChanged {
+	ctx := b.context()
+	for _, v := range b.onPlayerTokenUpdated {
 		logErr(v(ctx, evt))
 	}
 }
@@ -50,10 +93,11 @@ func (b *Bus) OnPlayerCreated(h func(ctx context.Context, evt core.EventPlayerCr
 }
 
 // PlayerCreated implements core.Bus.
-func (b *Bus) PlayerCreated(ctx context.Context, evt core.EventPlayerCreated) {
+func (b *Bus) PlayerCreated(evt core.EventPlayerCreated) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
 
+	ctx := b.context()
 	for _, v := range b.onPlayerCreated {
 		logErr(v(ctx, evt))
 	}
@@ -67,10 +111,11 @@ func (b *Bus) OnPlayerDeleted(h func(ctx context.Context, evt core.EventPlayerDe
 }
 
 // PlayerDeleted implements models.Bus.
-func (b *Bus) PlayerDeleted(ctx context.Context, evt core.EventPlayerDeleted) {
+func (b *Bus) PlayerDeleted(evt core.EventPlayerDeleted) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
 
+	ctx := b.context()
 	for _, v := range b.onPlayerDeleted {
 		logErr(v(ctx, evt))
 	}

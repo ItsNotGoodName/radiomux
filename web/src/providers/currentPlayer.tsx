@@ -5,7 +5,7 @@ import {
   ParentComponent,
   useContext
 } from "solid-js";
-import { usePlayerStates } from './playerStates';
+import { useWS } from './ws';
 
 type CurrentPlayerContextType = {
   currentPlayerId: Accessor<number>
@@ -31,7 +31,7 @@ export const CurrentPlayerProvider: ParentComponent<CurrentPlayerContextProps> =
   );
 
   // Queries
-  const { playerStates } = usePlayerStates()
+  const { playerStates } = useWS()
   const currentPlayerState = createMemo(() => playerStates.find((p) => p.id == currentPlayerId()))
 
   const store: CurrentPlayerContextType = {

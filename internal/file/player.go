@@ -1,7 +1,9 @@
 package file
 
 import (
+	"cmp"
 	"context"
+	"slices"
 
 	"github.com/ItsNotGoodName/radiomux/internal"
 	"github.com/ItsNotGoodName/radiomux/internal/core"
@@ -33,7 +35,7 @@ func (s PlayerStore) Drop(ctx context.Context) ([]core.Player, error) {
 	}
 
 	for _, p := range oldPlayers {
-		s.bus.PlayerDeleted(ctx, core.EventPlayerDeleted{ID: p.ID})
+		s.bus.PlayerDeleted(core.EventPlayerDeleted{ID: p.ID})
 	}
 
 	return s.List(ctx)
@@ -46,7 +48,10 @@ func (s PlayerStore) List(ctx context.Context) ([]core.Player, error) {
 		return nil, err
 	}
 
-	return lo.Map(db.Players, func(f playerModel, _ int) core.Player { return convertPlayer(f) }), nil
+	players := lo.Map(db.Players, func(f playerModel, _ int) core.Player { return convertPlayer(f) })
+	slices.SortFunc(players, func(a, b core.Player) int { return cmp.Compare(a.ID, b.ID) })
+
+	return players, nil
 }
 
 // Delete implements models.PlayerStore.
@@ -69,7 +74,7 @@ func (s PlayerStore) Delete(ctx context.Context, id int64) error {
 		return err
 	}
 
-	s.bus.PlayerDeleted(ctx, core.EventPlayerDeleted{ID: id})
+	s.bus.PlayerDeleted(core.EventPlayerDeleted{ID: id})
 
 	return nil
 }
@@ -95,7 +100,7 @@ func (s PlayerStore) Update(ctx context.Context, player core.Player) (core.Playe
 	}
 
 	if tokenUpdated {
-		s.bus.PlayerTokenUpdated(ctx, core.EventPlayerTokenUpdated{ID: player.ID})
+		s.bus.PlayerTokenUpdated(core.EventPlayerTokenUpdated{ID: player.ID})
 	}
 
 	return player, nil
@@ -119,7 +124,7 @@ func (s PlayerStore) Create(ctx context.Context, player core.Player) (core.Playe
 		return core.Player{}, err
 	}
 
-	s.bus.PlayerCreated(ctx, core.EventPlayerCreated{ID: player.ID})
+	s.bus.PlayerCreated(core.EventPlayerCreated{ID: player.ID})
 
 	return player, nil
 }

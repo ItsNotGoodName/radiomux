@@ -17,6 +17,7 @@ func (p Player) CompareToken(token string) bool {
 type PlayerStore interface {
 	Create(ctx context.Context, req Player) (Player, error)
 	Get(ctx context.Context, id int64) (Player, error)
+	// List MUST return a sorted list of players by the ID.
 	List(ctx context.Context) ([]Player, error)
 	Update(ctx context.Context, req Player) (Player, error)
 	Delete(ctx context.Context, id int64) error

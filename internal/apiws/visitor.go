@@ -1,11 +1,14 @@
 package apiws
 
-import "errors"
+import (
+	"context"
+	"errors"
+)
 
 var errVisitorEmpty = errors.New("visitor empty")
 
 type visitor interface {
-	Visit() ([]byte, error)
+	Visit(ctx context.Context) ([]byte, error)
 	HasMore() bool
 }
 
@@ -19,9 +22,9 @@ func newVisitors(visitors ...visitor) vistors {
 	}
 }
 
-func (c vistors) Visit() ([]byte, error) {
+func (c vistors) Visit(ctx context.Context) ([]byte, error) {
 	for _, v := range c.visitors {
-		data, err := v.Visit()
+		data, err := v.Visit(ctx)
 		if err != nil {
 			if errors.Is(err, errVisitorEmpty) {
 				continue

@@ -12,14 +12,16 @@ import (
 )
 
 type Server struct {
-	stateService *android.StateService
-	playerStore  core.PlayerStore
+	stateService       *android.StateService
+	playerStore        core.PlayerStore
+	notificationServer *NotificationServer
 }
 
-func NewServer(stateService *android.StateService, playerStore core.PlayerStore) Server {
+func NewServer(stateService *android.StateService, playerStore core.PlayerStore, notificationServer *NotificationServer) Server {
 	return Server{
-		stateService: stateService,
-		playerStore:  playerStore,
+		stateService:       stateService,
+		playerStore:        playerStore,
+		notificationServer: notificationServer,
 	}
 }
 
@@ -45,16 +47,21 @@ func (s Server) handle(ctx context.Context, conn *websocket.Conn) {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	// We subscribe to all player state changes
+	// Subscribe to all player state changes
 	stateC, stateCDisconnect := s.stateService.Subscribe()
 	defer stateCDisconnect()
 
-	// This allows the client to control when they are ready to receive updates
+	// Subscribe to all notifcations
+	notificationC, notificationCancel := s.notificationServer.Subscribe()
+	defer notificationCancel()
+
+	// Visitors allow the client to control when they are ready to receive updates
 	playerStateVisitor := newPlayerStateVisitor(s.stateService, s.playerStore)
-	visitors := newVisitors(playerStateVisitor)
-	sync := newSignal()
+	bufferVisitor := newBufferVisitor(10)
+	visitors := newVisitors(playerStateVisitor, bufferVisitor)
 
 	// Write pump
+	sync := newSignal()
 	flushC := make(chan chan []byte)
 	go wsWriter(ctx, cancel, conn, log, sync, flushC)
 
@@ -76,7 +83,7 @@ func (s Server) handle(ctx context.Context, conn *websocket.Conn) {
 		case dataC := <-flushC:
 			// Writer
 			ok := func() bool {
-				data, err := visitors.Visit()
+				data, err := visitors.Visit(ctx)
 				if err != nil {
 					if errors.Is(err, errVisitorEmpty) {
 						return true
@@ -110,6 +117,17 @@ func (s Server) handle(ctx context.Context, conn *websocket.Conn) {
 			playerStateVisitor.StateChange(state)
 
 			if playerStateVisitor.HasMore() {
+				sync.Queue()
+			}
+		case notification := <-notificationC:
+			// Notification
+			err := bufferVisitor.Push(notification)
+			if err != nil {
+				log.Err(err).Msg("Failed to pus to buffer")
+				return
+			}
+
+			if bufferVisitor.HasMore() {
 				sync.Queue()
 			}
 		}

@@ -63,7 +63,7 @@ func (s PresetStore) Delete(ctx context.Context, id int64) error {
 		return err
 	}
 
-	s.bus.PlayerDeleted(ctx, core.EventPlayerDeleted{ID: id})
+	s.bus.PlayerDeleted(core.EventPlayerDeleted{ID: id})
 
 	return nil
 }

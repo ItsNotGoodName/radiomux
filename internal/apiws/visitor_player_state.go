@@ -1,9 +1,11 @@
 package apiws
 
 import (
+	"cmp"
 	"context"
 	"encoding/json"
 	"errors"
+	"slices"
 
 	"github.com/ItsNotGoodName/radiomux/internal"
 	"github.com/ItsNotGoodName/radiomux/internal/android"
@@ -74,7 +76,7 @@ func (ps *playerStateVisitor) StateChange(msg android.StateChange) {
 	ps.queue(true)
 }
 
-func (ps *playerStateVisitor) Visit() ([]byte, error) {
+func (ps *playerStateVisitor) Visit(ctx context.Context) ([]byte, error) {
 	if ps.popEmpty() {
 		// No state needs updating
 		return nil, errVisitorEmpty
@@ -84,17 +86,28 @@ func (ps *playerStateVisitor) Visit() ([]byte, error) {
 
 	if ps.popRefresh() {
 		// State needs a full refresh
+
+		// Get players and states
 		playerStates := ps.stateService.List()
-		names := make([]string, len(playerStates))
-		for i := range playerStates {
-			f, err := ps.playerStore.Get(context.TODO(), playerStates[i].ID)
-			if err == nil {
-				names[i] = f.Name
+		playerStatePlayers := make([]core.Player, len(playerStates))
+		{
+			players, err := ps.playerStore.List(ctx)
+			if err != nil {
+				return nil, err
+			}
+			for i := range playerStates {
+				index, found := slices.BinarySearchFunc(players, playerStates[i], func(p core.Player, s android.State) int {
+					return cmp.Compare(p.ID, s.ID)
+				})
+				if found {
+					playerStatePlayers[index] = players[index]
+				}
 			}
 		}
 
+		// Create event
 		err := evt.MergeEventDataPlayerState(openapi.EventDataPlayerState{
-			Data: openapi.ConvertPlayerStates(playerStates, names),
+			Data: openapi.ConvertPlayerStates(playerStates, playerStatePlayers),
 		})
 		if err != nil {
 			return nil, err
@@ -107,11 +120,12 @@ func (ps *playerStateVisitor) Visit() ([]byte, error) {
 		}
 		ps.playerStateChanges = states
 	} else {
-		// We just need to send partial state
+		// Just need to send partial state
+
 		partials := []openapi.PlayerStatePartial{}
 		for i := range ps.playerStateChanges {
 			if ps.playerStateChanges[i].changed == diff.ChangedNone {
-				// We don't need to update
+				// Don't need to update
 				continue
 			}
 
