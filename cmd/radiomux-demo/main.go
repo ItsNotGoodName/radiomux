@@ -86,10 +86,10 @@ func run(cfg *demo.Config) lieut.Executor {
 				demo.NewStateService(
 					rpc.NewStateService(androidController, presetStore)))
 
+		// Bootstrap
 		if _, err = androidStateStore.Sync(ctx); err != nil {
-			return err
+			return fmt.Errorf("failed to sync android state store: %w", err)
 		}
-
 		for _, mockPlayer := range demo.MockPlayers {
 			mock := androidmock.NewMock(mockPlayer.ID, androidController, androidStateService)
 			super.Add(mock)

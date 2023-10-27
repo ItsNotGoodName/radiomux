@@ -62,15 +62,15 @@ func run(cfg *config.Config) lieut.Executor {
 
 		// Bus
 		bus := bus.New()
+		androidStatePubSub := android.NewStateMemPubSub()
 
 		// Store
 		jsonStore := file.NewStore(cfg.File)
 		playerStore := file.NewPlayerStore(jsonStore, bus)
 		presetStore := file.NewPresetStore(jsonStore, bus)
+		androidStateStore := android.NewStateMemStore(androidStatePubSub, bus, playerStore)
 
 		// Services
-		androidStatePubSub := android.NewStateMemPubSub()
-		androidStateStore := android.NewStateMemStore(androidStatePubSub, bus, playerStore)
 		androidStateService := android.NewStateService(androidStatePubSub, androidStateStore)
 		androidController := android.NewController(androidStateService, bus)
 		androidWSServer := androidws.NewServer(playerStore, androidController, androidStateService, cfg.HTTPURL)
@@ -87,8 +87,9 @@ func run(cfg *config.Config) lieut.Executor {
 			NewStateServiceServer(rpc.
 				NewStateService(androidController, presetStore))
 
+		// Bootstrap
 		if _, err = androidStateStore.Sync(ctx); err != nil {
-			return err
+			return fmt.Errorf("failed to sync android state store: %w", err)
 		}
 
 		// HTTP
