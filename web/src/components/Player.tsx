@@ -1,13 +1,13 @@
 import { style } from "@macaron-css/core";
 import { styled } from "@macaron-css/solid";
-import { RiDeviceDeviceFill, RiMediaPauseFill, RiMediaPlayFill, RiMediaVolumeDownFill, RiMediaVolumeMuteFill, RiMediaVolumeUpFill, RiSystemRefreshFill } from "solid-icons/ri";
+import { RiDeviceDeviceFill, RiMediaPauseFill, RiMediaPlayFill, RiMediaSkipBackFill, RiMediaSkipForwardFill, RiMediaStopFill, RiMediaVolumeDownFill, RiMediaVolumeMuteFill, RiMediaVolumeUpFill, RiSystemRefreshFill } from "solid-icons/ri";
 import { For, Show, } from "solid-js";
 import { Button } from "~/ui/Button";
 import { minScreen, mixin, theme, tw } from "~/ui/theme";
 import { As, Popover, Progress, } from "@kobalte/core";
 import { durationHumanize } from "~/common";
 import { DropdownMenuArrow, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuRoot, DropdownMenuTrigger } from "~/ui/DropdownMenu";
-import { PopoverContent } from "~/ui/Popover";
+import { PopoverContent, PopoverPortal, PopoverRoot, PopoverTrigger } from "~/ui/Popover";
 
 const Root = styled("div", {
   base: {
@@ -60,6 +60,7 @@ const ContentChild = styled("div", {
 
 const MainControl = styled("div", {
   base: {
+    ...mixin.row("2")
   }
 })
 
@@ -89,6 +90,7 @@ export const ConnectionIndicator = styled("div", {
   base: {
     ...mixin.size("4"),
     borderRadius: theme.borderRadius.full,
+    flexShrink: 0,
   },
   variants: {
     connected: {
@@ -125,6 +127,10 @@ const VolumeGroup = styled("div", {
   }
 })
 
+const iconClass = style({
+  ...mixin.size("6")
+})
+
 const IconRiDeviceDeviceFill = styled(RiDeviceDeviceFill, {
   base: {
     ...mixin.size("6")
@@ -151,9 +157,73 @@ const IconRiSystemRefreshFill = styled(RiSystemRefreshFill, {
   }
 })
 
-const PlayerTableHead = styled("th", {
+const IconRiMediaVolumeMuteFill = styled(RiMediaVolumeMuteFill, {
+  base: {
+    ...mixin.size("6"),
+    color: "red"
+  }
+})
+
+const MediaTable = styled("table", {
+  base: {
+    borderCollapse: "collapse",
+    width: "100%",
+  }
+})
+
+const MediaTableRow = styled("tr", {
+  base: {
+    borderBottom: `1px solid ${theme.color.border}`,
+    selectors: {
+      [`&:last-child`]: {
+        borderBottom: "none"
+      },
+    }
+  }
+})
+
+const MediaTableHead = styled("th", {
   base: {
     textAlign: "left",
+    padding: theme.space[1],
+  }
+})
+
+const MediaTableData = styled("td", {
+  base: {
+    padding: theme.space[1],
+  }
+})
+
+const MediaControlPopoverContent = styled("div", {
+  base: {
+    ...mixin.stack("2"),
+    padding: theme.space[2],
+    width: theme.space[48]
+  }
+})
+
+const MediaControlPopoverControls = styled("div", {
+  base: {
+    ...mixin.row("2"),
+    flexWrap: "wrap",
+    justifyContent: "center",
+    "@media": {
+      [minScreen.lg]: {
+        display: "none"
+      },
+    }
+  }
+})
+
+const MediaControls = styled("div", {
+  base: {
+    display: "none",
+    "@media": {
+      [minScreen.lg]: {
+        ...mixin.row("2")
+      },
+    }
   }
 })
 
@@ -181,24 +251,24 @@ type Props = {
     name: string
     connected: boolean
   }>
-  onPlayClick?: () => void
-  playDisabled?: boolean,
+  onPlayPauseClick?: () => void
+  playPauseDisabled?: boolean,
+  onStopClick?: () => void
+  stopDisabled?: boolean,
   onVolumeUpClick?: () => void
   onVolumeDownClick?: () => void
   onVolumeClick?: () => void
-  onPlayerClick: (id: number) => void
-  onSeekClick?: () => void
-  seekDisabled?: boolean
+  onPlayerChange: (id: number) => void
+  onSeekBackClick?: () => void
+  seekBackDisabled?: boolean
+  onSeekForwardClick?: () => void
+  seekForwardDisabled?: boolean
 }
-
 
 export function Player(props: Props) {
   const playerDisabled = () => props.player == undefined || !props.player.connected || !props.player.ready
 
-  const seekDisabled = () => playerDisabled() || props.seekDisabled
-
-  const playDisabled = () => playerDisabled() || props.playDisabled || props.seekDisabled
-  const playStatus = () => {
+  const playPauseTitle = () => {
     if (props.player == undefined) {
       return "Unknown"
     }
@@ -209,9 +279,9 @@ export function Player(props: Props) {
     <Root>
       <Content>
         <ContentChild>
-          <div class={style({ display: "flex", alignItems: "center" })}>
-            <Popover.Root>
-              <Popover.Trigger asChild>
+          <div>
+            <PopoverRoot placement="top">
+              <PopoverTrigger asChild>
                 <As component={Button} disabled={playerDisabled()} title="Media" size="icon" variant="ghost" class={style({
                   color: theme.color.cardForeground,
                   borderRadius: theme.borderRadius.full,
@@ -219,48 +289,50 @@ export function Player(props: Props) {
                 })}>
                   <Thumbnail src="/favicon.svg" alt="Media Thumbnail" />
                 </As>
-              </Popover.Trigger>
-              <Popover.Portal>
+              </PopoverTrigger>
+              <PopoverPortal>
                 <PopoverContent class={style({ padding: theme.space[2], width: theme.size.sm })}>
                   <Popover.Arrow />
-                  <Show when={props.player}>
+                  <Show when={!playerDisabled() && props.player}>
                     {player =>
                       <div class={style({ overflowX: "auto", })}>
-                        <table class={style({ borderCollapse: "collapse", })}>
+                        <MediaTable>
                           <tbody>
-                            <tr>
-                              <PlayerTableHead>Title</PlayerTableHead>
-                              <td>{player().title}</td>
-                            </tr>
-                            <tr>
-                              <PlayerTableHead>Genre</PlayerTableHead>
-                              <td>{player().genre}</td>
-                            </tr>
-                            <tr>
-                              <PlayerTableHead>Station</PlayerTableHead>
-                              <td>{player().station}</td>
-                            </tr>
-                            <tr>
-                              <PlayerTableHead>URI</PlayerTableHead>
-                              <td>{player().uri}</td>
-                            </tr>
+                            <MediaTableRow>
+                              <MediaTableHead>Title</MediaTableHead>
+                              <MediaTableData>{player().title}</MediaTableData>
+                            </MediaTableRow>
+                            <MediaTableRow>
+                              <MediaTableHead>Genre</MediaTableHead>
+                              <MediaTableData>{player().genre}</MediaTableData>
+                            </MediaTableRow>
+                            <MediaTableRow>
+                              <MediaTableHead>Station</MediaTableHead>
+                              <MediaTableData>{player().station}</MediaTableData>
+                            </MediaTableRow>
+                            <MediaTableRow>
+                              <MediaTableHead>URI</MediaTableHead>
+                              <MediaTableData>{player().uri}</MediaTableData>
+                            </MediaTableRow>
                             <Show when={player().playback_error}>
-                              <tr>
-                                <PlayerTableHead>Error</PlayerTableHead>
-                                <td>{player().playback_error}</td>
-                              </tr>
+                              <MediaTableRow>
+                                <MediaTableHead>Error</MediaTableHead>
+                                <MediaTableData>{player().playback_error}</MediaTableData>
+                              </MediaTableRow>
                             </Show>
                           </tbody>
-                        </table>
+                        </MediaTable>
                       </div>
                     }
                   </Show>
                 </PopoverContent>
-              </Popover.Portal>
-            </Popover.Root>
+              </PopoverPortal>
+            </PopoverRoot>
           </div>
-          <div class={style({ overflowX: "hidden", flex: 1 })}>
-            <Text title={props.player?.title}>{props.player?.title}</Text>
+          <div class={style({ flex: 1, display: "flex", flexDirection: "column", overflowX: "hidden" })}>
+            <div class={style({ flex: 1, display: "flex" })}>
+              <Text title={props.player?.title}>{props.player?.title}</Text>
+            </div>
             <div class={style({ ...mixin.row("1"), alignItems: 'center' })}>
               <Show when={props.player?.timeline_is_seekable && !props.player.timeline_is_placeholder}>
                 <Text>{durationHumanize(0)}</Text>
@@ -273,52 +345,94 @@ export function Player(props: Props) {
               </Show>
             </div>
           </div>
-          <Button size="icon" variant="ghost" title="Seek" disabled={seekDisabled()} onClick={props.onSeekClick} class={style({ marginLeft: "auto" })}>
-            <IconRiSystemRefreshFill loading={props.player?.loading || props.seekDisabled} />
-          </Button>
+          <PopoverRoot placement="top">
+            <PopoverTrigger asChild>
+              <As component={Button} size="icon" variant="ghost" title="Media Controls" disabled={playerDisabled()}>
+                <IconRiSystemRefreshFill loading={props.player?.loading || props.seekBackDisabled} />
+              </As>
+            </PopoverTrigger>
+            <PopoverPortal>
+              <PopoverContent>
+                <Popover.Arrow />
+                <MediaControlPopoverContent>
+                  <div>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Fugiat voluptatibus qui aliquam obcaecati distinctio consequuntur eveniet reprehenderit debitis. Distinctio nam delectus laborum exercitationem dicta ipsa rerum dolor maxime cum maiores!</div>
+                  <Show when={!playerDisabled()}>
+                    <MediaControlPopoverControls>
+                      <Button size="icon" variant="ghost" onClick={props.onSeekBackClick} disabled={props.seekBackDisabled} title="Seek Back">
+                        <RiMediaSkipBackFill class={iconClass} />
+                      </Button>
+                      <Button size="icon" variant="ghost" onClick={props.onStopClick} disabled={props.stopDisabled} title="Stop">
+                        <RiMediaStopFill class={iconClass} />
+                      </Button>
+                      <Button size="icon" variant="ghost" onClick={props.onSeekForwardClick} disabled={props.seekForwardDisabled} title="Seek Forward">
+                        <RiMediaSkipForwardFill class={iconClass} />
+                      </Button>
+                    </MediaControlPopoverControls>
+                  </Show>
+                </MediaControlPopoverContent>
+              </PopoverContent>
+            </PopoverPortal>
+          </PopoverRoot>
         </ContentChild>
         <ContentChild>
           <MainControl>
             <Button
               size="icon"
-              variant="ghost"
-              disabled={playDisabled()}
-              onClick={props.onPlayClick}
-              title={playStatus()}
+              disabled={playerDisabled() || props.playPauseDisabled}
+              onClick={props.onPlayPauseClick}
+              title={playPauseTitle()}
+              class={style({
+                borderRadius: theme.borderRadius.full
+              })}
             >
               <Show when={props.player?.playing} fallback={
-                <RiMediaPlayFill class={style({ ...mixin.size("10") })} />
+                <RiMediaPlayFill class={iconClass} />
               }>
-                <RiMediaPauseFill class={style({ ...mixin.size("10") })} />
+                <RiMediaPauseFill class={iconClass} />
               </Show>
             </Button>
+            <Show when={!playerDisabled()}>
+              <MediaControls>
+                <Button size="icon" variant="ghost" onClick={props.onSeekBackClick} disabled={props.seekBackDisabled} title="Seek Back">
+                  <RiMediaSkipBackFill class={iconClass} />
+                </Button>
+                <Button size="icon" variant="ghost" onClick={props.onStopClick} disabled={props.stopDisabled} title="Stop">
+                  <RiMediaStopFill class={iconClass} />
+                </Button>
+                <Button size="icon" variant="ghost" onClick={props.onSeekForwardClick} disabled={props.seekForwardDisabled} title="Seek Forward">
+                  <RiMediaSkipForwardFill class={iconClass} />
+                </Button>
+              </MediaControls>
+            </Show>
           </MainControl>
           <SubControl>
-            <Show when={props.player} fallback={<PlayerGroup />}>
-              {player => (
-                <>
-                  <PlayerGroup>
-                    <div>
-                      <ConnectionIndicator connected={player().connected} disconnected={!player().connected && !player().ready} connecting={!player().ready && player().connected} />
-                    </div>
+            <PlayerGroup>
+              <Show when={props.player}>
+                {player => (
+                  <>
+                    <ConnectionIndicator connected={player().connected} disconnected={!player().connected && !player().ready} connecting={!player().ready && player().connected} />
                     <Text title={player().name}>{player().name}</Text>
-                  </PlayerGroup>
-                  <VolumeGroup>
-                    <Button disabled={playerDisabled()} size="icon" variant="ghost" onClick={props.onVolumeDownClick} title="Volume Down">
-                      <RiMediaVolumeDownFill class={style({ ...mixin.size("6") })} />
-                    </Button>
-                    <Button disabled={playerDisabled()} size="icon" variant="ghost" onClick={props.onVolumeClick} title={player().muted ? "Volume Muted" : undefined}>
-                      <Show when={!player().muted} fallback={
-                        <RiMediaVolumeMuteFill class={style({ ...mixin.size("6"), color: "red" })} />
-                      }>
-                        {player().volume}
-                      </Show>
-                    </Button>
-                    <Button disabled={playerDisabled()} size="icon" variant="ghost" onClick={props.onVolumeUpClick} title="Volume Up">
-                      <RiMediaVolumeUpFill class={style({ ...mixin.size("6") })} />
-                    </Button>
-                  </VolumeGroup>
-                </>
+                  </>
+                )}
+              </Show>
+            </PlayerGroup>
+            <Show when={props.player}>
+              {player => (
+                <VolumeGroup>
+                  <Button disabled={playerDisabled()} size="icon" variant="ghost" onClick={props.onVolumeDownClick} title="Volume Down">
+                    <RiMediaVolumeDownFill class={iconClass} />
+                  </Button>
+                  <Button disabled={playerDisabled()} size="icon" variant="ghost" onClick={props.onVolumeClick} title={player().muted ? "Volume Muted" : "Volume " + player().volume}>
+                    <Show when={!player().muted} fallback={
+                      <IconRiMediaVolumeMuteFill />
+                    }>
+                      {player().volume}
+                    </Show>
+                  </Button>
+                  <Button disabled={playerDisabled()} size="icon" variant="ghost" onClick={props.onVolumeUpClick} title="Volume Up">
+                    <RiMediaVolumeUpFill class={iconClass} />
+                  </Button>
+                </VolumeGroup>
               )}
             </Show>
             <DropdownMenuRoot>
@@ -334,14 +448,12 @@ export function Player(props: Props) {
                     {player => (
                       <DropdownMenuItem asChild closeOnSelect={false}>
                         <As component={Button}
-                          onClick={[props.onPlayerClick, player.id]}
+                          onClick={[props.onPlayerChange, player.id]}
                           size="sm"
                           variant={player.id == props.player?.id ? "default" : "ghost"}
                           class={style({ ...mixin.row("2",), width: "100%", justifyContent: "start" })}
                         >
-                          <div>
-                            <ConnectionIndicator connected={player.connected} disconnected={!player.connected} />
-                          </div>
+                          <ConnectionIndicator connected={player.connected} disconnected={!player.connected} />
                           <Text title={player.name}>{player.name}</Text>
                         </As>
                       </DropdownMenuItem>
@@ -353,6 +465,6 @@ export function Player(props: Props) {
           </SubControl>
         </ContentChild>
       </Content>
-    </Root >
+    </Root>
   )
 }

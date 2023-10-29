@@ -235,14 +235,16 @@ function FooterPlayer() {
     <Player
       player={currentPlayerState()}
       players={playerStates}
-      onPlayClick={() => stateActionSetMutation.mutateAsync({ id: currentPlayerId(), action: currentPlayerState()?.playing ? StateAction.PUASE : StateAction.PLAY }).catch(toastWebrpcError)}
-      playDisabled={stateActionSetMutation.isLoading}
+      onPlayPauseClick={() => stateActionSetMutation.mutateAsync({ id: currentPlayerId(), action: currentPlayerState()?.playing ? StateAction.PUASE : StateAction.PLAY }).catch(toastWebrpcError)}
+      playPauseDisabled={stateActionSetMutation.isLoading}
+      onStopClick={() => stateActionSetMutation.mutateAsync({ id: currentPlayerId(), action: StateAction.STOP }).catch(toastWebrpcError)}
+      stopDisabled={stateActionSetMutation.isLoading}
       onVolumeDownClick={() => stateVolumeSetMutation.mutateAsync({ id: currentPlayerId(), delta: -1 }).catch(toastWebrpcError)}
       onVolumeUpClick={() => stateVolumeSetMutation.mutateAsync({ id: currentPlayerId(), delta: 1 }).catch(toastWebrpcError)}
       onVolumeClick={() => stateVolumeSetMutation.mutateAsync({ id: currentPlayerId(), mute: !currentPlayerState()?.muted }).catch(toastWebrpcError)}
-      onPlayerClick={(id) => setCurrentPlayerId((prev) => prev == id ? 0 : id)}
-      onSeekClick={() => stateActionSetMutation.mutateAsync({ id: currentPlayerId(), action: StateAction.SEEK }).catch(toastWebrpcError)}
-      seekDisabled={stateActionSetMutation.isLoading}
+      onPlayerChange={(id) => setCurrentPlayerId((prev) => prev == id ? 0 : id)}
+      onSeekBackClick={() => stateActionSetMutation.mutateAsync({ id: currentPlayerId(), action: StateAction.SEEK }).catch(toastWebrpcError)}
+      seekBackDisabled={stateActionSetMutation.isLoading}
     />
   )
 }
