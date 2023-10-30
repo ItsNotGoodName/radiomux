@@ -111,7 +111,13 @@ function ViewDialog(props: { disabled: boolean, id?: number }) {
               // Queries
               const player = usePlayerGetQuery(id)
               const playerWsURLQuery = usePlayerWsURLQuery(id)
-              const imgUrl = () => playerQrUrl(id())
+              const imgUrl = () => {
+
+                // this is tracking changes
+                playerWsURLQuery.data
+
+                return playerQrUrl(id())
+              }
 
               // Mutations
               const playerTokenRegenerateMutation = usePlayerTokenRegenerateMutation()

@@ -70,12 +70,16 @@ func NewStore(filePath string) *Store {
 }
 
 func (s *Store) Read() (*db, error) {
+	db := &db{}
+
 	b, err := os.ReadFile(s.filePath)
 	if err != nil {
+		if os.IsNotExist(err) {
+			return db, nil
+		}
 		return nil, err
 	}
 
-	db := &db{}
 	if err := json.Unmarshal(b, db); err != nil {
 		return nil, err
 	}
@@ -96,7 +100,7 @@ func (s *Store) Update(fn func(db *db) error) error {
 		return err
 	}
 
-	b, err := json.Marshal(db)
+	b, err := json.MarshalIndent(db, "", "  ")
 	if err != nil {
 		return err
 	}

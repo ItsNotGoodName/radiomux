@@ -4,7 +4,7 @@
 version: "3"
 
 tasks:
-  clean-dist:
+  clean:
     cmds:
       - rm -rf dist
       - mkdir -p dist
@@ -44,7 +44,7 @@ tasks:
       MAIN: "{{.PACKAGE_NAME}}/cmd/radiomux"
 
   build:
-    deps: [clean-dist, build-apk, build-server]
+    deps: [clean, build-apk, build-server]
     dir: dist
     cmds:
       - for: { var: FILES }

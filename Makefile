@@ -1,12 +1,15 @@
 -include .env
 
-_: init run
-
-init:
+_:
 	mkdir web/dist -p && touch web/dist/index.html
+
+generate:
+	go generate ./...
 
 run:
 	go run ./cmd/radiomux
+
+preview: generate run
 
 gen: gen-proto gen-openapi gen-webrpc
 
