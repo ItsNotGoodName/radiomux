@@ -40,11 +40,14 @@ jobs:
         with:
           go-version: "1.21"
 
-      - name: Build
-        uses: magefile/mage-action@v3
+      - name: Set up Task
+        uses: arduino/setup-task@v1
         with:
-          version: latest
-          args: build
+          version: 3.x
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build
+        run: task build
 
       - name: Publish
         run: |

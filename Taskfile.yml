@@ -1,0 +1,60 @@
+# yaml-language-server: https://taskfile.dev/schema.json
+# https://taskfile.dev
+
+version: "3"
+
+tasks:
+  clean-dist:
+    cmds:
+      - rm -rf dist
+      - mkdir -p dist
+
+  build-apk:
+    internal: true
+    dir: android
+    cmds:
+      - mkdir -p dist
+      - chmod +x gradlew
+      - ./gradlew build
+      - ./gradlew assembleDebug
+      - cp app/build/outputs/apk/debug/app-debug.apk ../dist/radiomuxplayer-debug.apk
+
+  build-server:
+    internal: true
+    cmds:
+      - go mod tidy
+      - go generate ./...
+      - GOOS=linux GOARCH=amd64   go build -ldflags="{{.LDFLAGS}}" -o ./dist/radiomux_linux_amd64       {{.MAIN}}
+      - GOOS=linux GOARCH=arm     go build -ldflags="{{.LDFLAGS}}" -o ./dist/radiomux_linux_arm         {{.MAIN}}
+      - GOOS=linux GOARCH=arm64   go build -ldflags="{{.LDFLAGS}}" -o ./dist/radiomux_linux_arm64       {{.MAIN}}
+      - GOOS=darwin GOARCH=arm64  go build -ldflags="{{.LDFLAGS}}" -o ./dist/radiomux_darwin_arm64      {{.MAIN}}
+      - GOOS=windows GOARCH=amd64 go build -ldflags="{{.LDFLAGS}}" -o ./dist/radiomux_windows_amd64.exe {{.MAIN}}
+    vars:
+      CGO_ENABLED: 0
+      PACKAGE_NAME: "github.com/ItsNotGoodName/radiomux"
+
+      BUILD_PACKAGE_NAME: "{{.PACKAGE_NAME}}/internal/build/build"
+      BUILD_VERSION: "nightly"
+      BUILD_DATE: '{{now | date "2006-01-02T15:04:05Z07:00"}}'
+      BUILD_COMMIT:
+        sh: git rev-parse HEAD
+      BUILD_REPO_URL: "https://{{.PACKAGE_NAME}}/"
+
+      LDFLAGS: -s -w -X {{.BUILD_PACKAGE_NAME}}.Version={{.BUILD_VERSION}} -X {{.BUILD_PACKAGE_NAME}}.Commit={{.BUILD_COMMIT}} -X {{.BUILD_PACKAGE_NAME}}.Date={{.BUILD_DATE}} -X {{.BUILD_PACKAGE_NAME}}.RepoURL={{.BUILD_REPO_URL}}
+      MAIN: "{{.PACKAGE_NAME}}/cmd/radiomux"
+
+  build:
+    deps: [clean-dist, build-apk, build-server]
+    dir: dist
+    cmds:
+      - for: { var: FILES }
+        cmd: cp ../{{.ITEM}} .
+      - mkdir -p artifacts
+      - cp radiomuxplayer-debug.apk artifacts/
+      - tar -czf artifacts/radiomux_linux_amd64.tar.gz  radiomux_linux_amd64       {{.FILES}}
+      - tar -czf artifacts/radiomux_linux_arm.tar.gz    radiomux_linux_arm         {{.FILES}}
+      - tar -czf artifacts/radiomux_linux_arm64.tar.gz  radiomux_linux_arm64       {{.FILES}}
+      - tar -czf artifacts/radiomux_darwin_arm64.tar.gz radiomux_darwin_arm64      {{.FILES}}
+      - zip artifacts/radiomux_windows_amd64.zip        radiomux_windows_amd64.exe {{.FILES}}
+    vars:
+      FILES: README.md LICENSE

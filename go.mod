@@ -7,7 +7,6 @@ require (
 	github.com/caarlos0/env/v9 v9.0.0
 	github.com/gorilla/websocket v1.5.0
 	github.com/labstack/echo/v4 v4.11.1
-	github.com/magefile/mage v1.15.0
 	github.com/oapi-codegen/runtime v1.0.0
 	github.com/rs/zerolog v1.30.0
 	github.com/samber/lo v1.38.1

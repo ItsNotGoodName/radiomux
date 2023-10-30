@@ -10,7 +10,7 @@ run:
 
 gen: gen-proto gen-openapi gen-webrpc
 
-tooling: tooling-air tooling-goreleaser tooling-protoc-gen-go tooling-oapi-codegen tooling-webrpc tooling-java tooling-mage
+tooling: tooling-air tooling-goreleaser tooling-protoc-gen-go tooling-oapi-codegen tooling-webrpc tooling-java tooling-taskfile
 
 # Docker
 
@@ -61,5 +61,5 @@ tooling-webrpc:
 tooling-java:
 	$(info Please install Java 17.)
 
-tooling-mage:
-	go install github.com/magefile/mage@latest
+tooling-taskfile:
+	go install github.com/go-task/task/v3/cmd/task@latest
