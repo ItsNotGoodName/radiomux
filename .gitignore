@@ -21,6 +21,8 @@
 go.work
 
 tmp
+.env
+dist
 radiomux.json
 radiomux
-.env
+radiomux-demo

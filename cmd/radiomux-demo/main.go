@@ -34,7 +34,7 @@ func main() {
 	app := lieut.NewSingleCommandApp(
 		lieut.AppInfo{
 			Name:    "radiomux",
-			Version: build.Current.Version,
+			Version: build.Version,
 		},
 		run(cfg),
 		flags,
@@ -111,24 +111,6 @@ func run(cfg *demo.Config) lieut.Executor {
 	}
 }
 
-var (
-	builtBy    = "unknown"
-	commit     = ""
-	date       = ""
-	version    = "dev"
-	repoURL    = "https://github.com/ItsNotGoodName/radiomux"
-	releaseURL = ""
-)
-
 func init() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
-
-	build.Current = build.Build{
-		BuiltBy:    builtBy,
-		Commit:     commit,
-		Date:       date,
-		Version:    version,
-		RepoURL:    repoURL,
-		ReleaseURL: releaseURL,
-	}
 }

@@ -1,0 +1,53 @@
+# yaml-language-server: https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/github-workflow.json
+name: Deploy Nightly
+on:
+  schedule:
+    - cron: "0 2 * * *" # run at 2 AM UTC
+  workflow_dispatch:
+
+jobs:
+  nightly:
+    env:
+      GH_REPO: ${{ github.repository }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.21"
+
+      - name: Build
+        uses: magefile/mage-action@v3
+        with:
+          version: latest
+          args: build
+
+      - name: Publish
+        run: |
+          gh release delete nightly --yes || true
+          git push origin :nightly || true
+          gh release create --prerelease --title "Nightly" --notes "" --target $GITHUB_SHA nightly dist/artifacts/*
