@@ -24,13 +24,14 @@ tasks:
     cmds:
       - go mod tidy
       - go generate ./...
-      - GOOS=linux GOARCH=amd64   go build -ldflags="{{.LDFLAGS}}" -o ./dist/radiomux_linux_amd64       {{.MAIN}}
-      - GOOS=linux GOARCH=arm     go build -ldflags="{{.LDFLAGS}}" -o ./dist/radiomux_linux_arm         {{.MAIN}}
-      - GOOS=linux GOARCH=arm64   go build -ldflags="{{.LDFLAGS}}" -o ./dist/radiomux_linux_arm64       {{.MAIN}}
-      - GOOS=darwin GOARCH=arm64  go build -ldflags="{{.LDFLAGS}}" -o ./dist/radiomux_darwin_arm64      {{.MAIN}}
-      - GOOS=windows GOARCH=amd64 go build -ldflags="{{.LDFLAGS}}" -o ./dist/radiomux_windows_amd64.exe {{.MAIN}}
-    vars:
+      - GOOS=linux GOARCH=amd64       go build -ldflags="{{.LDFLAGS}}" -o ./dist/radiomux_Linux_x86_64       {{.MAIN}}
+      - GOOS=linux GOARCH=arm GOARM=7 go build -ldflags="{{.LDFLAGS}}" -o ./dist/radiomux_Linux_armv7        {{.MAIN}}
+      - GOOS=linux GOARCH=arm64       go build -ldflags="{{.LDFLAGS}}" -o ./dist/radiomux_Linux_arm64        {{.MAIN}}
+      - GOOS=darwin GOARCH=arm64      go build -ldflags="{{.LDFLAGS}}" -o ./dist/radiomux_Darwin_arm64       {{.MAIN}}
+      - GOOS=windows GOARCH=amd64     go build -ldflags="{{.LDFLAGS}}" -o ./dist/radiomux_Windows_x86_64.exe {{.MAIN}}
+    env:
       CGO_ENABLED: 0
+    vars:
       PACKAGE_NAME: "github.com/ItsNotGoodName/radiomux"
 
       BUILD_PACKAGE_NAME: "{{.PACKAGE_NAME}}/internal/build/build"
@@ -38,10 +39,16 @@ tasks:
       BUILD_DATE: '{{now | date "2006-01-02T15:04:05Z07:00"}}'
       BUILD_COMMIT:
         sh: git rev-parse HEAD
-      BUILD_REPO_URL: "https://{{.PACKAGE_NAME}}/"
+      BUILD_REPO_URL: "https://{{.PACKAGE_NAME}}"
 
       LDFLAGS: -s -w -X {{.BUILD_PACKAGE_NAME}}.Version={{.BUILD_VERSION}} -X {{.BUILD_PACKAGE_NAME}}.Commit={{.BUILD_COMMIT}} -X {{.BUILD_PACKAGE_NAME}}.Date={{.BUILD_DATE}} -X {{.BUILD_PACKAGE_NAME}}.RepoURL={{.BUILD_REPO_URL}}
       MAIN: "{{.PACKAGE_NAME}}/cmd/radiomux"
+
+  checksum:
+    internal: true
+    dir: dist/artifacts
+    cmds:
+      - sha256sum *.tar.gz *.zip *.apk > checksum.txt
 
   build:
     deps: [clean, build-apk, build-server]
@@ -51,10 +58,11 @@ tasks:
         cmd: cp ../{{.ITEM}} .
       - mkdir -p artifacts
       - cp radiomuxplayer-debug.apk artifacts/
-      - tar -czf artifacts/radiomux_linux_amd64.tar.gz  radiomux_linux_amd64       {{.FILES}}
-      - tar -czf artifacts/radiomux_linux_arm.tar.gz    radiomux_linux_arm         {{.FILES}}
-      - tar -czf artifacts/radiomux_linux_arm64.tar.gz  radiomux_linux_arm64       {{.FILES}}
-      - tar -czf artifacts/radiomux_darwin_arm64.tar.gz radiomux_darwin_arm64      {{.FILES}}
-      - zip artifacts/radiomux_windows_amd64.zip        radiomux_windows_amd64.exe {{.FILES}}
+      - tar -czf artifacts/radiomux_Linux_x86_64.tar.gz radiomux_Linux_x86_64       {{.FILES}}
+      - tar -czf artifacts/radiomux_Linux_armv7.tar.gz  radiomux_Linux_armv7        {{.FILES}}
+      - tar -czf artifacts/radiomux_Linux_arm64.tar.gz  radiomux_Linux_arm64        {{.FILES}}
+      - tar -czf artifacts/radiomux_Darwin_arm64.tar.gz radiomux_Darwin_arm64       {{.FILES}}
+      - zip -q artifacts/radiomux_Windows_x86_64.zip    radiomux_Windows_x86_64.exe {{.FILES}}
+      - task: checksum
     vars:
       FILES: README.md LICENSE
