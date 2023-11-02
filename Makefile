@@ -64,5 +64,5 @@ tooling-webrpc:
 tooling-java:
 	$(info Please install Java 17.)
 
-tooling-taskfile:
+tooling-task:
 	go install github.com/go-task/task/v3/cmd/task@latest

@@ -7,12 +7,9 @@ on:
 
 jobs:
   nightly:
-    env:
-      GH_REPO: ${{ github.repository }}
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     permissions:
       contents: write
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,6 +21,9 @@ jobs:
         with:
           distribution: "temurin"
           java-version: "17"
+
+      - name: Set up zipalign and apksigner
+        run: sudo apt install -y zipalign apksigner
 
       - name: Set up Node
         uses: actions/setup-node@v3
@@ -47,10 +47,16 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
+        env:
+          ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
         run: task build
 
       - name: Publish
+        env:
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release delete nightly --yes || true
           git push origin :nightly || true
-          gh release create --prerelease --title "Nightly" --notes "" --target $GITHUB_SHA nightly dist/artifacts/*
+          gh release create --prerelease --title "Nightly $(date +'%Y-%m-%d')" --notes "" --target $GITHUB_SHA nightly dist/artifacts/*

@@ -15,20 +15,29 @@ tasks:
     cmds:
       - mkdir -p dist
       - chmod +x gradlew
-      - ./gradlew build
-      - ./gradlew assembleDebug
-      - cp app/build/outputs/apk/debug/app-debug.apk ../dist/radiomuxplayer-debug.apk
+      - ./gradlew :app:assembleRelease -x test
+      - rm {{.RELEASE_DIR}}/app-release-unsigned-aligned.apk || true
+      - zipalign -v -p 4 {{.RELEASE_DIR}}/app-release-unsigned.apk {{.RELEASE_DIR}}/app-release-unsigned-aligned.apk
+      - echo $ANDROID_KEYSTORE | base64 --decode > my-release-key.jks
+      - apksigner sign --ks my-release-key.jks --ks-pass env:ANDROID_KEYSTORE_PASSWORD --out {{.RELEASE_DIR}}/app-release.apk {{.RELEASE_DIR}}/app-release-unsigned-aligned.apk
+      - apksigner verify {{.RELEASE_DIR}}/app-release.apk
+      - cp {{.RELEASE_DIR}}/app-release.apk ../dist/radiomuxplayer-release.apk
+    vars:
+      RELEASE_DIR: app/build/outputs/apk/release
+    env:
+      ANDROID_KEYSTORE:
+      ANDROID_KEYSTORE_PASSWORD:
 
   build-server:
     internal: true
     cmds:
       - go mod tidy
       - go generate ./...
-      - GOOS=linux GOARCH=amd64       go build -ldflags="{{.LDFLAGS}}" -o ./dist/radiomux_Linux_x86_64       {{.MAIN}}
-      - GOOS=linux GOARCH=arm GOARM=7 go build -ldflags="{{.LDFLAGS}}" -o ./dist/radiomux_Linux_armv7        {{.MAIN}}
-      - GOOS=linux GOARCH=arm64       go build -ldflags="{{.LDFLAGS}}" -o ./dist/radiomux_Linux_arm64        {{.MAIN}}
-      - GOOS=darwin GOARCH=arm64      go build -ldflags="{{.LDFLAGS}}" -o ./dist/radiomux_Darwin_arm64       {{.MAIN}}
-      - GOOS=windows GOARCH=amd64     go build -ldflags="{{.LDFLAGS}}" -o ./dist/radiomux_Windows_x86_64.exe {{.MAIN}}
+      - GOOS=linux GOARCH=amd64       go build -ldflags="{{.LDFLAGS}}" -o ./dist/radiomux_Linux_x86_64       {{.MAIN_PACKAGE}}
+      - GOOS=linux GOARCH=arm GOARM=7 go build -ldflags="{{.LDFLAGS}}" -o ./dist/radiomux_Linux_armv7        {{.MAIN_PACKAGE}}
+      - GOOS=linux GOARCH=arm64       go build -ldflags="{{.LDFLAGS}}" -o ./dist/radiomux_Linux_arm64        {{.MAIN_PACKAGE}}
+      - GOOS=darwin GOARCH=arm64      go build -ldflags="{{.LDFLAGS}}" -o ./dist/radiomux_Darwin_arm64       {{.MAIN_PACKAGE}}
+      - GOOS=windows GOARCH=amd64     go build -ldflags="{{.LDFLAGS}}" -o ./dist/radiomux_Windows_x86_64.exe {{.MAIN_PACKAGE}}
     env:
       CGO_ENABLED: 0
     vars:
@@ -42,7 +51,7 @@ tasks:
       BUILD_REPO_URL: "https://{{.PACKAGE_NAME}}"
 
       LDFLAGS: -s -w -X {{.BUILD_PACKAGE_NAME}}.Version={{.BUILD_VERSION}} -X {{.BUILD_PACKAGE_NAME}}.Commit={{.BUILD_COMMIT}} -X {{.BUILD_PACKAGE_NAME}}.Date={{.BUILD_DATE}} -X {{.BUILD_PACKAGE_NAME}}.RepoURL={{.BUILD_REPO_URL}}
-      MAIN: "{{.PACKAGE_NAME}}/cmd/radiomux"
+      MAIN_PACKAGE: "{{.PACKAGE_NAME}}/cmd/radiomux"
 
   checksum:
     internal: true
@@ -57,7 +66,7 @@ tasks:
       - for: { var: FILES }
         cmd: cp ../{{.ITEM}} .
       - mkdir -p artifacts
-      - cp radiomuxplayer-debug.apk artifacts/
+      - cp radiomuxplayer-release.apk artifacts/
       - tar -czf artifacts/radiomux_Linux_x86_64.tar.gz radiomux_Linux_x86_64       {{.FILES}}
       - tar -czf artifacts/radiomux_Linux_armv7.tar.gz  radiomux_Linux_armv7        {{.FILES}}
       - tar -czf artifacts/radiomux_Linux_arm64.tar.gz  radiomux_Linux_arm64        {{.FILES}}
