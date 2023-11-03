@@ -7,7 +7,7 @@ tasks:
   clean:
     cmds:
       - rm -rf dist
-      - mkdir -p dist
+      - mkdir -p dist/artifacts
 
   build-apk:
     internal: true
@@ -62,28 +62,33 @@ tasks:
       LDFLAGS: -s -w -X {{.BUILD_PACKAGE_NAME}}.Version={{.BUILD_VERSION}} -X {{.BUILD_PACKAGE_NAME}}.Commit={{.BUILD_COMMIT}} -X {{.BUILD_PACKAGE_NAME}}.Date={{.BUILD_DATE}} -X {{.BUILD_PACKAGE_NAME}}.RepoURL={{.BUILD_REPO_URL}}
       MAIN_PACKAGE: "{{.PACKAGE_NAME}}/cmd/radiomux"
 
-  checksum:
+  compile-artifacts:
     internal: true
-    dir: dist/artifacts
+    dir: dist
     cmds:
-      - sha256sum *.tar.gz *.zip *.apk > checksum.txt
+      - cp *.apk artifacts/
+      - for: { var: FILES }
+        cmd: cp ../{{.ITEM}} .
+      - for: { var: WINDOWS_FILES }
+        cmd: cp ../{{.ITEM}} .
+      - tar -czf artifacts/radiomux_Linux_x86_64.tar.gz radiomux_Linux_x86_64       {{.FILES}}
+      - tar -czf artifacts/radiomux_Linux_armv7.tar.gz  radiomux_Linux_armv7        {{.FILES}}
+      - tar -czf artifacts/radiomux_Linux_arm64.tar.gz  radiomux_Linux_arm64        {{.FILES}}
+      - tar -czf artifacts/radiomux_Darwin_arm64.tar.gz radiomux_Darwin_arm64       {{.FILES}}
+      - zip -q artifacts/radiomux_Windows_x86_64.zip    radiomux_Windows_x86_64.exe {{.FILES}} {{.WINDOWS_FILES}}
+      - cd artifacts && sha256sum *.tar.gz *.zip *.apk > checksum.txt
+    vars:
+      FILES: README.md LICENSE
+      WINDOWS_FILES: WinSW.xml
 
   build:
     deps: [clean, build-apk, build-server]
     dir: dist
     cmds:
-      - for: { var: FILES }
-        cmd: cp ../{{.ITEM}} .
-      - mkdir -p artifacts
-      - cp radiomuxplayer-release.apk artifacts/
-      - tar -czf artifacts/radiomux_Linux_x86_64.tar.gz radiomux_Linux_x86_64       {{.FILES}}
-      - tar -czf artifacts/radiomux_Linux_armv7.tar.gz  radiomux_Linux_armv7        {{.FILES}}
-      - tar -czf artifacts/radiomux_Linux_arm64.tar.gz  radiomux_Linux_arm64        {{.FILES}}
-      - tar -czf artifacts/radiomux_Darwin_arm64.tar.gz radiomux_Darwin_arm64       {{.FILES}}
-      - zip -q artifacts/radiomux_Windows_x86_64.zip    radiomux_Windows_x86_64.exe {{.FILES}}
-      - task: checksum
-    vars:
-      FILES: README.md LICENSE
+      - task: compile-artifacts
 
   build-debug:
     deps: [clean, build-apk-debug, build-server]
+    dir: dist
+    cmds:
+      - task: compile-artifacts
