@@ -43,16 +43,20 @@ const MenuLink = styled(Link, {
 })
 
 const menuLinkInactiveClass = style({
+  background: "transparent",
   color: theme.color.foreground,
   ":hover": {
-    background: theme.color.primary,
-    color: theme.color.primaryForeground,
+    background: theme.color.accent,
+    color: theme.color.accentForeground,
   },
 })
 
 const menuLinkActiveClass = style({
   background: theme.color.primary,
   color: theme.color.primaryForeground,
+  ":hover": {
+    background: theme.color.primaryHover,
+  },
 })
 
 const MenuIcon = styled(RiSystemMenuLine, {
@@ -203,7 +207,8 @@ const MenuContent = styled("div", {
 
 const MenuLinks = styled("div", {
   base: {
-    ...mixin.stack("1"),
+    display: "flex",
+    flexDirection: "column",
     padding: theme.space[2]
   }
 })

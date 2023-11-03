@@ -13,7 +13,6 @@ tasks:
     internal: true
     dir: android
     cmds:
-      - mkdir -p dist
       - chmod +x gradlew
       - ./gradlew :app:assembleRelease -x test
       - rm {{.RELEASE_DIR}}/app-release-unsigned-aligned.apk || true
@@ -27,6 +26,16 @@ tasks:
     env:
       ANDROID_KEYSTORE:
       ANDROID_KEYSTORE_PASSWORD:
+
+  build-apk-debug:
+    internal: true
+    dir: android
+    cmds:
+      - chmod +x gradlew
+      - ./gradlew :app:assembleDebug -x test
+      - cp {{.DEBUG_DIR}}/app-debug.apk ../dist/radiomuxplayer-debug.apk
+    vars:
+      DEBUG_DIR: app/build/outputs/apk/debug
 
   build-server:
     internal: true
@@ -75,3 +84,6 @@ tasks:
       - task: checksum
     vars:
       FILES: README.md LICENSE
+
+  build-debug:
+    deps: [clean, build-apk-debug, build-server]

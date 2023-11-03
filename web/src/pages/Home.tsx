@@ -57,7 +57,8 @@ const PlayerListContent = styled("div", {
 
 const PlayerListList = styled("div", {
   base: {
-    ...mixin.stack("1"),
+    display: "flex",
+    flexDirection: "column"
   }
 })
 
