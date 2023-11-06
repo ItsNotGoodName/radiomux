@@ -40,18 +40,38 @@ func ConvertPlayer(p core.Player) *Player {
 	}
 }
 
-func ConvertPresets(req []core.Preset) []*Preset {
+func ConvertPresets(req []core.Preset) ([]*Preset, error) {
 	res := make([]*Preset, 0, len(req))
 	for _, r := range req {
-		res = append(res, ConvertPreset(r))
+		p, err := ConvertPreset(r)
+		if err != nil {
+			return nil, err
+		}
+		res = append(res, p)
 	}
-	return res
+	return res, nil
 }
 
-func ConvertPreset(p core.Preset) *Preset {
+func ConvertPreset(p core.Preset) (*Preset, error) {
+	var url string
+	{
+		slug, err := core.PresetSlugParse(p.Slug)
+		if err != nil {
+			return nil, err
+		}
+		switch slug := slug.(type) {
+		case core.PresetFile:
+			url = core.Settings.FileURL(slug.SourceID, slug.Path)
+		case core.PresetSubsonic:
+		case core.PresetURL:
+			url = string(slug)
+		default:
+		}
+	}
+
 	return &Preset{
 		Id:   p.ID,
 		Name: p.Name,
-		Url:  p.URL,
-	}
+		Url:  url,
+	}, nil
 }

@@ -24,5 +24,6 @@ tmp
 .env
 dist
 radiomux.json
+radiomux.json.tmp
 radiomux
 radiomux-demo

@@ -82,6 +82,31 @@ service StateService
   - StateVolumeSet(req: SetStateVolume)
   - StateMediaSet(req: SetStateMedia)
 
+######################## FileService
+
+struct File
+  - sourceId: int64
+  - path: string
+  - name: string
+  - size: int64
+  - isDirectory: bool
+
+struct FileListRequest
+  - page: int
+  - perPage: int
+
+struct FileListResponse
+  - items: []File
+	- page: int
+	- perPage: int
+  - hasNext: bool
+  - hasPrev: bool
+	- totalPages: int
+	- totalItems: int
+
+service FileService
+  - FileList(req: FileListRequest) => (res: FileListResponse)
+
 ######################## Errors
 
 error 100 NotFound         "not found"       HTTP 404

@@ -253,6 +253,9 @@ type ServerInterface interface {
 
 	// (GET /players/{id}/qr)
 	GetPlayersIdQr(ctx echo.Context, id int64) error
+
+	// (GET /sources/{id}/{slug*})
+	GetSourcesIdSlug(ctx echo.Context, id int64, slug string) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -273,6 +276,30 @@ func (w *ServerInterfaceWrapper) GetPlayersIdQr(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.GetPlayersIdQr(ctx, id)
+	return err
+}
+
+// GetSourcesIdSlug converts echo context to params.
+func (w *ServerInterfaceWrapper) GetSourcesIdSlug(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int64
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// ------------- Path parameter "slug" -------------
+	var slug string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "slug", runtime.ParamLocationPath, ctx.Param("slug"), &slug)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter slug: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetSourcesIdSlug(ctx, id, slug)
 	return err
 }
 
@@ -305,5 +332,6 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	}
 
 	router.GET(baseURL+"/players/:id/qr", wrapper.GetPlayersIdQr)
+	router.GET(baseURL+"/sources/:id/:slug", wrapper.GetSourcesIdSlug)
 
 }

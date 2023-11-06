@@ -1,24 +1,45 @@
 package api
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/ItsNotGoodName/radiomux/internal/core"
-	"github.com/ItsNotGoodName/radiomux/internal/openapi"
+	"github.com/cyphar/filepath-securejoin"
 	echo "github.com/labstack/echo/v4"
 	qrcode "github.com/skip2/go-qrcode"
 )
 
-func NewServer(playerStore core.PlayerStore, androidWSServer core.AndroidWSServer) *Server {
+type SourceStore interface {
+	GetFileSource(ctx context.Context, id int64) (core.FileSource, error)
+}
+
+func NewServer(playerStore core.PlayerStore, sourceStore SourceStore) *Server {
 	return &Server{
-		playerStore:     playerStore,
-		androidWSServer: androidWSServer,
+		playerStore: playerStore,
+		sourceStore: sourceStore,
 	}
 }
 
 type Server struct {
-	playerStore     core.PlayerStore
-	androidWSServer core.AndroidWSServer
+	playerStore core.PlayerStore
+	sourceStore SourceStore
+}
+
+func (s *Server) GetSourcesIdSlug(c echo.Context, id int64, slug string) error {
+	ctx := c.Request().Context()
+
+	source, err := s.sourceStore.GetFileSource(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	securePath, err := securejoin.SecureJoin(source.Path, slug)
+	if err != nil {
+		return err
+	}
+
+	return c.File(securePath)
 }
 
 func (s *Server) GetPlayersIdQr(c echo.Context, id int64) error {
@@ -30,7 +51,7 @@ func (s *Server) GetPlayersIdQr(c echo.Context, id int64) error {
 	}
 
 	var png []byte
-	url := s.androidWSServer.PlayerWSURL(player)
+	url := core.Settings.PlayerWSURL(player)
 	png, err = qrcode.Encode(url, qrcode.Medium, 256)
 	if err != nil {
 		return err
@@ -39,5 +60,3 @@ func (s *Server) GetPlayersIdQr(c echo.Context, id int64) error {
 	c.Response().Header().Set("Cache-Control", "no-store")
 	return c.Blob(http.StatusOK, "image/png", png)
 }
-
-var _ openapi.ServerInterface = (*Server)(nil)

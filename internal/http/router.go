@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/ItsNotGoodName/radiomux/internal/androidws"
 	"github.com/ItsNotGoodName/radiomux/internal/openapi"
 	"github.com/ItsNotGoodName/radiomux/pkg/echoext"
 	"github.com/ItsNotGoodName/radiomux/web"
@@ -54,7 +53,7 @@ func NewRouter(
 
 	// Routes
 	e.GET("/ws", androidWSServer.ServeEcho) // TODO: remove this
-	e.GET(androidws.Path, androidWSServer.ServeEcho)
+	e.GET("/api/android/ws", androidWSServer.ServeEcho)
 	e.GET("/api/ws", apiWSServer.ServeEcho)
 	openapi.RegisterHandlers(e.Group("/api", middlewareOpenAPI), apiServer)
 	e.Any("/rpc/PlayerService/*", echo.WrapHandler(playerService))

@@ -14,12 +14,36 @@ export interface paths {
         };
       };
       responses: {
+        /** @description QR code as PNG. */
         200: {
           content: {
             "image/png": string;
           };
         };
-        /** @description unexpected error */
+        /** @description Unexpected error. */
+        default: {
+          content: {
+            "application/json": components["schemas"]["Error"];
+          };
+        };
+      };
+    };
+  };
+  "/sources/{id}/{slug*}": {
+    /** @description Get file by source id and slug. */
+    get: {
+      parameters: {
+        path: {
+          id: number;
+          slug: string;
+        };
+      };
+      responses: {
+        /** @description File content. */
+        200: {
+          content: never;
+        };
+        /** @description Unexpected error. */
         default: {
           content: {
             "application/json": components["schemas"]["Error"];

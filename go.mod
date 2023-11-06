@@ -5,6 +5,7 @@ go 1.21
 require (
 	github.com/Rican7/lieut v0.1.1
 	github.com/caarlos0/env/v9 v9.0.0
+	github.com/cyphar/filepath-securejoin v0.2.4
 	github.com/gorilla/websocket v1.5.0
 	github.com/labstack/echo/v4 v4.11.1
 	github.com/oapi-codegen/runtime v1.0.0

@@ -2,7 +2,6 @@ package androidws
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/ItsNotGoodName/radiomux/internal"
 	"github.com/ItsNotGoodName/radiomux/internal/android"
@@ -24,12 +23,6 @@ func NewServer(playerStore core.PlayerStore, controller *android.Controller, bus
 		busEvent:    busEvent,
 		wsURL:       wsURL,
 	}
-}
-
-const Path = "/api/android/ws"
-
-func (s Server) PlayerWSURL(p core.Player) string {
-	return fmt.Sprintf("%s%s?id=%d&token=%s", s.wsURL, Path, p.ID, p.Token)
 }
 
 func (s Server) ServeEcho(c echo.Context) error {

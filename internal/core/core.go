@@ -2,6 +2,8 @@ package core
 
 import (
 	"context"
+
+	"github.com/ItsNotGoodName/radiomux/pkg/pagination"
 )
 
 type Player struct {
@@ -24,25 +26,32 @@ type PlayerStore interface {
 	Drop(ctx context.Context) ([]Player, error)
 }
 
-type Preset struct {
-	ID   int64
-	Name string
-	URL  string
+type FileSource struct {
+	ID       int64
+	Name     string
+	Path     string
+	Readonly bool
 }
 
-func (p Preset) URI() string {
-	return p.URL
+type File struct {
+	SourceID  int64
+	Path      string
+	Directory bool
 }
 
-type PresetStore interface {
-	Create(ctx context.Context, req Preset) (Preset, error)
-	Get(ctx context.Context, id int64) (Preset, error)
-	List(ctx context.Context) ([]Preset, error)
-	Update(ctx context.Context, req Preset) (Preset, error)
-	Delete(ctx context.Context, id int64) error
-	Drop(ctx context.Context) ([]Preset, error)
+type FileListRequest struct {
+	Page pagination.Page
 }
 
-type AndroidWSServer interface {
-	PlayerWSURL(p Player) string
+type FileListResponse struct {
+	Items      []File
+	PageResult pagination.PageResult
+}
+
+type SubsonicSource struct {
+	ID       int64
+	Name     string
+	Address  string
+	Username string
+	Password string
 }

@@ -3,6 +3,7 @@ package demo
 import (
 	"context"
 	"errors"
+	"net/url"
 	"slices"
 
 	"github.com/ItsNotGoodName/radiomux/internal"
@@ -68,26 +69,34 @@ func (PlayerStore) Update(ctx context.Context, req core.Player) (core.Player, er
 
 var _ core.PlayerStore = PlayerStore{}
 
+func mustParseURL(rawURL string) *url.URL {
+	u, err := url.Parse(rawURL)
+	if err != nil {
+		panic(err)
+	}
+	return u
+}
+
 var MockPresets []core.Preset = []core.Preset{
 	{
 		ID:   1,
 		Name: "Mock Preset 1",
-		URL:  "https://example.com/mock-preset-1",
+		Slug: mustParseURL("https://example.com/mock-preset-1"),
 	},
 	{
 		ID:   2,
 		Name: "Mock Preset 2",
-		URL:  "https://example.com/mock-preset-2",
+		Slug: mustParseURL("https://example.com/mock-preset-2"),
 	},
 	{
 		ID:   3,
 		Name: "Mock Preset 3",
-		URL:  "https://example.com/mock-preset-3",
+		Slug: mustParseURL("https://example.com/mock-preset-3"),
 	},
 	{
 		ID:   4,
 		Name: "Mock Preset 3 Duplicate",
-		URL:  "https://example.com/mock-preset-3",
+		Slug: mustParseURL("https://example.com/mock-preset-3"),
 	},
 }
 
@@ -132,5 +141,3 @@ func (PresetStore) List(ctx context.Context) ([]core.Preset, error) {
 func (PresetStore) Update(ctx context.Context, req core.Preset) (core.Preset, error) {
 	return core.Preset{}, errors.ErrUnsupported
 }
-
-var _ core.PresetStore = PresetStore{}

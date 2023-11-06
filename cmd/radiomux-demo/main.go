@@ -74,10 +74,10 @@ func run(cfg *demo.Config) lieut.Executor {
 		androidWSServer := demo.NewAndroidWSServer()
 		notificationServer := apiws.NewNotificationServer(bus, playerStore)
 		apiWSServer := apiws.NewServer(androidStateService, playerStore, notificationServer)
-		apiServer := api.NewServer(playerStore, androidWSServer)
+		apiServer := api.NewServer(playerStore, nil)
 		playerService := webrpc.
 			NewPlayerServiceServer(rpc.
-				NewPlayerService(playerStore, androidWSServer))
+				NewPlayerService(playerStore))
 		presetService := webrpc.
 			NewPresetServiceServer(rpc.
 				NewPresetService(presetStore))

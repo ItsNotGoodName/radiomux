@@ -13,8 +13,9 @@ import (
 	"github.com/ItsNotGoodName/radiomux/internal/build"
 	"github.com/ItsNotGoodName/radiomux/internal/bus"
 	"github.com/ItsNotGoodName/radiomux/internal/config"
-	"github.com/ItsNotGoodName/radiomux/internal/file"
+	"github.com/ItsNotGoodName/radiomux/internal/core"
 	"github.com/ItsNotGoodName/radiomux/internal/http"
+	"github.com/ItsNotGoodName/radiomux/internal/jsondb"
 	"github.com/ItsNotGoodName/radiomux/internal/rpc"
 	"github.com/ItsNotGoodName/radiomux/internal/webrpc"
 	"github.com/ItsNotGoodName/radiomux/pkg/sutureext"
@@ -55,6 +56,8 @@ func run(cfg *config.Config) lieut.Executor {
 			return fmt.Errorf("failed to parse config: %w", err)
 		}
 
+		core.Init(cfg.HTTPURL)
+
 		// Supervisor
 		super := suture.New("root", suture.Spec{
 			EventHook: sutureext.EventHook(),
@@ -65,21 +68,22 @@ func run(cfg *config.Config) lieut.Executor {
 		androidStatePubSub := android.NewStateMemPubSub()
 
 		// Store
-		jsonStore := file.NewStore(cfg.File)
-		playerStore := file.NewPlayerStore(jsonStore, bus)
-		presetStore := file.NewPresetStore(jsonStore, bus)
+		jsonStore := jsondb.NewStore(cfg.File)
+		playerStore := jsondb.NewPlayerStore(jsonStore, bus)
+		presetStore := jsondb.NewPresetStore(jsonStore, bus)
+		sourceStore := jsondb.NewSourceStore(jsonStore)
 		androidStateStore := android.NewStateMemStore(androidStatePubSub, bus, playerStore)
 
 		// Services
 		androidStateService := android.NewStateService(androidStatePubSub, androidStateStore)
 		androidController := android.NewController(androidStateService, bus)
-		androidWSServer := androidws.NewServer(playerStore, androidController, androidStateService, cfg.HTTPURL)
+		androidWSServer := androidws.NewServer(playerStore, androidController, androidStateService, cfg.HTTPURLRaw)
 		notificationServer := apiws.NewNotificationServer(bus, playerStore)
 		apiWSServer := apiws.NewServer(androidStateService, playerStore, notificationServer)
-		apiServer := api.NewServer(playerStore, androidWSServer)
+		apiServer := api.NewServer(playerStore, sourceStore)
 		playerService := webrpc.
 			NewPlayerServiceServer(rpc.
-				NewPlayerService(playerStore, androidWSServer))
+				NewPlayerService(playerStore))
 		presetService := webrpc.
 			NewPresetServiceServer(rpc.
 				NewPresetService(presetStore))

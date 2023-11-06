@@ -9,14 +9,23 @@ import (
 	"github.com/ItsNotGoodName/radiomux/internal/webrpc"
 )
 
-func NewPresetService(presetStore core.PresetStore) *PresetService {
+type PresetStore interface {
+	Create(ctx context.Context, req core.Preset) (core.Preset, error)
+	Get(ctx context.Context, id int64) (core.Preset, error)
+	List(ctx context.Context) ([]core.Preset, error)
+	Update(ctx context.Context, req core.Preset) (core.Preset, error)
+	Delete(ctx context.Context, id int64) error
+	Drop(ctx context.Context) ([]core.Preset, error)
+}
+
+func NewPresetService(presetStore PresetStore) *PresetService {
 	return &PresetService{
 		presetStore: presetStore,
 	}
 }
 
 type PresetService struct {
-	presetStore core.PresetStore
+	presetStore PresetStore
 }
 
 func (s *PresetService) PresetCreate(ctx context.Context, req *webrpc.CreatePreset) (int64, error) {
@@ -34,7 +43,12 @@ func (s *PresetService) PresetGet(ctx context.Context, id int64) (*webrpc.Preset
 		return nil, webrpc.ConvertErr(err)
 	}
 
-	return webrpc.ConvertPreset(preset), nil
+	res, err := webrpc.ConvertPreset(preset)
+	if err != nil {
+		return nil, webrpc.ConvertErr(err)
+	}
+
+	return res, nil
 }
 
 func (s *PresetService) PresetList(ctx context.Context) ([]*webrpc.Preset, error) {
@@ -43,7 +57,12 @@ func (s *PresetService) PresetList(ctx context.Context) ([]*webrpc.Preset, error
 		return nil, webrpc.ConvertErr(err)
 	}
 
-	return webrpc.ConvertPresets(presets), nil
+	res, err := webrpc.ConvertPresets(presets)
+	if err != nil {
+		return nil, webrpc.ConvertErr(err)
+	}
+
+	return res, nil
 }
 
 func (s *PresetService) PresetUpdate(ctx context.Context, req *webrpc.UpdatePreset) error {
@@ -55,7 +74,7 @@ func (s *PresetService) PresetUpdate(ctx context.Context, req *webrpc.UpdatePres
 		preset.Name = *req.Name
 	}
 	if req.Url != nil {
-		preset.URL = *req.Url
+		return webrpc.ErrNotImplemented
 	}
 	preset, err = s.presetStore.Update(ctx, preset)
 	if err != nil {

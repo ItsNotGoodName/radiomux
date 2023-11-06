@@ -9,26 +9,23 @@ import (
 	"github.com/ItsNotGoodName/radiomux/internal/webrpc"
 )
 
-func NewPlayerService(playerStore core.PlayerStore, androidWSServer core.AndroidWSServer) *PlayerService {
+func NewPlayerService(playerStore core.PlayerStore) *PlayerService {
 	return &PlayerService{
-		playerStore:     playerStore,
-		androidWSServer: androidWSServer,
+		playerStore: playerStore,
 	}
 }
 
 type PlayerService struct {
-	playerStore     core.PlayerStore
-	androidWSServer core.AndroidWSServer
+	playerStore core.PlayerStore
 }
 
-// PlayerWsURL implements webrpc.PlayerService.
 func (s *PlayerService) PlayerWsURL(ctx context.Context, id int64) (string, error) {
 	player, err := s.playerStore.Get(ctx, id)
 	if err != nil {
 		return "", webrpc.ConvertErr(err)
 	}
 
-	return s.androidWSServer.PlayerWSURL(player), nil
+	return core.Settings.PlayerWSURL(player), nil
 }
 
 func (s *PlayerService) PlayerCreate(ctx context.Context, req *webrpc.CreatePlayer) (int64, error) {

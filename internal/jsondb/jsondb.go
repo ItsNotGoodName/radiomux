@@ -1,16 +1,19 @@
-package file
+package jsondb
 
 import (
 	"encoding/json"
+	"net/url"
 	"os"
 	"sync"
 
 	"github.com/ItsNotGoodName/radiomux/internal/core"
+	"github.com/rs/zerolog/log"
 )
 
 type db struct {
 	Players []playerModel `json:"players"`
 	Presets []presetModel `json:"presets"`
+	Sources []sourceModel `json:"sources"`
 }
 
 type playerModel struct {
@@ -38,14 +41,18 @@ func unconvertPlayer(p core.Player) playerModel {
 type presetModel struct {
 	ID   int64  `json:"id"`
 	Name string `json:"name"`
-	URL  string `json:"url"`
+	Slug string `json:"url"`
 }
 
 func convertPreset(p presetModel) core.Preset {
+	slug, err := url.Parse(p.Slug)
+	if err != nil {
+		log.Err(err).Caller().Send()
+	}
 	return core.Preset{
 		ID:   p.ID,
 		Name: p.Name,
-		URL:  p.URL,
+		Slug: slug,
 	}
 }
 
@@ -53,8 +60,18 @@ func unconvertPreset(p core.Preset) presetModel {
 	return presetModel{
 		ID:   p.ID,
 		Name: p.Name,
-		URL:  p.URL,
+		Slug: p.Slug.String(),
 	}
+}
+
+type sourceModel struct {
+	ID   int64  `json:"id"`
+	Name string `json:"name"`
+	Type string `json:"type"`
+	File struct {
+		Path     string `json:"path"`
+		Readonly bool   `json:"readonly"`
+	} `json:"file,omitempty"`
 }
 
 type Store struct {
@@ -105,10 +122,11 @@ func (s *Store) Update(fn func(db *db) error) error {
 		return err
 	}
 
-	err = os.WriteFile(s.filePath, b, 0600)
+	filePathTmp := s.filePath + ".tmp"
+	err = os.WriteFile(filePathTmp, b, 0600)
 	if err != nil {
 		return err
 	}
 
-	return nil
+	return os.Rename(filePathTmp, s.filePath)
 }

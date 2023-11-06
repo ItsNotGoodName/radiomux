@@ -1,4 +1,4 @@
-package file
+package jsondb
 
 import (
 	"context"
@@ -121,5 +121,3 @@ func (s PresetStore) Get(ctx context.Context, id int64) (core.Preset, error) {
 
 	return convertPreset(preset), nil
 }
-
-var _ core.PresetStore = PresetStore{}

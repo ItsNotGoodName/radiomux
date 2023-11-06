@@ -2,13 +2,15 @@ package rpc
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
 	"github.com/ItsNotGoodName/radiomux/internal/android"
 	"github.com/ItsNotGoodName/radiomux/internal/core"
 	"github.com/ItsNotGoodName/radiomux/internal/webrpc"
 )
 
-func NewStateService(androidBus android.BusCommand, presetStore core.PresetStore) *StateService {
+func NewStateService(androidBus android.BusCommand, presetStore PresetStore) *StateService {
 	return &StateService{
 		androidBus:  androidBus,
 		presetStore: presetStore,
@@ -17,7 +19,7 @@ func NewStateService(androidBus android.BusCommand, presetStore core.PresetStore
 
 type StateService struct {
 	androidBus  android.BusCommand
-	presetStore core.PresetStore
+	presetStore PresetStore
 }
 
 func (s *StateService) StateMediaSet(ctx context.Context, req *webrpc.SetStateMedia) error {
@@ -29,7 +31,24 @@ func (s *StateService) StateMediaSet(ctx context.Context, req *webrpc.SetStateMe
 			return webrpc.ConvertErr(err)
 		}
 
-		if err := s.androidBus.Handle(ctx, req.Id, android.CommandSetMediaItem{URI: presetModel.URI()}); err != nil {
+		slug, err := core.PresetSlugParse(presetModel.Slug)
+		if err != nil {
+			return webrpc.ConvertErr(err)
+		}
+
+		var uri string
+		switch slug := slug.(type) {
+		case core.PresetFile:
+			uri = core.Settings.FileURL(slug.SourceID, slug.Path)
+		case core.PresetSubsonic:
+			return webrpc.ErrNotImplemented.WithCause(errors.New("subsonic preset not implemented"))
+		case core.PresetURL:
+			uri = string(slug)
+		default:
+			return webrpc.ErrWebrpcInternalError.WithCause(fmt.Errorf("invalid preset type: %T", slug))
+		}
+
+		if err := s.androidBus.Handle(ctx, req.Id, android.CommandSetMediaItem{URI: uri}); err != nil {
 			return webrpc.ConvertErr(err)
 		}
 	} else if req.Uri != nil {
