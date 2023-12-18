@@ -34,7 +34,7 @@ func main() {
 	app := lieut.NewSingleCommandApp(
 		lieut.AppInfo{
 			Name:    "radiomux",
-			Version: build.Version,
+			Version: build.Current.Version,
 		},
 		run(cfg),
 		flags,

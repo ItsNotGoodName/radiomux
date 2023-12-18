@@ -15,6 +15,9 @@ gen: gen-proto gen-openapi gen-webrpc
 
 tooling: tooling-air tooling-goreleaser tooling-protoc-gen-go tooling-oapi-codegen tooling-webrpc tooling-java tooling-taskfile
 
+build:
+	task build
+
 # Docker
 
 docker-build-demo:
